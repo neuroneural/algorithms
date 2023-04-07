@@ -1,0 +1,693 @@
+<!Doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="css/fontawesome-free-6.2.1-web/css/all.css" rel="stylesheet">
+
+    <script src="lib/colorbrewer.v1.min.js" charset="utf-8"></script>
+    <script src="lib/colorStringStandalone.js" charset="utf-8"></script>
+    <script type="text/javascript" src="lib/jquery-2.2.4.min.js"></script>
+
+    <title>Design & Analysis: Algorithms</title>
+
+    <meta name="description" content="CS4851/6851 GSU class">
+    <meta name="author" content="Sergey M Plis">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+    <!-- <link rel="stylesheet" href="lib/css/zenburn.css"> -->
+    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="dist/theme/aml.css" id="theme">
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.scss';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+
+    </script>
+  </head>
+
+
+  <body>
+    <div class="reveal">
+      <!-- In between the <div="reveal"> and the <div class="slides">-->
+          <!-- <header style="position: absolute; top: 10px; left: 100px; z-index: 500; font-size:100px;background-color: rgba(0,0,0,0); text-align: center !important"></header>  -->
+          <!-- In between the <div="reveal"> and the <div class="slides">-->
+              <!-- Any section element inside of this container is displayed as a slide -->
+              <div class="slides">
+		<section>
+		  <section>
+		    <p>
+		      <h2>Design & Analysis: Algorithms</h2>
+                      <h1>10: Analyzing RQsort</h1>
+		    <p>
+		  </section>
+	          <section>
+		    <h3>Outline of the lecture</h3>
+                    <ul>
+	              <li class="fragment roll-in"> Randomized Quicksort
+	              <li class="fragment roll-in"> Analyzing Randomized Quicksort
+		    </ul>
+                  </section>
+                </section>
+                <section>
+                  <section data-background="figures/probability_comparisons_new.png">
+                                        <h1 style="text-shadow: 4px 4px 4px #002b36; color: #818181;">Randomized Quicksort</h1>
+                  </section>
+                  <section>
+                    <pre class="python" style="font-size:16pt; width:110%;"><code data-trim data-noescape data-line-numbers>
+In [217]: quicksort(t)
+[1, 0, 0, 0, 0, 3, 2] 6 [8, 8]   [0, 0, 0] 0 [1, 3, 2]   [0, 0] 0 []   [0] 0 []
+
+[1] 2 [3]
+
+[8] 8 []
+
+Out[217]: [0, 0, 0, 0, 1, 2, 3, 6, 8, 8]
+                    </code></pre>
+<ul>
+<li class="fragment roll-in">We’d like to ensure that we get reasonably good splits reasonably quickly
+<li class="fragment roll-in" style="list-style:none;"> <span class="fa-li"><i class="fa-regular fa-circle-question"></i></span>How do we ensure that we “usually” get good splits?
+<li class="fragment roll-in" style="list-style:none;"> <span class="fa-li"><i class="fa-regular fa-circle-question"></i></span>How can we ensure this even for worst case inputs?
+<li class="fragment roll-in">A: We use randomization.
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>The Algorithm (pythonic)</h2>
+                    <pre class="python" style="font-size:20pt; width:110%;"><code data-trim data-noescape data-line-numbers="*|10">
+def swap(A, i, j): A[i], A[j] = A[j], A[i]
+
+def rquicksort(seq):
+    if len(seq) <= 1: return seq  # Base case
+    lo, pi, hi = partition(seq)   # pivot
+    # Sort lo and hi separately
+    return quicksort(lo) + [pi] + quicksort(hi)
+
+def partition(seq):
+    swap(seq,0,random.randint(0,len(seq)))
+    pi, seq = seq[0], seq[1:]        # Pick and remove the pivot
+    lo = [x for x in seq if x <= pi] # All the small elements
+    hi = [x for x in seq if x > pi]  # All the large ones
+    return lo, pi, hi                # pi is "in the right place"
+
+                    </code></pre>
+                  </section>
+                  <section>
+                    <h2>Analysis</h2>
+                    <ul>
+                      <li class="fragment roll-in"><code>rquicksort</code> is a randomized algorithm
+                      <li class="fragment roll-in">The run time is a random variable
+                      <li class="fragment roll-in">We’d like to analyze the expected run time of <code>rquicksort</code>
+                      <li class="fragment roll-in">To do this, we
+first need to refresh the basic probability theory
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Probability Definitions</h2>
+                    <ul>
+                      <li class="fragment roll-in">A <em>random variable</em> is a variable that takes on one of several
+values, each with some probability. (Example: if $X$ is the
+outcome of the roll of a die <i class="fa-solid fa-dice"></i>, $X$ is a random variable)
+<li class="fragment roll-in">The expected value of a random variable $X$ is defined as: $\prob{E}{X} = \sum_x x\times \prob{P}{X=x}$
+<li class="fragment roll-in"> A fair three-sided <i class="fa-solid fa-dice"></i> $\prob{E}{X} = 1\times\frac{1}{3} + 2\times\frac{1}{3} + 3\times\frac{1}{3} = 2$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Probability Definitions</h2>
+                    <ul>
+                      <li class="fragment roll-in">Two events $A$ and
+$B$ are mutually exclusive if $A\cap B$ is the empty set (Example: $A$
+is the event that the outcome of a die is <i class="fa-solid fa-dice-one"></i> and $B$ is the event
+that the outcome of a die is <i class="fa-solid fa-dice-two"></i>)
+                      <li class="fragment roll-in">Two random
+variables $X$ and $Y$ are independent if for all $x$ and $y$,
+$\prob{P}{X = x \mbox{ and } Y = y} = \prob{P}{X = x}\prob{P}{Y = y}$
+(Example: let $X$ be the outcome of the first roll of a die, and $Y$
+be the outcome of the second roll of the die. Then $X$ and $Y$ are
+independent.)
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Independence</h2>
+                    <blockquote>
+                      <b>Independent random variables:</b>
+                      \begin{align}
+                      \prob{P}{X,Y} &= \prob{P}{X}\prob{P}{Y}\\
+                      \prob{P}{X|Y} &= \prob{P}{X}
+                      \end{align}
+                    </blockquote>
+                    <ul style="list-style-type: none;">
+                      <li class="fragment roll-in"> $Y$ and $X$ don&#39;t contain information about each other.
+                      <li class="fragment roll-in"> Observing $Y$ does not help predicting $X$.
+                      <li class="fragment roll-in"> Observing $X$ does not help predicting $Y$.
+                    </ul>
+                    <ul style="list-style-type: none; font-size: 32px;">
+                      <li class="fragment roll-in"> <b>Examples:</b>
+                      <li class="fragment roll-in"> <b>Independent:</b> winning on roulette this week and next week
+                      <li class="fragment roll-in"> <b>Dependent:</b> Russian roulette
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>inependent/dependent</h2>
+                    <row>
+                      <col50>
+                      <img style="border:0; box-shadow: 0px 0px 0px rgba(255, 255, 255, 255);" width="100%"
+                           src="figures/independent_samples.png" alt="independent">
+                      </col50>
+                      <col50>
+                      <img style="border:0; box-shadow: 0px 0px 0px rgba(255, 255, 255, 255);" width="100%"
+                           src="figures/dependent_samples.png" alt="dependent">
+                      </col50>
+                    </row>
+                  </section>
+
+                  <section>
+                    <h2>Indicators</h2>
+                    <ul>
+<li class="fragment roll-in">An Indicator Random Variable associated with event $A$ is defined as:
+  <ul>
+    <li> $I(A) = 1$ if $A$ occurs
+    <li> $I(A) = 0$ if $A$ does not occur
+  </ul>
+<li class="fragment roll-in">Example: Let $A$ be the event that the roll of a die comes
+  up <i class="fa-solid fa-dice-two"></i>. Then $I(A)$ is $1$ if the die comes up <i class="fa-solid fa-dice-two"></i> and $0$ otherwise.
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Linearity of Expectation</h2>
+                    <ul>
+<li class="fragment roll-in">Let $X$ and $Y$ be two random variables
+<li class="fragment roll-in">Then $\prob{E}{X + Y} = \prob{E}{X} + \prob{E}{Y}$
+<li class="fragment roll-in">(Holds even if $X$ and $Y$ are not independent.)
+<li class="fragment roll-in">More generally, let $X_1, X_2, \dots , X_n$ be n random variables
+<li class="fragment roll-in">Then
+  $$
+  \prob{E}{\displaystyle\sum_{i=1}^n X_i} = \displaystyle\sum_{i=1}^n \prob{E}{X_i}
+  $$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Example</h2>
+                    <ul>
+<li class="fragment roll-in">For $1 \leq i \leq n$, let $X_i$ be the outcome of the $i^{th}$ roll of three-sided die
+<li class="fragment roll-in">Then
+  $$
+  \prob{E}{\displaystyle\sum_{i=1}^n X_i} = \displaystyle\sum_{i=1}^n \prob{E}{X_i} = 2n
+  $$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Example</h2>
+                    <ul>
+<li class="fragment roll-in">Indicator Random Variables and Linearity of Expectation used
+together are a very powerful tool
+<li class="fragment roll-in">The “Birthday Paradox” illustrates this point
+<li class="fragment roll-in">To analyze the run time
+of <code>rquicksort</code>, we will also use indicator random
+variables and linearity of expectation (analysis will be similar to
+“birthday paradox” problem)
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>"Birthday Paradox"</h2>
+                    <ul>
+                      <li class="fragment roll-in">Assume $k$ people in a room, and $n$ days in a year
+                      <li class="fragment roll-in">Assume that each of
+these $k$ people is born on a day chosen uniformly at random from the
+$n$ days
+                      <li class="fragment roll-in" style="list-style:none;"> <span class="fa-li"><i class="fa-regular fa-circle-question"></i></span> What is the
+expected number of pairs of individuals that have the same birthday?
+                      <li class="fragment roll-in">We can use
+                      indicator random variables and linearity of
+                      expectation to compute this
+                    </ul>
+                    <img style="border:0; box-shadow: 0px 0px 0px
+                                rgba(150, 150, 255, 0.8); width:50%;"
+                         class="reveal"  src="figures/hopper_bday.gif" alt="competition">
+                  </section>
+                  <section>
+                    <h2>Analysis</h2>
+                    <ul>
+<li class="fragment roll-in">For all $1 \leq i < j \leq k$, let $X_{i,j}$ be an indicator random variable
+                                                 defined such that:
+                                                 <ul>
+<li> $X_{i,j} = 1$ if person $i$ and person $j$ have the same birthday
+<li> $X_{i,j} = 0$ otherwise
+</ul>
+<li class="fragment roll-in">Note that for all $i, j$,
+  \begin{align}
+  \prob{E}{X_{i,j}} &= \prob{P}{\mbox{person } i \mbox{ and } j \mbox{ have same bday}}\\
+  &= \frac{1}{n}
+  \end{align}
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Analysis</h2>
+                    <ul>
+<li class="fragment roll-in">Let $X$ be a random variable giving the number of pairs of
+people with the same birthday
+<li class="fragment roll-in">We want $\prob{E}{X}$
+<li class="fragment roll-in">Then $X = \sum_{(i,j)} X_{i,j}$
+<li class="fragment roll-in">So $\prob{E}{X} = \prob{E}{\sum_{(i,j)} X_{i,j} }$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2></h2>
+                    \begin{align}
+                    \prob{E}{X} &= \prob{E}{\sum_{(i,j)} X_{i,j} }\\
+                    &= \sum_{(i,j)} \prob{E}{X_{i,j} }\\
+                    &= \sum_{(i,j)} \frac{1}{n}\\
+                    &= {k\choose 2}\frac{1}{n}\\
+                    &= \frac{k(k-1)}{2n}
+                    \end{align}
+                  </section>
+                  <section>
+                    <h2>Reality Check</h2>
+                    <ul>
+<li class="fragment roll-in">Thus, if $k(k − 1) \geq 2n$, expected number of pairs of people
+with same birthday is at least 1
+<li class="fragment roll-in">Thus if have at least $\sqrt{2n} + 1$ people in the room, can expect
+to have at least two with same birthday
+<li class="fragment roll-in">For $n = 365$, if $k = 28$, expected number of pairs with same
+birthday is $1.04$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>In Class Exercise <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100"
+                                               src="figures/dolphin_swim.webp" alt="dolphin">
+                    </h2>
+                    <ul>
+<li class="fragment roll-in">Assume there are $k$ people in a room, and $n$ days in a year
+<li class="fragment roll-in">Assume that each of these $k$ people is born on a day chosen
+uniformly at random from the $n$ days
+<li class="fragment roll-in">Let $X$ be the number of groups of three people who all have
+the same birthday. What is $\prob{E}{X}$?
+<li class="fragment roll-in">Let $X_{i,j,k}$ be an indicator r.v. which is $1$ if people $i,j$, and $k$
+have the same birthday and $0$ otherwise
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>In Class Exercise <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100"
+                                               src="figures/dolphin_swim.webp" alt="dolphin">
+                    </h2>
+                    <ol>
+<li class="fragment roll-in"><span class="fa-li"><i class="fa-regular fa-circle-question"></i></span> Write the expected value of $X$ as a function of the $X_{i,j,k}$
+(use linearity of expectation)
+<li class="fragment roll-in"><span class="fa-li"><i class="fa-regular fa-circle-question"></i></span> What is $\prob{E}{X_{i,j,k} }$?
+<li class="fragment roll-in"><span class="fa-li"><i class="fa-regular fa-circle-question"></i></span> What is the total number of groups of three people out
+of $k$?
+<li class="fragment roll-in"><span class="fa-li"><i class="fa-regular fa-circle-question"></i></span> What is $\prob{E}{X}$?
+                    </ol>
+                  </section>
+                  <section>
+                    <h2>Assigned reading</h2>
+                    <row>
+                      <col60>
+                        <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="80%"
+                             src="figures/cormen_algs.jpeg" alt="Cormen Algs">
+                      </col60>
+                      <col40>
+                        complete Chapter 7: Quicksort<p>
+                      </col40>
+                    </row>
+                  </section>
+                </section>
+                <section>
+                  <section data-background="figures/weird_dice.gif">
+                    <h1 style="text-shadow: 4px 4px 4px #002b36; color: #818181;">Analyzing Randomized Quicksort</h1>
+                  </section>
+                                    <section>
+                    <h2>The Algorithm (pythonic)</h2>
+                    <pre class="python" style="font-size:20pt; width:110%;"><code data-trim data-noescape data-line-numbers="*|10">
+def swap(A, i, j): A[i], A[j] = A[j], A[i]
+
+def rquicksort(seq):
+    if len(seq) <= 1: return seq  # Base case
+    lo, pi, hi = rpartition(seq)   # pivot
+    # Sort lo and hi separately
+    return rquicksort(lo) + [pi] + rquicksort(hi)
+
+def rpartition(seq):
+    swap(seq,0,random.randint(0,len(seq)))
+    pi, seq = seq[0], seq[1:]        # Pick and remove the pivot
+    lo = [x for x in seq if x <= pi] # All the small elements
+    hi = [x for x in seq if x > pi]  # All the large ones
+    return lo, pi, hi                # pi is "in the right place"
+
+                   </code></pre>
+                                    </section>
+                                    <section>
+                                      <h2>The efficient version</h2>
+ <blockquote style="text-align: left; background-color: #93a1a1; color: #fdf6e3; font-size: 22px; width: 110%;">
+   Note, the analysis below and the efficiency gains apply to the code below rather than the pythonic version, which is although asymptotically similar, is much less efficient if both are implemented in C or similar.
+   </blockquote>
+                    <pre class="python" style="font-size:20pt; width:110%;"><code data-trim data-noescape data-line-numbers="*|7-8">
+# Python3 implementation of QuickSort
+
+
+# Function to find the partition position
+def partition(array, low, high):
+
+    # Choose a random element as pivot
+    pivot = array[random.randint(low,high)]
+
+    # Pointer for greater element
+    i = low - 1
+
+    # Traverse through all elements
+    # compare each element with pivot
+    for j in range(low, high):
+        if array[j] <= pivot:
+            # If element smaller than pivot is found
+            # swap it with the greater element pointed by i
+            i = i + 1
+
+            # Swapping element at i with element at j
+            (array[i], array[j]) = (array[j], array[i])
+
+    # Swap the pivot element with
+    # e greater element specified by i
+    (array[i + 1], array[high]) = (array[high], array[i + 1])
+
+    # Return the position from where partition is done
+    return i + 1
+
+# Function to perform quicksort
+
+
+def rquicksort(array, low, high):
+    if low < high:
+
+        # Find pivot element such that
+        # element smaller than pivot are on the left
+        # element greater than pivot are on the right
+        pi = partition(array, low, high)
+
+        # Recursive call on the left of pivot
+        quick_sort(array, low, pi - 1)
+
+        # Recursive call on the right of pivot
+        quick_sort(array, pi + 1, high)
+
+
+# Driver code
+array = [10, 7, 8, 9, 1, 5]
+quick_sort(array, 0, len(array) - 1)
+
+print(f'Sorted array: {array}')
+
+# This code is contributed by Adnan Aliakbar
+             </code></pre>
+                    <div class="slide-footer">
+                      <a href="https://www.geeksforgeeks.org/quick-sort/" target="_blank">https://www.geeksforgeeks.org/quick-sort/</a>
+                    </div>
+                                    </section>
+                  <section>
+                    <h2></h2>
+                    <ul>
+<li class="fragment roll-in"><code>rquicksort</code> is a <em>randomized</em> algorithm
+<li class="fragment roll-in">The run time is a <em>random</em> variable
+<li class="fragment roll-in">We’d like to analyze the <em>expected</em> run time of <code>rquicksort</code>
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Plan of Attack <i class="fa-regular fa-chess-knight"></i> </h2>
+                    <ul>
+                      <li class="fragment roll-in">We will analyze the
+total number of comparisons made by <code>quicksort</code>
+                      <li class="fragment roll-in">We will let $X$ be
+the total number of comparisons made by <code>rquicksort</code>
+                      <li class="fragment roll-in">We will write $X$ as
+the sum of a bunch of indicator random variables
+                      <li class="fragment roll-in">We will use
+linearity of expectation to compute the expected value of $X$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Notation</h2>
+                    <ul>
+<li class="fragment roll-in">Let $A$ be the array to be sorted
+<li class="fragment roll-in">Let $z_i$ be the $i^{th}$ smallest element in the array $A$
+<li class="fragment roll-in">Let $Z_{i,j} = \{z_i, z_{i+1}, . . . , z_j \}$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Indicator Random Variables</h2>
+                    <ul>
+<li class="fragment roll-in">Let $X_{i,j}$ be $1$ if $z_i$ is compared with $z_j$ and $0$ otherwise
+<li class="fragment roll-in">Note that $X =\sum_{i=1}^{n−1}\sum_{j=i+1}^{n} X_{i,j}$
+<li class="fragment roll-in">Further note that
+  $$
+  \prob{E}{X} = \prob{E}{\sum_{i=1}^{n−1}\sum_{j=i+1}^{n} X_{i,j}} = \sum_{i=1}^{n−1}\sum_{j=i+1}^{n} \prob{E}{X_{i,j}}
+  $$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2><i class="fa-regular fa-circle-question"></i> Questions <i class="fa-regular fa-circle-question"></i></h2>
+                    <ul>
+<li class="fragment roll-in" style="list-style:none;"><span class="fa-li"><i class="fa-regular fa-circle-question"></i></span> So what is $\prob{E}{X_{i,j}}$?
+<span class="fragment roll-in">It is $\prob{P}{z_i \mbox{ is compared to } z_j }$</span>
+<li class="fragment roll-in" style="list-style:none;"><span class="fa-li"><i class="fa-regular fa-circle-question"></i></span> What is $\prob{P}{z_i \mbox{ is compared to } z_j }$?
+<span class="fragment roll-in">It is: $\prob{P}{\mbox{either } z_i \mbox{ or } z_j \\ \mbox{ are the first elements in } Z_{i,j} \mbox{ chosen as pivots}}
+  $</span>
+<li class="fragment roll-in" style="list-style:none;"><span class="fa-li"><i class="fa-regular fa-circle-question"></i></span> Why?
+  <ul style="font-size: 26pt;">
+<li class="fragment roll-in"> If no element in $Z_{i,j}$ has been chosen yet, no two elements
+in $Z_{i,j}$ have yet been compared, and all of $Z_{i,j}$ is in same list
+<li class="fragment roll-in"> If some element in $Z_{i,j}$ other than $z_i$ or $z_j$ is chosen first, $z_i$ and $z_j$ will be split into separate lists (and hence will never be compared)
+      </ul>
+                    </ul>
+                  </section>
+                  <section>
+                    <!-- <h2><i class="fa-regular fa-circle-question"></i> More Questions <i class="fa-regular fa-circle-question"></i></h2> -->
+                    <ul>
+                      <li class="fragment roll-in" style="list-style:none;"><span class="fa-li"><i class="fa-regular fa-circle-question"></i></span> What is $\prob{P}{\mbox{either } z_i \mbox{ or } z_j \mbox{ are the first elements in } Z_{i,j} \\ \mbox{ chosen as pivots}}$
+                      <li class="fragment roll-in"> $\prob{P}{z_i \mbox{ chosen as first elements in } Z_{i,j}}$ $+$ $\prob{P}{z_j \mbox{ chosen as first elements in } Z_{i,j}}$
+                      <li class="fragment roll-in"> Note that number of elems in $Z_{i,j}$ is $j − i + 1$, so $\prob{P}{z_i \mbox{ chosen as first elements in } Z_{i,j}} = \frac{1}{j − i + 1}$ $\prob{P}{z_j \mbox{ chosen as first elements in } Z_{i,j}} = \frac{1}{j − i + 1}$
+                      <li class="fragment roll-in">  $\prob{P}{z_i \mbox{ or } z_j \mbox{ are first elems in } Z_{i,j}\\ \mbox{ chosen as pivots}} = \frac{2}{j − i + 1}$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Conclusion</h2>
+                    $$\prob{E}{X_{i,j}} = \prob{P}{z_i \mbox{ is compared to } z_j}  = \frac{2}{j − i + 1}$$
+                  </section>
+                  <section>
+                    <h2>Putting it together</h2>
+                    <row style="font-size: 20pt;">
+                      <col50>
+                    \begin{align}
+                    \prob{E}{X} & = \prob{E}{\sum_{i=1}^{n−1}\sum_{j=i+1}^{n} X_{i,j}} \\
+                    & = \sum_{i=1}^{n−1}\sum_{j=i+1}^{n} \prob{E}{X_{i,j}}\\
+                    &= \sum_{i=1}^{n−1}\sum_{j=i+1}^{n} \frac{2}{j − i + 1}\\
+                    &= \sum_{i=1}^{n−1}\sum_{j=1}^{n-i} \frac{2}{j + 1}\\
+                    \end{align}
+                      </col50>
+                      <col50>
+                    \begin{align}
+                    \prob{E}{X} & = \sum_{i=1}^{n−1}\sum_{j=1}^{n-i} \frac{2}{j + 1}\\
+                    & < \sum_{i=1}^{n−1}\sum_{j=1}^{n} \frac{2}{j}\\
+                        & = \sum_{i=1}^{n−1} O(\log n)\\
+                        & = O(n\log n)
+                    \end{align}
+                      </col50>
+                    </row>
+                    <div  class="fragment roll-in">
+                      <i class="fa-regular fa-circle-question"></i>Why $\sum_{j=1}^{n} \frac{2}{j} = O(\log n)$?
+                    </div>
+                  </section>
+                  <section>
+                    <h2>Take away</h2>
+                    <ul>
+<li class="fragment roll-in">The expected number of comparisons for <code>rquicksort</code> is $O(n \log n)$
+<li class="fragment roll-in">Competitive with mergesort and heapsort
+<li class="fragment roll-in">Randomized version is “better” than deterministic version
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Assigned reading</h2>
+                    <row>
+                      <col60>
+                        <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="80%"
+                             src="figures/cormen_algs.jpeg" alt="Cormen Algs">
+                      </col60>
+                      <col40>
+                        <b>complete</b> Chapter 7: Quicksort<p>
+                      </col40>
+                    </row>
+                  </section>
+                </section>
+
+                <section>
+                  <h2>See you</h2>
+                  Wednesday February $15^{th}$
+                </section>
+
+              </div>
+
+            </div>
+
+            <script src="dist/reveal.js"></script>
+
+            <!-- <link rel="stylesheet" href="lib/css/monokai.css"> -->
+            <script src="plugin/highlight/highlight.js"></script>
+            <script src="plugin/math/math.js"></script>
+            <script src="plugin/chalkboard/plugin.js"></script>
+            <script src="plugin/notes/notes.js"></script>
+            <script src="plugin/zoom/zoom.js"></script>
+            <!-- <script src="node_modules/reveal.js-menu/menu.js"></script> -->
+            <script>
+              // Full list of configuration options available at:
+              // https://github.com/hakimel/reveal.js#configuration
+              let notes = document.querySelectorAll('aside.notes');
+              notes.forEach(n => {
+	      let html = n.innerHTML;
+	      html = html.trim().replace(/\n/g, '<br/>');
+	      n.innerHTML = html;
+              });
+              Reveal.initialize({
+                  // history: true,
+                  hash: true,
+                  margin: 0.01,
+                  minScale: 0.01,
+                  maxScale: 1.23,
+                  menu: {
+                      themes: true,
+                      openSlideNumber: true,
+                      openButton: false,
+                  },
+                  customcontrols: {
+                      slideNumberCSS : 'position: fixed; display: block; right: 90px; top: auto; left: auto; width: 50px; bottom: 30px; z-index: 31; font-family: Helvetica, sans-serif; font-size:  12px; line-height: 1; padding: 5px; text-align: center; border-radius: 10px; background-color: rgba(128,128,128,.5)',
+                      controls: [
+                          { icon: '<i class="fa fa-caret-left"></i>',
+                            css: 'position: fixed; right: 60px; bottom: 30px; z-index: 30; font-size: 24px;',
+                            action: 'Reveal.prev(); return false;'
+                          },
+                          { icon: '<i class="fa fa-caret-right"></i>',
+                            css: 'position: fixed; right: 30px; bottom: 30px; z-index: 30; font-size: 24px;',
+                            action: 'Reveal.next(); return false;'
+                          }
+                      ]
+                  },
+                  chalkboard: {
+                      boardmarkerWidth: 1,
+                      chalkWidth: 2,
+                      chalkEffect: 1,
+                      slideWidth: Reveal.width,
+                      slideHeight: Reveal.height,
+                      toggleNotesButton: false,
+                      toggleChalkboardButton: false,
+                      //src: "chalkboards/chalkboard_em2.json",
+                      readOnly: false,
+                      theme: "blackboard",
+                      eraser: { src: "plugin/chalkboard/img/sponge.png", radius: 30},
+                  },
+
+                  math: {
+                      mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
+                      config: 'TeX-AMS_SVG-full',
+                      // pass other options into `MathJax.Hub.Config()`
+                      TeX: {
+                          Macros: {
+        	              RR: '\\mathbb{R}',
+        	              PP: '\\mathbb{P}',
+        	              EE: '\\mathbb{E}',
+        	              NN: '\\mathbb{N}',
+        	              vth: '\\vec{\\theta}',
+                              loss: '{\\cal l}',
+                              hclass: '{\\cal H}',
+                              CD: '{\\cal D}',
+                              def: '\\stackrel{\\text{def}}{=}',
+                              pag: ['\\text{pa}_{{\cal G}^{#1}}(#2)}', 2],
+                              vec: ['\\boldsymbol{\\mathbf #1}', 1],
+        	              set: [ '\\left\\{#1 \\; : \\; #2\\right\\}', 2 ],
+                              bm: ['\\boldsymbol{\\mathbf #1}', 1],
+                              argmin: ['\\operatorname\{arg\\,min\\,\}'],
+                              argmax: ['\\operatorname\{arg\\,max\\,\}'],
+                              prob: ["\\mbox{#1$\\left(#2\\right)$}", 2],
+                              floor: ["\\lfloor #1 \\rfloor",1]
+                          },
+                          loader: {load: ['[tex]/color']},
+                          extensions: ["color.js"],
+                          tex: {packages: {'[+]': ['color']}},
+                          svg: {
+                              fontCache: 'global'
+                          }
+                      }
+                  },
+
+                  plugins: [ RevealMath, RevealChalkboard, RevealHighlight, RevealNotes, RevealZoom ],
+
+              });
+
+              Reveal.configure({ fragments: true }); // set false when developing to see everything at once
+              Reveal.configure({ slideNumber: true });
+              //Reveal.configure({ history: true });
+              Reveal.configure({ slideNumber: 'c / t' });
+              Reveal.addEventListener( 'darkside', function() {
+                  document.getElementById('theme').setAttribute('href','dist/theme/aml_dark.css');
+              }, false );
+              Reveal.addEventListener( 'brightside', function() {
+                  document.getElementById('theme').setAttribute('href','dist/theme/aml.css');
+              }, false );
+
+            </script>
+
+            <style type="text/css">
+              /* 1. Style header/footer <div> so they are positioned as desired. */
+              #header-left {
+                  position: absolute;
+                  top: 0%;
+                  left: 0%;
+              }
+              #header-right {
+                  position: absolute;
+                  top: 0%;
+                  right: 0%;
+              }
+              #footer-left {
+                  position: absolute;
+                  bottom: 0%;
+                  left: 0%;
+              }
+            </style>
+
+            <!-- // 2. Create hidden header/footer -->
+            <div id="hidden" style="background; display:none;">
+              <div id="header">
+                <div id="header-left"><h4>CS4520</h4></div>
+                <div id="header-right"><h4>Algorithms</h4></div>
+                <div id="footer-left">
+                  <!-- <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100" -->
+                  <!--      src="figures/flowchart.png" alt="robot learning"> -->
+                </div>
+              </div>
+            </div>
+
+
+            <script type="text/javascript">
+              // 3. On Reveal.js ready event, copy header/footer <div> into each `.slide-background` <div>
+              var header = $('#header').html();
+              if ( window.location.search.match( /print-pdf/gi ) ) {
+                  Reveal.addEventListener( 'ready', function( event ) {
+                      $('.slide-background').append(header);
+                  });
+              }
+              else {
+                  $('div.reveal').append(header);
+              }
+            </script>
+
+  </body>
+</html>
