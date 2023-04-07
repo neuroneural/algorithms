@@ -1,0 +1,650 @@
+<!Doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="css/fontawesome-free-6.2.1-web/css/all.css" rel="stylesheet">
+
+    <script src="lib/colorbrewer.v1.min.js" charset="utf-8"></script>
+    <script src="lib/colorStringStandalone.js" charset="utf-8"></script>
+    <script type="text/javascript" src="lib/jquery-2.2.4.min.js"></script>
+
+    <title>Design & Analysis: Algorithms</title>
+
+    <meta name="description" content="CS4851/6851 GSU class">
+    <meta name="author" content="Sergey M Plis">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+    <!-- <link rel="stylesheet" href="lib/css/zenburn.css"> -->
+    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="dist/theme/aml.css" id="theme">
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.scss';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+
+    </script>
+  </head>
+
+
+  <body>
+    <div class="reveal">
+      <!-- In between the <div="reveal"> and the <div class="slides">-->
+          <!-- <header style="position: absolute; top: 10px; left: 100px; z-index: 500; font-size:100px;background-color: rgba(0,0,0,0); text-align: center !important"></header>  -->
+          <!-- In between the <div="reveal"> and the <div class="slides">-->
+              <!-- Any section element inside of this container is displayed as a slide -->
+              <div class="slides">
+		<section>
+		  <section>
+		    <p>
+		      <h2>Design & Analysis: Algorithms</h2>
+                      <h1>09: Queue & Qsort</h1>
+		    <p>
+		  </section>
+	          <section>
+		    <h3>Outline of the lecture</h3>
+                    <ul>
+                      <li class="fragment roll-in"> (finishing) Heap
+		      <li class="fragment roll-in"> Priority Queue
+		      <li class="fragment roll-in"> Quicksort
+	              <li class="fragment roll-in"> Randomized Quicksort
+		    </ul>
+                  </section>
+                </section>
+
+                <section>
+                  <section data-background="figures/tree_xkcd835.png" data-background-size="contain" data-vertical-align-top>
+                    <h2 style="text-shadow: 4px 4px 4px #002b36; color: #f1f1f1; margin-left: -600pt;">HEAP</h2>
+                    <div class="slide-footer">
+                      <a href="https://xkcd.com/835/">https://xkcd.com/835/</a>
+                    </div>
+                  </section>
+                  <section>
+                    <h2><code>heap_sort</code></h2>
+                    <pre class="python"><code data-trim data-noescape data-line-numbers>
+def heap_sort(A):
+    # build maxheap
+    build_max_heap(A)
+    heap_size = len(A)
+    while heap_size > 0:
+        swap(A, 0, heap_size-1)
+        heap_size -= 1
+        max_heapify(A,0,heap_size=heap_size)
+                    </code></pre>
+                  </section>
+                  <section>
+                    <h2>Analysis</h2>
+                    <ul>
+                      <li class="fragment roll-in"> <code>build_max_heap</code> takes $O(n)$, and each of the $O(n)$ calls to <code>max_heapify</code> takes $O(\log n)$, so <code>heap_sort</code> takes $O(n \log n)$
+                      <li class="fragment roll-in" style="list-style: none;"> <i class="fa fa-question-circle" aria-hidden="true"></i> What is best case runtime?
+                      <li class="fragment roll-in" style="list-style: none;"> <i class="fa fa-question-circle" aria-hidden="true"></i> What is runtime if the array is already in sorted order?
+                      <li class="fragment roll-in" style="list-style: none;"> <i class="fa fa-question-circle" aria-hidden="true"></i> Correctness?
+                    </ul>
+                  </section>
+                  <section data-background-video="figures/compare_sorts.mp4" data-background-size="contain" data-background-video-loop=true>
+                  </section>
+                  <section>
+                    <h2>Correctness</h2>
+                    <ul>
+                      <li class="fragment roll-in" style="list-style: none;"> We can prove <em>correctness</em> by using the following loop invariant:
+                      <li class="fragment roll-in"> At the start of each iteration of the for loop, the subarray <code>A[0:i]</code> is a max-heap containing the <code>i</code> smallest elements of <code>A[0:n]</code> and the subarray <code>A[i..n]</code> contains the <code>n-i</code> largest elements of <code>A[0:n]</code> in sorted order.
+                    </ul>
+                  </section>
+                </section>
+                <section>
+                  <section data-background="figures/penguins_fly.gif">
+                    <h2 style="text-shadow: 4px 4px 4px #002b36; color: #f1f1f1; margin-left: -30%; margin-top: -35%;">priority queue</h2>
+                  </section>
+                  <section>
+                    <h2>Priority Queues</h2>
+                    <blockquote style="background-color: #93a1a1; color: #fdf6e3; width:100%; text-align:left;" class="fragment roll-in" >
+                      A Priority Queue is an ADT for a set $S$ which supports the
+                      following operations:
+                    </blockquote>
+                    <ul>
+                      <li class="fragment roll-in"><code>Insert(S,x)</code>: inserts x into the set S
+                      <li class="fragment roll-in"><code>Maximum(S)</code>: returns the maximum element in S
+                      <li class="fragment roll-in"><code>Extract-Max(S)</code>: removes and returns the element of $S$ with the largest key
+                      <li class="fragment
+                        roll-in"><code>Increase-Key(S,x,k)</code>:
+                        increases the value of $x$’s key to the new
+                        value $k$ ($k$ is assumed to be as large as
+                        $x$’s current key)
+                      <li class="fragment roll-in" style="list-style: none;"> (can also have an analagous min-priority queue)
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Applications of Priority Queue</h2>
+                    <ul>
+                      <li class="fragment roll-in">Application: Scheduling jobs on a workstation
+                      <li class="fragment roll-in">Priority Queue holds jobs to be performed and their priorities
+                      <li class="fragment roll-in">When a job is finished or interrupted, highest-priority job is
+chosen using <code>Extract-Max</code>
+                      <li class="fragment roll-in">New jobs can be added using <code>Insert</code>
+                      <li class="fragment roll-in" style="list-style: none;">(note: an application of a min-priority queue is scheduling events in a simulation)
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Applications of Priority Queue</h2>
+                    <ul>
+                      <li class="fragment roll-in"> Dijkstra’s Shortest Path Algorithm
+                      <li class="fragment roll-in"> Prim’s spanning tree algorithm
+                      <li class="fragment roll-in"> Artificial Intelligence : A* Search Algorithm
+                      <li class="fragment roll-in"> Operating systems
+                      <li class="fragment roll-in">  Optimization problems
+                      <li class="fragment roll-in">  Robotics
+                      <li class="fragment roll-in">  Event-driven simulations
+                      <li class="fragment roll-in">  Medical systems
+                    </ul>
+                    <aside class="notes">
+                    Dijkstra’s Shortest Path Algorithm using priority queue: When the graph is stored in the form of adjacency list or matrix, priority queue can be used to extract minimum efficiently when implementing Dijkstra’s algorithm.
+Prim’s algorithm: It is used to implement Prim’s Algorithm to store keys of nodes and extract minimum key node at every step. Data compression : It is used in Huffman codes which is used to compresses data.
+Artificial Intelligence : A* Search Algorithm : The A* search algorithm finds the shortest path between two vertices of a weighted graph, trying out the most promising routes first.
+The priority queue (also known as the fringe) is used to keep track of unexplored routes, the one for which a lower bound on the total path length is smallest is given highest priority.
+Heap Sort : Heap sort is typically implemented using Heap which is an implementation of Priority Queue.
+Operating systems: It is also used in Operating System for load balancing (load balancing on server), interrupt handling.
+Optimization problems: Priority Queue is used in optimization problems such as Huffman coding, Kruskal’s Algorithm and Prim’s Algorithm
+Robotics: Priority Queue is used in robotics to plan and execute tasks in a priority-based manner.
+Event-driven simulations: Priority queues are used in event-driven simulations, such as network simulations, to determine which events should be processed next.
+Medical systems: Priority queues are used in medical systems, such as triage systems in emergency departments, to prioritize patients based on the urgency of their condition.
+                    </aside>
+                  </section>
+                  <section>
+                    <h2>Implementation</h2>
+                    <ul>
+                      <li class="fragment roll-in">A Priority Queue can be implemented using heaps
+                      <li class="fragment roll-in">We’ll show how to implement each of these four functions
+                        using heaps
+                        <ol>
+                          <li> <code>Insert(S,x)</code>
+                          <li> <code>Maximum(S)</code>
+                          <li> <code>Extract-Max(S)</code>
+                          <li> <code>Increase-Key(S,x,k)</code>
+                        </ol>
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Heap-Maximum</h2>
+                    <pre class="python" style="font-size:32pt;"><code data-trim data-noescape data-line-numbers>
+def heap_maximum(A):
+    return A[0]
+                    </code></pre>
+                  </section>
+
+                  <section>
+                    <h2>Heap-Extract-Max (idea)</h2>
+                    <pre class="python" style="font-size:28pt; width:110%;"><code data-trim data-noescape data-line-numbers="2-3|4|5|6|7">
+def heap_extract_max(A):
+    if heap_size < 1:
+        raise Exception("The queue is empty")
+    max = A[0]               # this is max
+    A[0] = A[heap_size(A)-1] # set last first
+    heap_size -= 1           # reduce heap
+    max_heapify(A, 0)        # rebalance
+    return max
+                    </code></pre>
+                  </section>
+                  <section>
+                    <h2>Heap-Extract-Max (working code)</h2>
+                    <pre class="python" style="font-size:24pt; width:110%;"><code data-trim data-noescape data-line-numbers>
+def heap_extract_max(A, heap_size=None):
+    if heap_size is None:
+        heap_size = len(A)
+    if heap_size < 1:
+        raise Exception("The queue is empty")
+    max = A[0]
+    A[0] = A[heap_size-1]
+    heap_size -= 1
+    max_heapify(A, 0, heap_size)
+    return max, heap_size # max and new heap size
+                    </code></pre>
+                  </section>
+                  <section>
+                    <h2>Heap-Increase-Key</h2>
+                    <pre class="python" style="font-size:26pt; width:110%;"><code data-trim data-noescape data-line-numbers>
+def heap_increase_key(A, i, key):
+    if key < A[i]:
+        raise Exception("The new key\
+                         is smaller \
+                         than the current")
+    A[i] = key
+    while i > 0 and A[parent(i)] < A[i]:
+        swap(A, i, parent(i))
+        i = parent(i)
+                    </code></pre>
+                  </section>
+                  <section data-background="figures/increase_key.svg" data-background-size="contain">
+                  </section>
+                  <section>
+                    <h2>Heap-Insert</h2>
+                    <pre class="python" style="font-size:26pt; width:110%;"><code data-trim data-noescape data-line-numbers>
+def heap_insert(A, key, heap_size=None):
+    if heap_size is None or heap_size >= len(A):
+        raise Exception("Heap is full")
+    heap_size += 1
+    A[heap_size] = np.iinfo(A[0]).min
+    heap_increase_key(A, heap_size, key)
+                    </code></pre>
+                  </section>
+
+                  <section>
+                    <h2>Analysis</h2>
+                    <ul>
+                      <li class="fragment roll-in"><code>heap_maximum</code> takes $O(1)$ time
+                      <li class="fragment roll-in"><code>heap_extract_max</code> takes $O(\log n)$
+                      <li class="fragment roll-in"><code>heap_increase_key</code> takes $O(\log n)$
+                      <li class="fragment roll-in"><code>heap_insert</code> takes $O(\log n)$
+                      <li class="fragment roll-in" style="list-style: none;"> <i class="fa fa-question-circle" aria-hidden="true"></i> Correctness?
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>In Class Exercise <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100"
+                                               src="figures/dolphin_swim.webp" alt="dolphin">
+                    </h2>
+                    <ul>
+<li class="fragment roll-in">Imagine you have a min-heap with the following operations
+  defined and taking $O(\log n)$:
+  <ul>
+    <li> (key,data) <code>heap_extract_min(A)</code>
+    <li> <code>heap_insert(A,key,data)</code>
+  </ul>
+<li class="fragment roll-in">Now assume you’re given $k$ sorted lists, each of length $n/k$
+<li class="fragment roll-in">Use this min-heap to give a $O(n \log k)$ algorithm for merging
+these $k$ lists into one sorted list of size $n$.
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>In Class Exercise <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100"
+                                               src="figures/dolphin_swim.webp" alt="dolphin">
+                    </h2>
+                    <ul>
+                      <li class="fragment roll-in" style="list-style:none;"> <span class="fa-li"><i class="fa-regular fa-circle-question"></i></span>What is the high level idea for solving this problem?
+                      <li class="fragment roll-in" style="list-style:none;"> <span class="fa-li"><i class="fa-regular fa-circle-question"></i></span>What is the pseudocode for solving the problem?
+                      <li class="fragment roll-in" style="list-style:none;"> <span class="fa-li"><i class="fa-regular fa-circle-question"></i></span>What is the runtime analysis?
+                      <li class="fragment roll-in" style="list-style:none;"> <span class="fa-li"><i class="fa-regular fa-circle-question"></i></span>What would be an appropriate loop invariant for proving
+                        correctness of the algorithm?
+                    </ul>
+                    <aside class="notes">
+                      The main thrust of the correctness proof is that the least element remaining is always the one to be extracted. The key invariant in support of this claim is that the priority queue contains, for each list, the least element remaining from that list. From this invariant, it follows that, since the least element remaining is also the least element remaining from its list, it is returned by extract-min.
+                    </aside>
+                  </section>
+                  <section>
+                    <h2>Assigned reading</h2>
+                    <row>
+                      <col60>
+                        <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="80%"
+                             src="figures/cormen_algs.jpeg" alt="Cormen Algs">
+                      </col60>
+                      <col40>
+                        Chapter 7: Quicksort<p>
+                      </col40>
+                    </row>
+                  </section>
+
+                </section>
+
+                <section>
+                  <section data-background="figures/qsort_f.gif" data-background-size="contain" data-vertical-align-top>
+                    <h1>Quicksort</h1>
+                  </section>
+                  <section>
+                    <h2>Quicksort</h2>
+                    <ul>
+<li class="fragment roll-in">Based on divide and conquer strategy
+<li class="fragment roll-in">Worst case is $\Theta(n^2)$
+<li class="fragment roll-in">Expected running time is $\Theta(n \log n)$
+<li class="fragment roll-in">An In-place sorting algorithm
+<li class="fragment roll-in">Almost always the fastest sorting algorithm
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Quicksort</h2>
+                    <ul>
+                      <li class="fragment roll-in"><b>Divide:</b> Pick
+some element $A[q]$ of the array $A$ and partition $A$ into two arrays
+$A_1$ and $A_2$ such that every element in $A_1 \leq A[q]$, and every
+element in $A_2 > A[p]$
+                          <li class="fragment roll-in"><b>Conquer:</b>
+                          Recursively sort $A_1$ and $A_2$
+                          <li class="fragment roll-in"><b>Combine:</b>
+                          $A_1$ concatenated with $A[q]$ concatenated
+                          with $A_2$ is now the sorted version of $A$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>The Algorithm (pythonic)</h2>
+                    <pre class="python" style="font-size:20pt; width:110%;"><code data-trim data-noescape data-line-numbers>
+def quicksort(seq):
+    if len(seq) <= 1: return seq  # Base case
+    lo, pi, hi = partition(seq)   # pivot
+    # Sort lo and hi separately
+    return quicksort(lo) + [pi] + quicksort(hi)
+
+def partition(seq):
+    pi, seq = seq[0], seq[1:]        # Pick and remove the pivot
+    lo = [x for x in seq if x <= pi] # All the small elements
+    hi = [x for x in seq if x > pi]  # All the large ones
+    return lo, pi, hi                # pi is "in the right place"
+
+                    </code></pre>
+                  </section>
+                  <section data-vertical-align-top>
+                    <h2>The Algorithm</h2>
+                    <pre class="python" style="font-size:20pt"><code data-trim data-noescape data-line-numbers>
+def qsort(A, first, last):
+    if first < last-1:
+        q = partition(A, first, last)
+        qsort(A, first, q)
+        qsort(A, q+1, last)
+
+def partition(A, first, last):
+    x = A[last-1]
+    i = first-1
+    for j in range(first, last-1):
+        if A[j] <= x:
+            i += 1
+            swap(A, i, j)
+    swap(A,i+1,last-1)
+    return i+1
+                    </code></pre>
+                  </section>
+                  <section>
+                    <h2>Correctness of <code>partition</code></h2>
+                    <ul>
+<li class="fragment roll-in" style="list-style:none;">Basic idea: The array is partitioned into four regions, <code>pi</code> is the
+pivot
+<li class="fragment roll-in"><code>lo</code>: Region that is less than or equal to <code>pi</code>
+<li class="fragment roll-in"><code>hi</code>: Region that is greater than <code>pi</code>
+<li class="fragment roll-in"><code>seq</code>: Unprocessed region
+<li class="fragment roll-in"><code>pi</code>: Region that contains <code>pi</code> only
+<li class="fragment roll-in" style="list-style:none;"> Regions <code>lo</code> and <code>hi</code> are growing and <code>seq</code> is shrinking
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Loop invariant for <code>partition</code></h2>
+                    <row>
+                      <col50>
+                        <ul>
+                          <li class="fragment roll-in" style="list-style:none;"> At the beginning of each iteration of the for loop, for any index $k$:
+                            <ol>
+                              <li class="fragment roll-in"> If $first \leq k \leq i$ then $A[k] \leq x$
+                              <li class="fragment roll-in"> If $i + 1 \leq k \leq j − 1$ then $A[k] > x$
+               <li class="fragment roll-in"> If $k = last-1$ then $A[k] = x$
+</ol>
+</ul>
+</col50>
+<col50>
+                    <pre class="python" style="font-size:14pt"><code data-trim data-noescape data-line-numbers>
+def qsort(A, first, last):
+    if first < last-1:
+        q = partition(A, first, last)
+        qsort(A, first, q)
+        qsort(A, q+1, last)
+
+def partition(A, first, last):
+    x = A[last-1]
+    i = first-1
+    for j in range(first, last-1):
+        if A[j] <= x:
+            i += 1
+            swap(A, i, j)
+    swap(A,i+1,last-1)
+    return i+1
+                    </code></pre>
+</col50>
+  </row>
+</section>
+<section>
+  <h2><i class="fa-solid fa-terminal"></i> a Demo in the terminal </h2>
+  </section>
+                  <section>
+                    <h2>In Class Exercise <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100"
+                                               src="figures/dolphin_swim.webp" alt="dolphin">
+                    </h2>
+                    <ul>
+                      <li class="fragment roll-in">Show Initialization for this loop invariant
+<li class="fragment roll-in">Show Termination for this loop invariant
+<li class="fragment roll-in">Show Maintenance for this loop invariant:
+  <ul>
+<li class="fragment roll-in"> Show Maintenance when $A[j] > x$
+<li class="fragment roll-in"> Show Maintenance when $A[j] \leq x$
+</ul>
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Analysis</h2>
+                    <ul>
+<li class="fragment roll-in">The function Partition takes $O(n)$ time. Why?
+<li class="fragment roll-in" style="list-style:none;"> <span class="fa-li"><i class="fa-regular fa-circle-question"></i></span>  What is the runtime of Quicksort?
+<li class="fragment roll-in">A: It depends on the size of the two lists in the recursive calls
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Best Case</h2>
+                    <ul>
+<li class="fragment roll-in">In the best case, the partition always splits the original list
+into two lists of half the size
+<li class="fragment roll-in">Then we have the recurrence $T (n) = 2T (n/2) + \Theta(n)$
+<li class="fragment roll-in">This is the same recurrence as for mergesort and its solution
+is $T(n) = O(n \log n)$
+
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Worst Case</h2>
+                    <ul>
+<li class="fragment roll-in">In the worst case, the partition always splits the original list
+into a singleton element and the remaining list
+<li class="fragment roll-in">Then we have the recurrence $T(n) = T(n − 1) + T (1) + \Theta(n)$,
+which is the same as $T(n) = T (n − 1) + \Theta(n)$
+<li class="fragment roll-in">The solution to this recurrence is $T(n) = O(n^2)$. Why?
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Average Case Intuition</h2>
+                    <ul>
+<li class="fragment roll-in">Even if the recurrence tree is somewhat unbalanced, Quicksort does well
+<li class="fragment roll-in">Imagine we always have a 9-to-1 split
+<li class="fragment roll-in">Then we get the recurrence $T (n) \leq T (9n/10) + T (n/10) + cn$
+<li class="fragment roll-in">Solving this recurrence (with annihilators or recursion tree)
+gives $T(n) = \Theta(n \log n)$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Wrap Up</h2>
+                    <ul>
+<li class="fragment roll-in">Take away: Both the worst case, best case, and average case
+analysis of algorithms can be important.
+<li class="fragment roll-in">You will (likely) have a hw problem on the “average case intuition”
+for deterministic quicksort
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>Assigned reading</h2>
+                    <row>
+                      <col60>
+                        <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="80%"
+                             src="figures/cormen_algs.jpeg" alt="Cormen Algs">
+                      </col60>
+                      <col40>
+                        complete Chapter 7: Quicksort<p>
+                      </col40>
+                    </row>
+                  </section>
+                </section>
+
+                <section>
+                  <h2>See you</h2>
+                  Monday February $13^{th}$
+                </section>
+
+              </div>
+
+            </div>
+
+            <script src="dist/reveal.js"></script>
+
+            <!-- <link rel="stylesheet" href="lib/css/monokai.css"> -->
+            <script src="plugin/highlight/highlight.js"></script>
+            <script src="plugin/math/math.js"></script>
+            <script src="plugin/chalkboard/plugin.js"></script>
+            <script src="plugin/notes/notes.js"></script>
+            <script src="plugin/zoom/zoom.js"></script>
+            <!-- <script src="node_modules/reveal.js-menu/menu.js"></script> -->
+            <script>
+              // Full list of configuration options available at:
+              // https://github.com/hakimel/reveal.js#configuration
+              let notes = document.querySelectorAll('aside.notes');
+              notes.forEach(n => {
+	      let html = n.innerHTML;
+	      html = html.trim().replace(/\n/g, '<br/>');
+	      n.innerHTML = html;
+              });
+              Reveal.initialize({
+                  // history: true,
+                  hash: true,
+                  margin: 0.01,
+                  minScale: 0.01,
+                  maxScale: 1.23,
+                  menu: {
+                      themes: true,
+                      openSlideNumber: true,
+                      openButton: false,
+                  },
+                  customcontrols: {
+                      slideNumberCSS : 'position: fixed; display: block; right: 90px; top: auto; left: auto; width: 50px; bottom: 30px; z-index: 31; font-family: Helvetica, sans-serif; font-size:  12px; line-height: 1; padding: 5px; text-align: center; border-radius: 10px; background-color: rgba(128,128,128,.5)',
+                      controls: [
+                          { icon: '<i class="fa fa-caret-left"></i>',
+                            css: 'position: fixed; right: 60px; bottom: 30px; z-index: 30; font-size: 24px;',
+                            action: 'Reveal.prev(); return false;'
+                          },
+                          { icon: '<i class="fa fa-caret-right"></i>',
+                            css: 'position: fixed; right: 30px; bottom: 30px; z-index: 30; font-size: 24px;',
+                            action: 'Reveal.next(); return false;'
+                          }
+                      ]
+                  },
+                  chalkboard: {
+                      boardmarkerWidth: 1,
+                      chalkWidth: 2,
+                      chalkEffect: 1,
+                      slideWidth: Reveal.width,
+                      slideHeight: Reveal.height,
+                      toggleNotesButton: false,
+                      toggleChalkboardButton: false,
+                      //src: "chalkboards/chalkboard_em2.json",
+                      readOnly: false,
+                      theme: "blackboard",
+                      eraser: { src: "plugin/chalkboard/img/sponge.png", radius: 30},
+                  },
+
+                  math: {
+                      mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
+                      config: 'TeX-AMS_SVG-full',
+                      // pass other options into `MathJax.Hub.Config()`
+                      TeX: {
+                          Macros: {
+        	              RR: '\\mathbb{R}',
+        	              PP: '\\mathbb{P}',
+        	              EE: '\\mathbb{E}',
+        	              NN: '\\mathbb{N}',
+        	              vth: '\\vec{\\theta}',
+                              loss: '{\\cal l}',
+                              hclass: '{\\cal H}',
+                              CD: '{\\cal D}',
+                              def: '\\stackrel{\\text{def}}{=}',
+                              pag: ['\\text{pa}_{{\cal G}^{#1}}(#2)}', 2],
+                              vec: ['\\boldsymbol{\\mathbf #1}', 1],
+        	              set: [ '\\left\\{#1 \\; : \\; #2\\right\\}', 2 ],
+                              bm: ['\\boldsymbol{\\mathbf #1}', 1],
+                              argmin: ['\\operatorname\{arg\\,min\\,\}'],
+                              argmax: ['\\operatorname\{arg\\,max\\,\}'],
+                              prob: ["\\mbox{#1$\\left(#2\\right)$}", 2],
+                              floor: ["\\lfloor #1 \\rfloor",1]
+                          },
+                          loader: {load: ['[tex]/color']},
+                          extensions: ["color.js"],
+                          tex: {packages: {'[+]': ['color']}},
+                          svg: {
+                              fontCache: 'global'
+                          }
+                      }
+                  },
+
+                  plugins: [ RevealMath, RevealChalkboard, RevealHighlight, RevealNotes, RevealZoom ],
+
+              });
+
+              Reveal.configure({ fragments: true }); // set false when developing to see everything at once
+              Reveal.configure({ slideNumber: true });
+              //Reveal.configure({ history: true });
+              Reveal.configure({ slideNumber: 'c / t' });
+              Reveal.addEventListener( 'darkside', function() {
+                  document.getElementById('theme').setAttribute('href','dist/theme/aml_dark.css');
+              }, false );
+              Reveal.addEventListener( 'brightside', function() {
+                  document.getElementById('theme').setAttribute('href','dist/theme/aml.css');
+              }, false );
+
+            </script>
+
+            <style type="text/css">
+              /* 1. Style header/footer <div> so they are positioned as desired. */
+              #header-left {
+                  position: absolute;
+                  top: 0%;
+                  left: 0%;
+              }
+              #header-right {
+                  position: absolute;
+                  top: 0%;
+                  right: 0%;
+              }
+              #footer-left {
+                  position: absolute;
+                  bottom: 0%;
+                  left: 0%;
+              }
+            </style>
+
+            <!-- // 2. Create hidden header/footer -->
+            <div id="hidden" style="background; display:none;">
+              <div id="header">
+                <div id="header-left"><h4>CS4520</h4></div>
+                <div id="header-right"><h4>Algorithms</h4></div>
+                <div id="footer-left">
+                  <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100"
+                       src="figures/flowchart.png" alt="robot learning">
+                </div>
+              </div>
+            </div>
+
+
+            <script type="text/javascript">
+              // 3. On Reveal.js ready event, copy header/footer <div> into each `.slide-background` <div>
+              var header = $('#header').html();
+              if ( window.location.search.match( /print-pdf/gi ) ) {
+                  Reveal.addEventListener( 'ready', function( event ) {
+                      $('.slide-background').append(header);
+                  });
+              }
+              else {
+                  $('div.reveal').append(header);
+              }
+            </script>
+
+  </body>
+</html>
