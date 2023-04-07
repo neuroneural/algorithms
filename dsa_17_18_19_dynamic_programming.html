@@ -1,0 +1,1479 @@
+ <!Doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="css/fontawesome-free-6.2.1-web/css/all.css" rel="stylesheet">
+
+    <!-- <script src="lib/colorbrewer.v1.min.js" charset="utf-8"></script> -->
+    <!-- <script src="lib/colorStringStandalone.js" charset="utf-8"></script> -->
+    <script type="text/javascript" src="lib/jquery-2.2.4.min.js"></script>
+
+    <title>Design & Analysis: Algorithms</title>
+
+    <meta name="description" content="CS4851/6851 GSU class">
+    <meta name="author" content="Sergey M Plis">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+    <!-- <link rel="stylesheet" href="lib/css/zenburn.css"> -->
+    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="dist/theme/aml.css" id="theme">
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.scss';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+                    <script type="module" src="js/wc_code/wc-code.js"></script>
+
+    <!--Popup Window CSS-->
+    <style media="screen">
+		*,*:before,*:after{
+		    padding: 0;
+		    margin: 0;
+		    box-sizing: border-box;
+		}
+
+		.popup{
+		    background-color: #fdf6e3;
+		    width: 80%;
+		    padding: 30px 40px;
+		    position: absolute;
+		    transform: translate(-50%,-50%);
+		    left: 50%;
+		    top: 50%;
+		    border-radius: 8px;
+		    font-family: "Poppins",sans-serif;
+		    display: none;
+		    z-index: 1000;
+		    text-align: left;
+		    max-height: 90%;
+            overflow: scroll;
+		}
+		.popup button{
+		    display: block;
+		    margin:  0 0 20px auto;
+		    background-color: transparent;
+		    font-size: 30px;
+		    color: #fdf6e3;
+		    background: #03549a;
+		    border-radius: 100%;
+		    width: 40px;
+		    height: 40px;
+		    border: none;
+		    outline: none;
+		    cursor: pointer;
+		}
+    </style>
+  </head>
+
+
+  <body>
+        <div class="popup" id="div4code.1">
+            <!-- <button id="close">&times;</button> -->
+		    <wc-code-zone mode="python">
+		      <wc-code style="font-size: 14pt;" theme="monokai" mode="python" file-name="python-file.py">
+		        <script type="wc-content">
+from time import time
+from functools import wraps
+def dp_fib(n, F):
+    if n < 2: return n
+    if n not in F:
+        F[n] = dp_fib(n-1, F) + dp_fib(n-2, F)
+    return F[n]
+
+
+def memoize(func):
+    cache = {}                        # Stored subproblem solutions
+
+    @wraps(func)                      # Make wrap look like func
+    def wrap(*args):                  # The memoized wrapper
+        n = args[0]                   # n-th Fibonacci
+        if n not in cache:            # Not already computed?
+            cache[n] = func(*args)    # Compute & cache the solution
+        return cache[n]
+    return wrap
+
+@memoize
+def fib(n):
+    if n < 2: return n
+    return fib(n-1) + fib(n-2)
+
+st = time()
+f = fib(10)
+print('Took %0.3f seconds' % (time() - st))
+print(f)
+	                </script>
+		      </wc-code>
+		    </wc-code-zone>
+        </div>
+        <div class="popup" id="div4code.2">
+            <!-- <button id="close">&times;</button> -->
+		    <wc-code-zone mode="python">
+		      <wc-code style="font-size: 14pt;" theme="monokai" mode="python" file-name="python-file.py">
+		        <script type="wc-content">
+from time import time
+
+def edit_distance_rec(x, y):
+    if len(x) == 0: return len(y)
+    if len(y) == 0: return len(x)
+    delt = int(x[-1] != y[-1])
+    diag = edit_distance_rec(x[:-1], y[:-1]) + delt
+    vert = edit_distance_rec(x[:-1], y) + 1
+    horz = edit_distance_rec(x, y[:-1]) + 1
+    return min(diag, vert, horz)
+
+
+st = time()
+dist = edit_distance_rec('Shakespeare', 'shake spear')
+print('Took %0.3f seconds' % (time() - st))
+print(dist)
+	                </script>
+		      </wc-code>
+		    </wc-code-zone>
+        </div>
+        <div class="popup" id="div4code.3">
+            <!-- <button id="close">&times;</button> -->
+		    <wc-code-zone mode="python">
+		      <wc-code style="font-size: 14pt;" theme="monokai" mode="python" file-name="python-file.py">
+		        <script type="wc-content">
+from time import time
+import numpy as np
+
+def edit_distance_rec(x, y):
+    if len(x) == 0: return len(y)
+    if len(y) == 0: return len(x)
+    delt = int(x[-1] != y[-1])
+    diag = edit_distance_rec(x[:-1], y[:-1]) + delt
+    vert = edit_distance_rec(x[:-1], y) + 1
+    horz = edit_distance_rec(x, y[:-1]) + 1
+    return min(diag, vert, horz)
+
+def edit_distance_DP(x, y):
+    """ Calculate edit distance between sequences x and y using
+        matrix dynamic programming.  Return distance. """
+    # initialize an empty matrix
+    E = np.zeros((len(x)+1, len(y)+1), dtype=int)
+    # Fill in the values for the empty sub-strings
+    E[0, 1:] = range(1, len(y)+1)
+    E[1:, 0] = range(1, len(x)+1)
+    for i in range(1, len(x)+1):
+        for j in range(1, len(y)+1):
+            delt = int(x[i-1] != y[j-1])
+            E[i, j] = min(E[i-1, j-1]+delt, E[i-1, j]+1, E[i, j-1]+1)
+    return E[len(x), len(y)]
+
+# 'GCGTATGCACGC', 'GCTATGCCACGC'
+st = time()
+dist1 = edit_distance_rec('Shakespeare', 'shake spear')
+print('Recursive took %0.5f seconds' % (time() - st))
+st = time()
+dist2 = edit_distance_DP('Shakespeare', 'shake spear')
+print('DP took %0.5f seconds' % (time() - st))
+print(dist1, dist2)
+	                </script>
+		      </wc-code>
+		    </wc-code-zone>
+        </div>
+        <div class="popup" id="div4code.4">
+            <!-- <button id="close">&times;</button> -->
+		    <wc-code-zone mode="python">
+		      <wc-code style="font-size: 14pt;" theme="monokai" mode="python" file-name="python-file.py">
+		        <script type="wc-content">
+from time import time
+from functools import wraps
+
+def memoize(func):
+    cache = {}                        # Stored subproblem solutions
+
+    @wraps(func)                      # Make wrap look like func
+    def wrap(*args):                  # The memoized wrapper
+        key = args[0]+" | "+args[1]        # pair of strings as the key
+        if key not in cache:            # Not already computed?
+            cache[key] = func(*args)    # Compute & cache the solution
+        return cache[key]
+    return wrap
+
+@memoize
+def edit_distance_rec(x, y):
+    if len(x) == 0: return len(y)
+    if len(y) == 0: return len(x)
+    delt = int(x[-1] != y[-1])
+    diag = edit_distance_rec(x[:-1], y[:-1]) + delt
+    vert = edit_distance_rec(x[:-1], y) + 1
+    horz = edit_distance_rec(x, y[:-1]) + 1
+    return min(diag, vert, horz)
+
+# 'GCGTATGCACGC', 'GCTATGCCACGC'
+st = time()
+dist = edit_distance_rec('Shakespeare', 'shake spear')
+print('Took %0.3f seconds' % (time() - st))
+print(dist)
+	                </script>
+		      </wc-code>
+		    </wc-code-zone>
+        </div>
+
+    <div class="reveal">
+      <!-- In between the <div="reveal"> and the <div class="slides">-->
+          <!-- <header style="position: absolute; top: 10px; left: 100px; z-index: 500; font-size:100px;background-color: rgba(0,0,0,0); text-align: center !important"></header>  -->
+          <!-- In between the <div="reveal"> and the <div class="slides">-->
+              <!-- Any section element inside of this container is displayed as a slide -->
+              <div class="slides">
+		<section>
+		  <section>
+		    <p>
+		      <h2>Design & Analysis: Algorithms</h2>
+                      <h2>17: Dynamic Programming</h2>
+		    <p>
+		  </section>
+                  <section data-fullscreen>
+                    <h3>Schedule</h3>
+
+                    <row style="width: 100%">
+                      <col50>
+                        <table style="font-size:14px">
+                          <tr>
+                            <th>#</th>
+                            <th>date</th>
+                            <th>topic</th>
+                            <th>description</th>
+                          </tr>
+                          <tr><td>1</td>
+                            <td> 09-Jan-2023 </td>
+                            <td> Introduction and Introductions </td>
+                            <td> </td>
+                          </tr>
+                          <tr><td>2</td>
+                            <td> 11-Jan-2023 </td>
+                            <td> Basics of Algorithm Analysis </td>
+                            <td> </td>
+                          </tr>
+                          <tr style='background-color: #FBEEC2;'><td>    </td><td> 16-Jan-2023 </td><td> <em>Holiday</em>     </td><td>              </td></tr>
+                          <tr><td>  3 </td><td> 18-Jan-2023 </td><td> Asymptotic Analysis         </td><td> hw1        </td></tr>
+                          <tr><td>  4 </td><td> 23-Jan-2023 </td><td> Recurrence Relations: Substitution </td><td>      </td></tr>
+                          <tr><td>  5 </td><td> 25-Jan-2023 </td><td> Recursion Trees and the Master Theorem     </td><td>  </td></tr>
+                          <tr><td>  6 </td><td> 30-Jan-2023  </td><td> Recurrence Relations: Annihilators    </td></td></td><td> </td></tr>
+<tr><td>  7 </td><td> 1-Feb-2023  </td><td> Recurrence Relations: Transformations  </td><td> hw2, hw1 <i class="fa-solid fa-calendar-check"></i> </td></tr>
+<tr><td>  8 </td><td> 6-Feb-2023  </td><td> Heap & Invariants</td><td>        </td></tr>
+<tr><td>  9 </td><td> 8-Feb-2023 </td><td> Queue & Qsort                      </td><td>          </td></tr>
+<tr><td> 10 </td><td> 13-Feb-2023 </td><td> Analyzing RQsort </td><td>             </td></tr>
+<tr><td>  11 </td><td> 15-Feb-2023  </td><td>  Comparison-based Sorting Analysis  </td><td> hw3, hw2 <i class="fa-solid fa-calendar-check"></i> </td></tr>
+<tr><td> 12 </td><td> 20-Feb-2023 </td><td> Dictionary</td><td>             </td></tr>
+<tr><td> 13 </td><td> 22-Feb-2023 </td><td> Open Address Hashing & Refresher                </td><td>     </td></tr>
+<tr  style='background-color: #E5DDCB;'><td> 14 </td><td> 27-Feb-2023 </td><td> Midterm exam           </td><td>   <em>midpoint</em>         </td></tr>
+<tr><td> 15 </td><td> 1-Mar-2023  </td><td>   Binary Search Trees I   </td><td>    </td></tr>
+<tr><td> 16 </td><td> 6-Mar-2023  </td><td> Binary Search Trees II </td><td>hw4, hw3 <i class="fa-solid fa-calendar-check"></i> </td></tr>
+<tr><td> 17 </td><td> 8-Mar-2023  </td><td>     Balanced Binary Search Trees                </td><td>   </td></tr>
+</table>
+</col50>
+<col50>
+  <table style="font-size:16px; vertical-align: top;">
+    <tr>
+      <th>#</th>
+      <th>date</th>
+      <th>topic</th>
+      <th>description</th>
+    </tr>
+    <tr style='background-color: #FBEEC2;'><td>  </td><td> 13-Mar-2023 </td><td> <em>Spring Break<em>       </td><td> </td></tr>
+    <tr style='background-color: #FBEEC2;'><td>  </td><td> 15-Mar-2023 </td><td> <em>Spring Break<em>         </td><td>             </td></tr>
+    <tr><td>  18  </td><td> 20-Mar-2023 </td><td> Dynamic Programming  I </td><td>  </td></tr>
+    <tr><td>  19  </td><td> 22-Mar-2023 </td><td> Dynamic Programming II </td><td>  </td></tr>
+    <tr style='background-color: #E0E4CC;'><td> 20 </td><td> 27-Mar-2023 </td><td> DP 2.5 +  Greedy Algorithms </td><td> hw5, hw4 <i class="fa-solid fa-calendar-check"></i> <i class='fa fa-map-marker' style='color: #FA6900;'></i> </td></tr>
+    <tr><td> 21 </td><td> 29-Mar-2023 </td><td> Graphs and Traversals  </td><td></td></tr>
+    <tr><td> 22 </td><td> 3-Apr-2023 </td><td> </td><td>          </td></tr>
+    <tr><td> 23 </td><td> 5-Apr-2023  </td><td>  </td><td>             </td></tr>
+    <tr><td> 24 </td><td> 10-Apr-2023  </td><td>  </td><td> hw6, hw5 <i class="fa-solid fa-calendar-check"></i>            </td></tr>
+    <tr><td> 25 </td><td> 12-Apr-2023 </td><td> </td><td>   </td></tr>
+    <tr><td> 26 </td><td> 17-Apr-2023 </td><td> </td><td>        </td></tr>
+    <tr><td> 27 </td><td> 19-Apr-2023 </td><td> </td><td>  </td></tr>
+    <tr><td> 28 </td><td> 24-Apr-2023 </td><td>  </td><td> hw6 <i class="fa-solid fa-calendar-check"></i>      </td></tr>
+    <tr  style='background-color: #E5DDCB;'><td> 29 </td><td> 26-Apr-2023 </td><td> Final exam </td><td>             </td></tr>
+    <tr style='color: #ccd5d8ff;'><td> 30 </td><td> 2-May-2022 </td><td> </td><td>         </td></tr>
+    <tr style='color: #ccd5d8ff;'><td> 31 </td><td> 4-May-2022  </td><td> </td><td>             </td></tr>
+  </table>
+</col50>
+</row>
+</section>
+
+	          <section>
+		    <h3>Outline of the lecture</h3>
+                    <ul>
+                      <li class="fragment roll-in"> Intro to Dynamic Programming
+                      <li class="fragment roll-in"> String Alignment
+                      <li class="fragment roll-in"> Matrix Chain Multiplication
+		    </ul>
+                  </section>
+                </section>
+
+
+<section>
+  <section data-background="figures/maze.gif" data-background-size="cover" data-background-transition="zoom">
+    <h2 style="color: #f1f1f1;">Intro to Dynamic Programming</h2>
+    <blockquote style="background-color: #93a1a1; color: #fdf6e3; font-size: 38px; width: 110%; text-align: left;">
+      “Those who cannot remember the past are doomed to repeat
+      it.”<br>
+      - George Santayana, The Life of Reason, Book I: Introduction and Reason in Common Sense (1905)
+    </blockquote>
+  </section>
+    <section>
+      <h2></h2>
+      <row>
+        <col50>
+          <img src="figures/i-like-dynamic.jpg" alt="DP1" width="100%">
+        </img>
+        </col50>
+        <col50>
+          <img src="figures/braceyourself_DP.jpeg" alt="DP2" width="90%">
+        </img>
+        </col50>
+      </row>
+    </section>
+
+  <section>
+    <h2>What is Dynamic Programming?</h2>
+    <ul>
+      <li class="fragment roll-in">Dynamic Programming is basically “Divide and Conquer” with memorization
+      <li class="fragment roll-in"><b>Basic Trick is</b>: Don’t solve the same problem more than once!
+    </ul>
+  </section>
+
+  <section data-background="figures/change_my_mind_DP.png" data-background-size="contain" data-background-transition="zoom">
+  </section>
+
+  <section>
+    <h2>Fibonacci Example <i class="fa-solid fa-carrot" style="color: #ed9121;"></i></h2>
+    <row>
+      <col50 style="text-align: left; font-size: 22pt;" class="fragment roll-in">
+        Consider the following procedure for computing the $n^{th}$ Fibonacci number:
+        <pre class="python fragment roll-in" style="width: 100%; font-size: 18pt;"><code data-trim data-noescape data-line-numbers>
+def fib(n):
+    if n < 2: return n
+    return fib(n-1) + fib(n-2)
+        </code></pre>
+      </col50>
+      <col50>
+        <ul style="font-size: 22pt;">
+          <li class="fragment roll-in"> <i class="fa-regular fa-circle-question"></i> What is the runtime of Fib?
+          <li class="fragment roll-in">Except for recursive calls, the entire algorithm takes a
+            constant number of steps.
+          <li class="fragment roll-in" style="list-style: none;">If $T(n)$ is the run time of the
+            algorithm on input $n$, then we can say that:
+          <li class="fragment roll-in" style="list-style: none; font-size: 21pt;"> $T (0) = T (1) = 1$,
+          <li class="fragment roll-in" style="list-style: none; font-size: 20pt;"> $T (n) = T (n − 2) + T (n − 1) + 1$
+<li class="fragment roll-in">It’s easy to show by induction that $T (n) = 2F_{n+1} − 1$.
+        </ul>
+      </col50>
+    </row>
+
+  </section>
+                    <section>
+                    <h2>Runtime of <code>fib</code></h2>
+                    <ul>
+                      <li class="fragment roll-in">The recurrence is $T(0) = 1$, $T(1) = 1$, and $T (n) = T (n − 1) + T (n − 2) + 1$
+<li class="fragment roll-in">The annihilator
+for $T$ is $(\bm{L} − \phi)(\bm{L} − \hat\phi)(\bm{L} − 1)$, where $\phi = \frac{1+\sqrt{5}}{2}$ and $\hat\phi = \frac{1-\sqrt{5}}{2}$
+<li class="fragment roll-in">From “Lookup Table”, we see that the sequence $T$ must be of the form $< c_1 \phi^n + c_2 \hat\phi^n + c_3>$
+<li class="fragment roll-in">All we have left to do is solve for $c_1$, $c_2$, and $c_3$
+<li class="fragment roll-in">Can use the base cases to solve for these
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Finding the Constants</h2>
+                    <ul>
+                      <li class="fragment roll-in">We know $T = < c_1 \phi^n + c_2\hat\phi^n + c_3>$, where $\phi = \frac{1+\sqrt{5}}{2}$ and $\hat\phi = \frac{1-\sqrt{5}}{2}$
+                          <li class="fragment roll-in">We know
+                            \begin{align}
+                            T (0) &= c_1 + c_2 + c_3 = 1 \\
+                            T (1) &= c_1 \phi + c_2\hat\phi + c_3= 1 \\
+                            T (2) &= c_1 \phi^2 + c_2\hat{\phi}^2 + c_3= 3 \\
+                            \end{align}
+<li class="fragment roll-in">Follows, $c_1 = 1 + \frac{1}{\sqrt{5}}$, $c_2 = 1 -\frac{1}{\sqrt{5}}$, and $c_3 = -1$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>The Runtime</h2>
+                    <ul>
+<li class="fragment roll-in">The final explicit formula for $T(n)$ is thus: $$T(n) = \left(1 + \frac{1}{\sqrt{5}}\right)\phi^n + \left(1 - \frac{1}{\sqrt{5}}\right)\hat{\phi}^n - 1$$
+                    </ul>
+                    <div class="fragment roll-in" style="text-align:left;">
+                      This is $\Theta(\phi^n)$ for $\phi$ that is greater than 1.
+                    </div>
+                  </section>
+    <section data-background="figures/Fn_BAD.png" data-background-size="contain" data-background-transition="zoom">
+    <h1 style="text-shadow: 4px 4px 4px #002b36; color: #f10101; margin-top: -100px;">This is very bad!</h1>
+  </section>
+
+
+  <section>
+    <h2>The problem</h2>
+    <ul>
+<li class="fragment roll-in">The reason <code>fib</code> is so slow is that it computes the same Fibonacci numbers over and over
+<li class="fragment roll-in">In general, there are $F_{k−1}$ recursive calls to <code>fib(n-k)</code>
+<li class="fragment roll-in">We can greatly speed up the algorithm by writing down the
+results of the recursive calls and looking them up if needed
+
+    </ul>
+  </section>
+  <section>
+    <h2>dynamic programming version</h2>
+    <pre class="python fragment roll-in" style="width: 100%; font-size: 18pt;"><code data-trim data-noescape data-line-numbers>
+def fib(n):
+    if n < 2: return n
+    return fib(n-1) + fib(n-2)
+           </code></pre>
+        <pre class="python fragment roll-in" style="width: 100%; font-size: 24pt;"><code data-trim data-noescape data-line-numbers>
+def dp_fib(n, F):
+    if n < 2: return n
+    if n not in F:
+        F[n] = dp_fib(n-1, F) + dp_fib(n-2, F)
+    return F[n]
+
+# how to call it
+dp_fib(68, {})
+           </code></pre>
+  </section>
+  <section>
+    <h2>Analysis</h2>
+    <ul>
+<li class="fragment roll-in">For every value of $x$ between 1 and $n$, <code>dp_fib(x, F)</code> is called
+exactly one time.
+<li class="fragment roll-in">Each call does constant work
+<li class="fragment roll-in">Thus runtime of <code>dp_fib(x, F)</code> is $\Theta(n)$ - a HUGE savings
+    </ul>
+  </section>
+  <section>
+    <h2>But boy! is it ugly!</h2>
+    <pre class="python fragment roll-in" style="width: 100%; font-size: 18pt;"><code data-trim data-noescape data-line-numbers>
+def fib(n):
+    if n < 2: return n
+    return fib(n-1) + fib(n-2)
+           </code></pre>
+        <pre class="python fragment roll-in" style="width: 100%; font-size: 24pt;"><code data-trim data-noescape data-line-numbers>
+def dp_fib(n, F):
+    if n < 2: return n
+    if n not in F:
+        F[n] = dp_fib(n-1, F) + dp_fib(n-2, F)
+    return F[n]
+
+# how to call it
+dp_fib(68, {})
+           </code></pre>
+  </section>
+
+  <section>
+    <h2><i class="fa-brands fa-python"></i> memoization w/ decorators</h2>
+    <row>
+      <col50 style="text-align: left; font-size: 22pt;" class="fragment roll-in">
+        Let`s separate the ugly from the logic:
+        <pre class="python fragment roll-in" style="width: 100%; font-size: 14pt;"><code data-trim data-noescape data-line-numbers>
+from functools import wraps
+def memoize(func):
+    cache = {}                        # Stored subproblem solutions
+
+    @wraps(func)                      # Make wrap look like func
+    def wrap(*args):                  # The memoized wrapper
+        n = args[0]                   # n-th Fibonacci
+        if n not in cache:            # Not already computed?
+            cache[n] = func(*args)    # Compute & cache the solution
+        return cache[n]
+    return wrap
+        </code></pre>
+      </col50>
+      <col50 style="text-align: left; font-size: 22pt;" class="fragment roll-in">
+        <pre class="python fragment roll-in" style="width: 99%; font-size: 14pt;"><code data-trim data-noescape data-line-numbers>
+@memoize
+def fib(n):
+    if n < 2: return n
+    return fib(n-1) + fib(n-2)
+        </code></pre>
+      </col50>
+    </row>
+  </section>
+
+  <section id="code.1">
+  </section>
+  <section>
+    <h2>Take Away</h2>
+    <div style="text-align: left;">
+    Dynamic Programming is different than Divide and Conquer in
+the following ways:
+    </div>
+    <ul style="font-size: 24pt;">
+<li class="fragment roll-in">“Divide and Conquer” divides problem into independent subproblems, solves the subproblems recursively and then combines solutions to solve original problem
+<li class="fragment roll-in">Dynamic Programming is used when the subproblems are not
+independent, i.e. the subproblems share subsubproblems
+<li class="fragment roll-in">For these kinds of problems, divide and conquer does more
+work than necessary
+<li class="fragment roll-in">Dynamic Programming solves each subproblem once only and
+saves the answer in a table for future reference
+    </ul>
+  </section>
+</section>
+
+  <section>
+
+    <section  data-background="figures/nucleotide_alignment.png" data-background-size="cover" data-background-transition="zoom">
+    <h1  style="text-shadow: 10px 10px 10px #002b36; color: #fdf6e3;">String Alignment</h1>
+    </section>
+
+  <section>
+    <h2>The Pattern for DP</h2>
+    <ul>
+      <li class="fragment roll-in"><b>Formulate the problem recursively.</b> Write down a formula
+for the whole problem as a simple combination of answers to
+smaller subproblems
+<li class="fragment roll-in"><b>Build solutions to your recurrence from the bottom up.</b>
+Write an algorithm that starts with the base cases of your
+recurrence and works its way up to the final solution by considering the intermediate subproblems in the correct order.
+    </ul>
+    <div class="slide-footer fragment roll-in">
+      Note: Dynamic Programs store the results of intermediate subproblems. This is frequently but not always done with some type
+of table.
+    </div>
+  </section>
+
+  <section>
+    <h2>String distances</h2>
+    <span class="fragment roll-in">
+    <blockquote style="background-color: #93a1a1; color: #fdf6e3; text-align: left; font-size: 36px; width: 100%;" >
+      Hamming Distance
+    </blockquote>
+    <blockquote style="background-color: #eee8d5;  width: 100%; text-align: left; ">
+      For strings $X$, $Y$ where $| X | = | Y |$, <mark>Hamming distance</mark> is minimum # substitutions needed to turn one into the other
+    </blockquote>
+    </span>
+    <span class="fragment roll-in">
+    <blockquote style="background-color: #93a1a1; color: #fdf6e3; text-align: left; font-size: 36px; width: 100%;" >
+      Edit Distance
+    </blockquote>
+    <blockquote style="background-color: #eee8d5;  width: 100%; text-align: left; ">
+      For strings $X$, $Y$  <mark>edit distance</mark> is minimum # of edits (substitutions, insertions, deletions) needed to turn one into the other
+    </blockquote>
+    </span>
+  </section>
+
+  <section>
+    <h2>How to compute Hamming distance?</h2>
+    <pre class="python fragment roll-in" style="width: 100%; font-size: 24pt;"><code data-trim data-noescape data-line-numbers>
+def hamming_distance(x, y):
+    ????
+    </code></pre>
+    <span class="fragment roll-in">
+    <blockquote style="background-color: #93a1a1; color: #fdf6e3; text-align: left; font-size: 36px; width: 100%;" >
+      Strategy
+    </blockquote>
+    <blockquote style="background-color: #eee8d5;  width: 100%; text-align: left; ">
+      Walk along both strings. For each position, compare the
+      characters in both strings at that position. If not equal,
+      increment Hamming distance.
+    </blockquote>
+    </span>
+    <span class="fragment roll-in">
+      <img src="figures/hamming_atcg_example.svg" alt="hd" width="90%">
+    </span>
+  </section>
+
+  <section>
+        <span class="fragment roll-in">
+    <blockquote style="background-color: #93a1a1; color: #fdf6e3; text-align: left; font-size: 36px; width: 100%;" >
+      Hamming Distance
+    </blockquote>
+    <pre class="python" style="width: 100%; font-size: 20pt;"><code data-trim data-noescape data-line-numbers>
+# BONUS: we solve it for strings of arbitrary lengths
+from itertools import zip_longest
+
+def hamming_distance(x, y):
+    return sum(c1 != c2 for c1, c2 in zip_longest(x, y))
+    </code></pre>
+    </span>
+    <span class="fragment roll-in">
+    <blockquote style="background-color: #93a1a1; color: #fdf6e3; text-align: left; font-size: 36px; width: 100%;" >
+      Edit Distance
+    </blockquote>
+    <pre class="python" style="width: 100%; font-size: 20pt;"><code data-trim data-noescape data-line-numbers>
+def edit_distance(x, y):
+    ????
+    </code></pre>
+    </span>
+  </section>
+  <section>
+    <h2>Edit Distance</h2>
+    <blockquote style="background-color: #93a1a1; color: #fdf6e3; font-size: 38px; width: 110%; text-align: left;">
+      The edit distance between two words is the minimum number
+of letter insertions, letter deletions, and letter substitutions
+required to transform one word into another. For example,
+      the edit distance between FOOD and MONEY is at most four:
+      <pre style="font-size: 32pt;">
+<b>F</b>OOD → MO<b>O</b>D → MON∧D → MONE<b>D</b> → MONEY
+</pre>
+    </blockquote>
+  </section>
+  <section>
+    <h2>String Alignment</h2>
+    <ul>
+      <li class="fragment roll-in" style="list-style: none;"> Better way to display this process:
+      <li class="fragment roll-in">Place the words one above the other in a table
+      <li class="fragment roll-in">Put a gap in the first word for every insertion and a gap in
+        the second word for every deletion
+      <li class="fragment roll-in">Columns with two different characters correspond to substitutions
+      <li class="fragment roll-in">Then the number of editing steps is just the number of
+        columns that don’t contain the same character twice
+    </ul>
+  </section>
+
+  <section>
+    <h2>Example</h2>
+    <ul>
+      <li class="fragment roll-in">String Alignment for “FOOD” and “MONEY”:
+              <pre style="font-size: 40pt;">
+      F O O   D
+      M O N E Y
+</pre>
+             <li class="fragment roll-in">It’s not too hard to see that we can’t do better than four for
+the edit distance between “Food” and “Money”
+
+    </ul>
+  </section>
+
+  <section>
+    <h2>Example II</h2>
+    <ul>
+      <li class="fragment roll-in">Unfortunately, it can be more difficult to compute the edit
+        distance exactly. Example:
+                      <pre style="font-size: 40pt;">
+  A L G O R   I   T H M
+  A L   T R U I S T I C
+</pre>
+    </ul>
+  </section>
+  <section>
+    <h2>Key Observation</h2>
+    <ul style="font-size: 28pt;">
+<li class="fragment roll-in">If we remove the last column in an optimal alignment, the
+remaining alignment must also be optimal
+<li class="fragment roll-in"><b>Easy to prove by contradiction:</b> Assume there is some better
+subalignment of all but the last column. Then we can just
+paste the last column onto this better subalignment to get
+a better overall alignment.
+<li class="fragment roll-in">Note: The last column can be either:
+  <ol>
+    <li class="fragment roll-in"> a blank on top
+      aligned with a character on bottom,
+    <li class="fragment roll-in"> a character on top
+      aligned with a blank on bottom or
+    <li class="fragment roll-in"> a character on top
+      aligned with a character on bottom
+      </ol>
+    </ul>
+  </section>
+
+  <section data-background="figures/edit_distance_transcript.svg" data-background-size="contain" data-background-transition="zoom">
+    <h2 style="margin-top: -350px; margin-left: -500px;">Edit distance</h2>
+    <div class="slide-footer">
+      <a style="margin-left: 400px;" href="https://www.cs.jhu.edu/~langmea/resources/lecture_notes/11_dp_and_edit_dist_v2.pdf"> This and the following example come from the JHU slides by Ben Langmead</a>
+    </div>
+  </section>
+
+    <section data-background="figures/edit_distance_examples.svg" data-background-size="contain" data-background-transition="zoom">
+    <h2 style="margin-top: -350px; margin-left: -500px;">Edit distance</h2>
+    <div class="slide-footer">
+      <a style="margin-left: 400px;" href="https://www.cs.jhu.edu/~langmea/resources/lecture_notes/11_dp_and_edit_dist_v2.pdf"> This and the following example come from the JHU slides by Ben Langmead</a>
+    </div>
+  </section>
+
+  <section>
+    <h2>Dynamic Programming solution</h2>
+    <ul>
+      <li class="fragment roll-in">To develop a DP algorithm for this problem, we first need to
+find a recursive definition
+<li class="fragment roll-in">Assume we have a $m$ length string $A$ and an $n$ length string
+$B$
+<li class="fragment roll-in">Let $E(i, j)$ be the edit distance between the first $i$ characters
+of $A$ and the first $j$ characters of $B$
+<li class="fragment roll-in">Then what we want to find is $E(n, m)$
+    </ul>
+  </section>
+
+  <section>
+    <h2>Recursive definition</h2>
+    <ul>
+      <li class="fragment roll-in">Say we want to compute $E(i, j)$ for some $i$ and $j$
+<li class="fragment roll-in">Further say that the “Recursion Fairy <i class="fa-solid fa-wand-magic-sparkles"></i>” can tell us the solution to $E(i', j')$, for all $i' \leq i$, $j' \leq j$, except for $i' = i$ and $j' = j$
+<li class="fragment roll-in"><i class="fa-regular fa-circle-question"></i>  Can we compute $E(i, j)$ efficiently with help from the our <i class="fa-solid fa-wand-magic-sparkles"></i> friend?
+    </ul>
+  </section>
+
+  <section>
+    <h2>Recursive definition</h2>
+    3 possible cases
+    <ul>
+      <li class="fragment roll-in"><b>Insertion:</b> $E(i, j) = 1 + E(i − 1, j)$
+      <li class="fragment roll-in"><b>Deletion:</b> $E(i, j) = 1 + E(i, j − 1)$
+      <li class="fragment roll-in"><b>Substitution:</b> If $a_i = b_j$ , $E(i, j) = E(i−1, j−1)$, else $E(i, j) =
+        E(i − 1, j − 1) + 1$
+    </ul>
+  </section>
+  <section>
+    <h2>Summary</h2>
+    Let $I(A[i] \ne B[j]) = 1$ if $A[i]$ and $B[j]$ are different, and 0 if they
+    are the same. Then:
+    $$
+    E(i,j) = \min \left\{ \begin{align} E(i -1, j ) + 1\\ E(i, j-1) + 1\\ E(i-1, j-1) + I(A[i] \ne B[j])\\\end{align} \right\}
+    $$
+  </section>
+
+  <section>
+    <h2>Base case(s)</h2>
+    Not too hard to see that
+    <ul>
+      <li class="fragment roll-in">$E(0, j) = j$ for all $j$, since the $j$ characters of $B$ must be
+aligned with blanks
+<li class="fragment roll-in">Similarly, $E(i, 0) = i$ for all $i$
+    </ul>
+  </section>
+
+  <section>
+    <h2>Recursive algorithm</h2>
+    <ul style="font-size: 22pt;">
+      <li class="fragment roll-in">We now have enough info to directly create a recursive algorithm
+        <pre class="python" style="width: 100%; font-size: 16pt;"><code data-trim data-noescape data-line-numbers>
+def edit_distance_rec(x, y):
+    if len(x) == 0: return len(y)
+    if len(y) == 0: return len(x)
+    diag = edit_distance_rec(x[:-1], y[:-1]) + int(x[-1] != y[-1])
+    vert = edit_distance_rec(x[:-1], y) + 1
+    horz = edit_distance_rec(x, y[:-1]) + 1
+    return min(diag, vert, horz)
+        </code></pre>
+      <li class="fragment roll-in">The run time of this recursive algorithm would be given by
+        the following recurrence:
+        \begin{align}
+        T(m, 0) &= T(0, n) = O(1)\\
+        T(m,n) & = T(m, n-1) + T(m-1, n) + T(n-1, m-1) + O(1)
+        \end{align}
+      <li class="fragment roll-in">Solution: $T (n, n) = \theta(1 + 2^{\frac{n}{2}})$, which is terribly, terribly
+slow.
+    </ul>
+  </section>
+
+  <section id="code.2">
+  </section>
+
+  <section>
+    <h2>Wait, but why?</h2>
+    <pre class="python" style="width: 100%; font-size: 16pt;"><code data-trim data-noescape data-line-numbers="|1,3,6,12,13|6,13">
+n = 0
+def edit_distance_rec(x, y):
+    global n
+    if len(x) == 0: return len(y)
+    if len(y) == 0: return len(x)
+    if x == "Shake" and y == "shake": n += 1
+    diag = edit_distance_rec(x[:-1], y[:-1]) + int(x[-1] != y[-1])
+    vert = edit_distance_rec(x[:-1], y) + 1
+    horz = edit_distance_rec(x, y[:-1]) + 1
+    return min(diag, vert, horz)
+dist = edit_distance_rec('Shakespeare', 'shake spear')
+print(n)
+8989
+    </code></pre>
+  </section>
+
+    <section>
+      <h2>Better Idea</h2>
+      <ul>
+        <li class="fragment roll-in">We can build up a $m \times n$ table which contains all values of $E(i, j)$
+        <li class="fragment roll-in">We start by filling in the base cases for this table: the entries in the $0^{th}$ row and $0^{th}$ column
+        <li class="fragment roll-in">To fill in any other entry, we need to know the values directly above, to the left and above and to the left.
+        <li class="fragment roll-in">Thus we can fill in the table in the standard way: left to right and top down to ensure that the entries we need to fill in each cell are always available
+      </ul>
+    </section>
+
+    <section data-background="figures/DP_example_table_01.svg" data-background-size="contain" data-background-transition="zoom">
+          <span class="fragment roll-in">
+      <pre class="python" style="width: 100%; font-size: 16pt;"><code data-trim data-noescape data-line-numbers="|4,5">
+def edit_distance_DP(x, y):
+    """ Calculate edit distance between sequences x and y using
+        matrix dynamic programming.  Return distance. """
+    # initialize an empty matrix
+    E = zeros((len(x)+1, len(y)+1), dtype=int)
+      </code></pre>
+      </span>
+    </section>
+
+    <section data-background="figures/DP_example_table_02.svg" data-background-size="contain" data-background-transition="zoom">
+    </section>
+
+    <section data-background="figures/DP_example_table_03.svg" data-background-size="contain" data-background-transition="zoom">
+          <span class="fragment roll-in">
+      <pre class="python" style="width: 100%; font-size: 16pt;"><code data-trim data-noescape data-line-numbers="|6-8">
+def edit_distance_DP(x, y):
+    """ Calculate edit distance between sequences x and y using
+        matrix dynamic programming.  Return distance. """
+    # initialize an empty matrix
+    E = zeros((len(x)+1, len(y)+1), dtype=int)
+    # Fill in the values for the empty sub-strings
+    E[0, 1:] = range(1, len(y)+1)
+    E[1:, 0] = range(1, len(x)+1)
+      </code></pre>
+      </span>
+    </section>
+
+    <section data-background="figures/DP_example_table_04.svg" data-background-size="contain" data-background-transition="slide">
+      <span class="fragment roll-in">
+      <pre class="python" style="width: 100%; font-size: 16pt;"><code data-trim data-noescape data-line-numbers="|9-12">
+def edit_distance_DP(x, y):
+    """ Calculate edit distance between sequences x and y using
+        matrix dynamic programming.  Return distance. """
+    # initialize an empty matrix
+    E = zeros((len(x)+1, len(y)+1), dtype=int)
+    # Fill in the values for the empty sub-strings
+    E[0, 1:] = range(1, len(y)+1)
+    E[1:, 0] = range(1, len(x)+1)
+    for i in range(1, len(x)+1):
+        for j in range(1, len(y)+1):
+            delt = int(x[i-1] != y[j-1])
+            E[i, j] = min(E[i-1, j-1]+delt, E[i-1, j]+1, E[i, j-1]+1)
+    return E[len(x), len(y)]
+      </code></pre>
+      </span>
+    </section>
+
+    <section data-background="figures/DP_example_table_05.svg" data-background-size="contain" data-background-transition="slide">
+    </section>
+
+    <section data-background="figures/DP_example_table_06.svg" data-background-size="contain" data-background-transition="slide">
+    </section>
+
+  <section>
+    <h2>Analysis</h2>
+    <ul>
+<li class="fragment roll-in">Let n be the length of the first string and m the length of
+the second string
+<li class="fragment roll-in">Then there are $\Theta(nm)$ entries in the table, and it takes $\Theta(1)$
+time to fill each entry
+<li class="fragment roll-in">This implies that the run time of the algorithm is $\Theta(nm)$
+    </ul>
+  </section>
+
+  <section data-background="figures/DP_example_table_07_vert.png" data-background-size="contain" data-background-transition="slide">
+    <h3 style="width: 110%; text-shadow: 10px 10px 10px #002b36; color: #fdf6e3;">Could we have filled the cells in a different order?</h3>
+  </section>
+
+  <section data-background="figures/DP_example_table_08_diag.png" data-background-size="contain" data-background-transition="slide">
+    <h3 style="width: 110%; text-shadow: 10px 10px 10px #002b36; color: #fdf6e3;">Could we have filled the cells in a different order?</h3>
+  </section>
+
+  <section data-background="figures/DP_example_table_09_blocks.png" data-background-size="contain" data-background-transition="slide">
+    <h3 style="width: 110%; text-shadow: 10px 10px 10px #002b36; color: #fdf6e3;">Could we have filled the cells in a different order?</h3>
+  </section>
+
+  <section id="code.3">
+  </section>
+
+  <section data-background="figures/DP_example_table_06.svg" data-background-size="contain" data-background-transition="slide">
+    <h3>But where and what are the 2 edits?</h3>
+  </section>
+
+  <section data-vertical-align-top data-background="figures/DP_example_table_10_trace.png" data-background-size="contain" data-background-transition="slide">
+    <span class="fragment roll-in">
+    <blockquote style="background-color: #93a1a1; color: #fdf6e3; text-align: left; font-size: 36px; width: 100%;" >
+      Traceback corresponds to an optimal alignment (edit transcript)
+    </blockquote>
+    <blockquote style="background-color: #eee8d5;  width: 100%; text-align: left; ">
+      At each step ask which neighbor ($\leftarrow$, $\nwarrow$, $\rightarrow$) gave the minimum
+    </blockquote>
+    </span>
+  </section>
+
+  <section data-background="figures/DP_example_table_11.5_trace.png" data-background-size="contain" data-background-transition="slide">
+  </section>
+
+  <section data-background="figures/DP_example_table_12_trace.png" data-background-size="contain" data-background-transition="slide">
+  </section>
+
+  <section data-background="figures/DP_example_table_13_trace.png" data-background-size="contain" data-background-transition="slide">
+  </section>
+
+  <section data-background="figures/DP_example_table_14_trace.png" data-background-size="contain" data-background-transition="slide">
+  </section>
+
+  <section>
+    <h2>String Alignment: Analysis</h2>
+    <ul>
+      <li>Let n be the length of the first string and m the length of
+        the second string
+      <li>Then there are $\Theta(nm)$ entries in the table, and it takes $\Theta(1)$
+        time to fill each entry
+      <li>This implies that the run time of the algorithm is $\Theta(nm)$
+      <li class="fragment roll-in">Worst case: traceback never moves diagonally requiring $O(n+m)$
+    </ul>
+  </section>
+
+      <section>
+      <h2>In Class Exercise <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100"
+                                 src="figures/dolphin_swim.webp" alt="dolphin"></h2>
+      <ul>
+        <li class="fragment roll-in">Create a string alignment table for the two strings “abba”
+          and “bab”. Put “abba” at the top of the table and “bab”
+          on the left side
+        <li class="fragment roll-in">$Q_i$: $(i = 1, 2, . . . , 5)$ What is the $i^{th}$ row of your table
+        <li class="fragment roll-in">$Q_6$: What is the minimum edit distance and how many alignments achieve it?
+      </ul>
+      </section>
+
+  <section data-background="figures/change_my_mind_DP.png" data-background-size="contain" data-background-transition="zoom">
+  </section>
+  <section id="code.4">
+  </section>
+  <section>
+    <h2>Take Away</h2>
+    To solve the string alignment problem, we did the following:
+    <ol>
+<li class="fragment roll-in"> formulated the problem recursively
+<li class="fragment roll-in"> built a solution to the recurrence from the bottom up
+    </ol>
+  </section>
+  </section>
+
+  <section>
+  <section>
+    <h1>Matrix Chain Multiplication</h1>
+  </section>
+
+  <section>
+    <h2>Problem</h2>
+    <ul style="margin-top: -50px; width: 115%; margin-left: -50px;">
+<li class="fragment roll-in">We are given an ordered sequence of n matrices, $A_1, A_2, \dots , A_n$, where
+for $i = 1, 2, \dots , n$, matrix $A_i$ has dimension $p_{i−1} \times p_i$
+<li class="fragment roll-in">We want to compute the product, $A_1A_2 \cdots A_n$ as quickly as
+possible.
+<li class="fragment roll-in">In particular, we want to fully
+parenthesize the expression above so there are no ambiguities about
+the order in which the matrices are multiplied
+<li class="fragment roll-in">A product of matrices is fully parenthisized if it is either a
+single matrix, or the product of two fully parenthesized matrix
+products, sorrounded by parentheses
+    </ul>
+  </section>
+  <section>
+    <h2>Parenthesizing Matrices</h2>
+    <ul>
+<li class="fragment roll-in">There are many ways to parenthesize the matrices
+<li class="fragment roll-in">Each way gives the same output (because of associativity of
+matrix multiplications)
+<li class="fragment roll-in">However the way we parenthesize will effect the time to compute the output
+<li class="fragment roll-in"><b>Our Goal:</b> Find a parenthesization which requires the minimal number of scalar multiplications
+    </ul>
+  </section>
+  <section>
+    <h2>Example</h2>
+    <span class="fragment roll-in">
+      <img src="figures/matrices.png" style="margin-right: -400px;" alt="hd" width="90%">
+    </span>
+
+    <ul style="margin-top: -300px;">
+      <li class="fragment roll-in">In this example, it’s much better to multiply the last two
+matrices first (this will give us a short, narrow matrix like the square matrix on the
+left)
+<li class="fragment roll-in">Worse to multiply the first two matrices first (this gives us a
+short wide matrix in the middle)
+<li class="fragment roll-in">In general, our goal is to find ways to always create narrow
+and short resulting matrices.
+    </ul>
+  </section>
+  <section>
+    <h2>A Problem</h2>
+    Problem: There can be many ways to parenthesize. e.g.
+    <ul>
+<li class="fragment roll-in">$(A_1(A_2(A_3A_4)))$
+<li class="fragment roll-in">$(A_1((A_2A_3)A_4))$
+<li class="fragment roll-in">$((A_1A_2)(A_3A_4))$
+<li class="fragment roll-in">$((A_1(A_2A_3))A_4)$
+<li class="fragment roll-in">$(((A_1A_2)A_3)A_4)$
+    </ul>
+  </section>
+
+  <section>
+    <h2>A Problem</h2>
+    <ul>
+<li class="fragment roll-in">Let $P (n)$ be the number of ways to parenthesize n matrices.
+Then $P (1) = 1$
+<li class="fragment roll-in">For $n \geq 2$, we know that a fully parenthesized product is the
+product of two fully parenthesized products, and the split
+can occur anywhere from $k = 1$ to $k = n − 1$.
+<li class="fragment roll-in">Hence for $n \geq 2$:
+  $
+P (n) = \sum_{k=1}^{n-1 }P (k)P (n − k)
+  $
+<li class="fragment roll-in">The solution to this recurrence
+is $\Omega(2^n)$ (derivation is left as a homework)
+    </ul>
+  </section>
+  <section>
+    <h2>The Pattern</h2>
+    <ul>
+<i class="fa-regular fa-circle-question"></i> Can we develop a DP Solution to this problem?
+<li class="fragment roll-in"><b>Formulate the problem recursively.</b>
+Write down a formula for the whole problem as a simple combination of
+answers to smaller subproblems
+<li class="fragment roll-in"><b>Build solutions to your recurrence
+  from the bottom up.</b>  Write an algorithm that starts with the
+  base cases of your recurrence and works its way up to the final
+  solution by considering the intermediate subproblems in the correct
+  order.
+    </ul>
+  </section>
+  <section>
+    <h2>Key Observation</h2>
+    <ul>
+      <li class="fragment roll-in">Let $A_{i..j}$ (for $i \le j$) be
+the matrix that results from evaluating the product $A_iA_{i+1} \cdots
+A_j$
+      <li class="fragment roll-in">Note that if $i < j$, then for some
+value of $k$, $i \leq k < j$, we must first compute $A_{i..k}$ and
+$A_{k+1..j}$ , and then multiply them together to get $A_{i..j}$
+                          <li class="fragment roll-in">The cost of
+this particular parenthesization is then the cost of computing
+$A_{i..k}$ plus the cost of computing $A_{k+1..j}$ plus cost of
+multiplying $A_{i..k}$ by $A_{k+1..j}$
+    </ul>
+  </section>
+    <section>
+    <h2>Key Observation: one more time</h2>
+    <ul>
+<li class="fragment roll-in">Let $A_{i..j}$ (for $i \leq j$) be the matrix that results from evaluating the product $A_iA_{i+1} \cdots
+A_j$
+<li class="fragment roll-in">Imagine we are computing $A_{i..j}$
+<li class="fragment roll-in">The last multiplication we do must look like this:
+  <div style="margin-top: -40px; margin-bottom: -40px;">
+  $$
+  A_{i..j} = (A_{i..k}) \times (A_{k+1..j} )
+  $$
+  </div>
+for some $k$ between $i$ and $j − 1$
+<li class="fragment roll-in">Then total cost to compute $A_{i..j}$ is:
+  <ul>
+    <li class="fragment roll-in">cost to compute $A_{i..k} +$
+    <li class="fragment roll-in">cost to compute $A_{k+1..j} +$
+    <li class="fragment roll-in">cost to multiply $A_{i..k}$ and $A_{k+1..j}$
+
+  </ul>
+    </ul>
+  </section>
+  <section>
+    <h3>The Recursive Formulation</h3>
+    <ul style="margin-top: -25px;">
+      <li class="fragment roll-in">For any integers $x$, $y$, let $m(x, y)$ be the minimum cost of computing $A_{x..y}$
+      <li class="fragment roll-in">Then for any $k$ between $i$ and $j − 1$,
+        <div style="margin-top: -30px; margin-bottom: -30px;">
+        \begin{align}
+        m(i, j) \leq & \mbox{ optimal cost to compute } A_{i..k} +\\
+        & \mbox{ optimal cost to compute } A_{k+1..j} +\\
+        & \mbox{ cost to multiply } A_{i..k} \mbox{ and } A_k+1..j\\
+        \end{align}
+        </div>
+      <li class="fragment roll-in">In other words:
+        <div style="margin-top: -30px; margin-bottom: -30px;">
+          \begin{align}
+          m(i, j) \leq & m(i, k) +\\
+          & m(k + 1, j) +\\
+          & \mbox{ cost to multiply } A_{i..k} \mbox{ and } A_{k+1..j}
+          \end{align}
+        </div>
+    </ul>
+  </section>
+  <section>
+    <h2>The Cost to multiply 2 matrices</h2>
+    <ul>
+      <li class="fragment roll-in">$A_{i..k}$ is a $p_{i−1} \times
+      p_k$ matrix
+      <li class="fragment roll-in">$A_{k+1..j}$ is a $p_k \times p_j$
+      matrix
+      <li class="fragment roll-in">Thus $A_{i..k}A_{k+1..j}$ takes $p_{i−1}p_k p_j$ operations
+      <li class="fragment roll-in"> Hence we have:
+        \begin{align}
+        m(i, j) \leq & m(i, k) +\\
+        & m(k + 1, j) +\\
+        & p_{i−1}p_k p_j
+        \end{align}
+    </ul>
+  </section>
+  <section>
+    <h3>The Recursive Formulation</h3>
+    <ul style="margin-top: -20px;">
+<li class="fragment roll-in">Let $m(i, j)$ be the minimum cost of computing $A_{i,j}$
+<li class="fragment roll-in">We’ve shown that $m(i, j) \leq m(i, k) + m(k + 1, j) + p_{i−1}p_k p_j$ for any $k = i, i + 1, \dots , j − 1$
+<li class="fragment roll-in">Further note that the optimal
+parenthesization must use some value of $k = i, i + 1, \dots , j −
+  1$. So we need only pick the best
+<li class="fragment roll-in"> Thus we have:
+  <div style="margin-top: -20px;">
+    \begin{align}
+    m(i, j) &= 0 \mbox{ if } i = j\\
+    m(i, j) &= \min_{i\leq k< j} \{m(i, k) + m(k + 1, j) + p_{i−1}p_k p_j \}
+    \end{align}
+  </div>
+    </ul>
+  </section>
+  <section>
+    <h2>The Recursive Solution</h2>
+    <ul>
+      <li class="fragment roll-in">We now have enough information to write a recursive function to solve the problem
+      <li class="fragment roll-in">The recursive solution will have runtime given by the following recurrence:
+      <li class="fragment roll-in">$T (1) = 1$,
+      <li class="fragment roll-in">$T (n) = 1 + \sum^{n−1}_{k=1} (T (k) + T (n − k) + 1)$
+      <li class="fragment roll-in">Unfortunately, the solution to this recurrence is $\Theta(2^n)$ (see the textbook)
+      <li class="fragment roll-in"> Yet, I challenge you to implement the recursive solution and use memoization. <i class="fa-solid fa-mug-hot"></i>
+    </ul>
+  </section>
+  <section>
+    <h2>Recursive Implementation <i class="fa-solid fa-mug-hot"></i> </h2>
+      <pre class="python" style="width: 100%; font-size: 16pt;"><code data-trim data-noescape data-line-numbers>
+import sys
+# Matrix A[i] has dimension p[i-1] x p[i]
+def MatrixChainOrder(p, i, j):
+    if i == j: return 0
+    _min = sys.maxsize
+    for k in range(i, j):
+        count = MatrixChainOrder(p, i, k)\
+                + MatrixChainOrder(p, k + 1, j)\
+                + p[i-1] * p[k] * p[j]
+        if count < _min: _min = count;
+    return _min;
+# test
+arr = [1, 2, 3, 4, 3];
+print("Minimum number of multiplications is ",
+                   MatrixChainOrder(arr, 1, len(arr)-1));
+                   </code></pre>
+      <div style="text-align:left; font-size: 22pt;">
+        Note, there are $n$ matrices but $n+1$ dimensions. The matrices are numbered from $1$ to $n-1$, while dimensions go from $0$ to $n-1$. The test code above starts in a top-down manner with matrix $1$ through $4$ - what we need to compute. However, there are $5$ dimensions.
+        </div>
+  </section>
+  <section>
+    <h2>DP Solution</h2>
+    <ul>
+      <li class="fragment roll-in">Note that we must solve one subproblem for each choice of $i$ and $j$ satisfying $1\leq i \leq j \leq n$
+<li class="fragment roll-in">This is only $\left({n\over  2}\right) + n = \Theta(n^2 )$  subproblems
+<li class="fragment roll-in">The recursive algorithm encounters each subproblem many
+times in the branches of the recursion tree.
+<li class="fragment roll-in">However, we can just compute these subproblems from the
+bottom up, storing the results in a table (this is the DP
+solution)
+    </ul>
+  </section>
+    <section>
+    <h2><i class="fa-solid fa-user-tie"></i> DP Implementation</h2>
+    <pre class="python stretch" style="width: 100%; font-size: 16pt;"><code data-trim data-noescape data-line-numbers>
+import sys
+# Matrix Ai has dimension p[i-1] x p[i] for i = 1..n
+def MatrixChainOrder(p, n):
+    m = [[0 for x in range(n)] for x in range(n)]
+    # cost is zero when multiplying one matrix.
+    for i in range(1, n): m[i][i] = 0
+    for L in range(2, n):
+        for i in range(1, n-L + 1):
+            j = i + L-1
+            m[i][j] = sys.maxsize
+            for k in range(i, j):
+                q = m[i][k] + m[k + 1][j] + p[i-1]*p[k]*p[j]
+                if q < m[i][j]: m[i][j] = q
+    return m[1][n-1]
+# Test
+arr = [1, 2, 3, 4, 3]
+print("Minimum number of multiplications is " +
+       str(MatrixChainOrder(arr, len(arr))))
+                       </code></pre>
+      <div style="text-align:left; font-size: 22pt;">
+        Note, there are $n$ matrices but $n+1$ dimensions. The matrices are numbered from $1$ to $n-1$, while dimensions go from $0$ to $n-1$.
+        </div>    
+  </section>
+  <section>
+    <h2>"Pseudocode"</h2>
+    <ul>
+<li class="fragment roll-in">This code computes the optimal cost and can be modified to compute parenthesization that achieves that cost.
+<li class="fragment roll-in">It uses an $m$ array to store the optimal costs of computing
+$m(i, j)$. It may also use an additional array, say $s$ , where $s(i, j)$ stores the $k$ value
+which gives $m(i, j)$.
+<li class="fragment roll-in">The parenthesization can be recovered from the s array using the pseudocode that you will produce as part of your homework when solving this problem.
+    </ul>
+  </section>
+  <section>
+     <div id="header-right" style="margin-right: -180px; margin-top: -190px">
+       <pre class="python" style="width: 100%; font-size: 10pt;"><code data-trim data-noescape data-line-numbers>
+import sys
+# Matrix Ai has dimension p[i-1] x p[i] for i = 1..n
+def MatrixChainOrder(p, n):
+    m = [[0 for x in range(n)] for x in range(n)]
+    # cost is zero when multiplying one matrix.
+    for i in range(1, n): m[i][i] = 0
+    for L in range(2, n):
+        for i in range(1, n-L + 1):
+            j = i + L-1
+            m[i][j] = sys.maxsize
+            for k in range(i, j):
+                q = m[i][k] + m[k + 1][j] + p[i-1]*p[k]*p[j]
+                if q < m[i][j]: m[i][j] = q
+    return m[1][n-1]
+# Test
+arr = [1, 2, 3, 4, 3]
+print("Minimum number of multiplications is " +
+       str(MatrixChainOrder(arr, len(arr))))
+                       </code></pre>
+       </div>
+    <h2>Analysis</h2>
+    <ul>
+<li class="fragment roll-in">This code has three nested loops, each of which takes on at
+most $n − 1$ values, and the inner loop takes $O(1)$ time.
+<li class="fragment roll-in">Thus the runtime is $O(n^3)$
+<li class="fragment roll-in">The algorithm also requires $\Theta(n^2)$ space
+    </ul>
+  </section>
+  <section>
+    <h2>Example I</h2>
+    <ul>
+<li class="fragment roll-in">Consider the sequence of three matrices, $A_1, A_2, A_3$ whose
+dimensions are given by the sequence $3, 1, 2, 1$ (i.e. $p_0 = 3$,
+$p_1 = 1$, $p_2 = 2$, $p_3 = 1$)
+<li class="fragment roll-in">Let’s construct the tables giving the optimal parenthesization
+<li class="fragment roll-in">The $(i, j)$ entry of the first table will give the optimal cost
+for computing $A_{i..j}$ , the $(i, j)$ entry of the second table will
+give a $k$ value which achieves this optimal cost
+    </ul>
+  </section>
+  <section>
+    <h2></h2>
+  </section>
+    <section>
+    <h2>Example II</h2>
+    <ul>
+<li class="fragment roll-in">Consider the sequence of three matrices, $A_1, A_2, A_3, A_4$ whose
+dimensions are given by the sequence $3, 1, 2, 1, 2$ (i.e. $p_0 = 3$,
+$p_1 = 1$, $p_2 = 2$, $p_3 = 1$, $p_4 = 2$)
+<li class="fragment roll-in">Let’s construct the tables giving the optimal parenthesization
+<li class="fragment roll-in">The $(i, j)$ entry of the first table will give the optimal cost
+for computing $A_{i..j}$ , the $(i, j)$ entry of the second table will
+give a $k$ value which achieves this optimal cost
+    </ul>
+  </section>
+  <section>
+    <h2></h2>
+  </section>
+  <section>
+    <h2>In Class Exercise <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100" src="figures/dolphin_swim.webp" alt="dolphin"></h2>
+    <ul>
+    <li class="fragment roll-in">Consider the sequence of three matrices, $A_1$, $A_2$, $A_3$ whose
+dimensions are given by the sequence $1, 2, 1, 2$  (i.e. $p_0 = 1$,
+$p_1 = 2$, $p_2 = 1$, $p_3 = 2$)
+    <li class="fragment roll-in"><span class="fa-li"><i class="fa-regular fa-circle-question"></i></span> What are the m array and s array for these inputs?
+<li class="fragment roll-in"><span class="fa-li"><i class="fa-regular fa-circle-question"></i></span> What is the optimal parenthesization?
+    </ul>
+  </section>
+  </section>
+
+
+                <section>
+                  <h2>See you</h2>
+                  Wednesday March $29^{nd}$
+                </section>
+
+              </div>
+
+            </div>
+
+            <script src="dist/reveal.js"></script>
+
+            <!-- <link rel="stylesheet" href="lib/css/monokai.css"> -->
+            <script src="plugin/highlight/highlight.js"></script>
+            <script src="plugin/math/math.js"></script>
+            <script src="plugin/chalkboard/plugin.js"></script>
+            <script src="plugin/notes/notes.js"></script>
+            <script src="plugin/zoom/zoom.js"></script>
+            <script src="node_modules/reveal.js-menu/menu.js"></script>
+
+                <script type="text/javascript">
+
+	// Event start load section on slide
+	Reveal.addEventListener('slidechanged', function(event) {
+		//-- check if current slide with code
+	    var sectionID = Reveal.getCurrentSlide().id;
+
+	    if(sectionID === "code.1") {
+	       document.getElementById("div4code.1").style.display = "block";
+	    } else {
+	       document.getElementById("div4code.1").style.display = "none"
+	    }
+	    if(sectionID === "code.2") {
+	       document.getElementById("div4code.2").style.display = "block";
+	    } else {
+	       document.getElementById("div4code.2").style.display = "none"
+	    }
+	    if(sectionID === "code.3") {
+	       document.getElementById("div4code.3").style.display = "block";
+	    } else {
+	       document.getElementById("div4code.3").style.display = "none"
+	    }
+	    if(sectionID === "code.4") {
+	       document.getElementById("div4code.4").style.display = "block";
+	    } else {
+	       document.getElementById("div4code.4").style.display = "none"
+	    }
+
+	});
+
+
+    </script>
+
+            <script>
+              // Full list of configuration options available at:
+              // https://github.com/hakimel/reveal.js#configuration
+              let notes = document.querySelectorAll('aside.notes');
+              notes.forEach(n => {
+	      let html = n.innerHTML;
+	      html = html.trim().replace(/\n/g, '<br/>');
+	      n.innerHTML = html;
+              });
+              Reveal.initialize({
+                  // history: true,
+                  hash: true,
+                  margin: 0.01,
+                  minScale: 0.01,
+                  maxScale: 1.23,
+                  menu: {
+                      themes: true,
+                      openSlideNumber: true,
+                      openButton: false,
+                  },
+                  customcontrols: {
+                      slideNumberCSS : 'position: fixed; display: block; right: 90px; top: auto; left: auto; width: 50px; bottom: 30px; z-index: 31; font-family: Helvetica, sans-serif; font-size:  12px; line-height: 1; padding: 5px; text-align: center; border-radius: 10px; background-color: rgba(128,128,128,.5)',
+                      controls: [
+                          { icon: '<i class="fa fa-caret-left"></i>',
+                            css: 'position: fixed; right: 60px; bottom: 30px; z-index: 30; font-size: 24px;',
+                            action: 'Reveal.prev(); return false;'
+                          },
+                          { icon: '<i class="fa fa-caret-right"></i>',
+                            css: 'position: fixed; right: 30px; bottom: 30px; z-index: 30; font-size: 24px;',
+                            action: 'Reveal.next(); return false;'
+                          }
+                      ]
+                  },
+                  chalkboard: {
+                      boardmarkerWidth: 1,
+                      chalkWidth: 2,
+                      chalkEffect: 1,
+                      slideWidth: Reveal.width,
+                      slideHeight: Reveal.height,
+                      toggleNotesButton: false,
+                      toggleChalkboardButton: false,
+                      //src: "chalkboards/chalkboard_em2.json",
+                      readOnly: false,
+                      theme: "blackboard",
+                      eraser: { src: "plugin/chalkboard/img/sponge.png", radius: 30},
+                  },
+
+                  math: {
+                      mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
+                      config: 'TeX-AMS_SVG-full',
+                      // pass other options into `MathJax.Hub.Config()`
+                      TeX: {
+                          Macros: {
+        	              RR: '\\mathbb{R}',
+        	              PP: '\\mathbb{P}',
+        	              EE: '\\mathbb{E}',
+        	              NN: '\\mathbb{N}',
+        	              vth: '\\vec{\\theta}',
+                              loss: '{\\cal l}',
+                              hclass: '{\\cal H}',
+                              CD: '{\\cal D}',
+                              def: '\\stackrel{\\text{def}}{=}',
+                              pag: ['\\text{pa}_{{\cal G}^{#1}}(#2)}', 2],
+                              vec: ['\\boldsymbol{\\mathbf #1}', 1],
+        	              set: [ '\\left\\{#1 \\; : \\; #2\\right\\}', 2 ],
+                              bm: ['\\boldsymbol{\\mathbf #1}', 1],
+                              argmin: ['\\operatorname\{arg\\,min\\,\}'],
+                              argmax: ['\\operatorname\{arg\\,max\\,\}'],
+                              prob: ["\\mbox{#1$\\left(#2\\right)$}", 2],
+                              floor: ["\\lfloor #1 \\rfloor",1]
+                          },
+                          loader: {load: ['[tex]/color']},
+                          extensions: ["color.js"],
+                          tex: {packages: {'[+]': ['color']}},
+                          svg: {
+                              fontCache: 'global'
+                          }
+                      }
+                  },
+
+                  plugins: [ RevealMath, RevealChalkboard, RevealHighlight, RevealNotes, RevealZoom, RevealMenu ],
+
+              });
+
+              Reveal.configure({ fragments: false }); // set false when developing to see everything at once
+              Reveal.configure({ slideNumber: true });
+              //Reveal.configure({ history: true });
+              Reveal.configure({ slideNumber: 'c / t' });
+              Reveal.addEventListener( 'darkside', function() {
+                  document.getElementById('theme').setAttribute('href','dist/theme/aml_dark.css');
+              }, false );
+              Reveal.addEventListener( 'brightside', function() {
+                  document.getElementById('theme').setAttribute('href','dist/theme/aml.css');
+              }, false );
+            </script>
+            <style type="text/css">
+              /* 1. Style header/footer <div> so they are positioned as desired. */
+              #header-left {
+                  position: absolute;
+                  top: 0%;
+                  left: 0%;
+              }
+              #header-right {
+                  position: absolute;
+                  top: 0%;
+                  right: 0%;
+              }
+              #footer-left {
+                  position: absolute;
+                  bottom: 0%;
+                  left: 0%;
+              }
+            </style>
+
+            <!-- // 2. Create hidden header/footer -->
+            <div id="hidden" style="background; display:none;">
+              <div id="header">
+                <div id="header-left"><h4>CS4520</h4></div>
+                <div id="header-right"><h4>Algorithms</h4></div>
+                <div id="footer-left">
+                  <!-- <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100" -->
+                  <!--      src="figures/flowchart.png" alt="robot learning"> -->
+                </div>
+              </div>
+            </div>
+
+
+            <script type="text/javascript">
+              // 3. On Reveal.js ready event, copy header/footer <div> into each `.slide-background` <div>
+              var header = $('#header').html();
+              if ( window.location.search.match( /print-pdf/gi ) ) {
+                  Reveal.addEventListener( 'ready', function( event ) {
+                      $('.slide-background').append(header);
+                  });
+              }
+              else {
+                  $('div.reveal').append(header);
+              }
+            </script>
+
+  </body>
+</html>
