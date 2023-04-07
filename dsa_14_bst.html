@@ -1,0 +1,1028 @@
+<!Doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="css/fontawesome-free-6.2.1-web/css/all.css" rel="stylesheet">
+
+    <script src="lib/colorbrewer.v1.min.js" charset="utf-8"></script>
+    <script src="lib/colorStringStandalone.js" charset="utf-8"></script>
+    <script type="text/javascript" src="lib/jquery-2.2.4.min.js"></script>
+
+    <title>Design & Analysis: Algorithms</title>
+
+    <meta name="description" content="CS4851/6851 GSU class">
+    <meta name="author" content="Sergey M Plis">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+    <!-- <link rel="stylesheet" href="lib/css/zenburn.css"> -->
+    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="dist/theme/aml.css" id="theme">
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.scss';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+                    <script type="module" src="js/wc_code/wc-code.js"></script>
+
+    <!--Popup Window CSS-->
+    <style media="screen">
+		*,*:before,*:after{
+		    padding: 0;
+		    margin: 0;
+		    box-sizing: border-box;
+		}
+
+		.popup{
+		    background-color: #fdf6e3;
+		    width: 80%;
+		    padding: 30px 40px;
+		    position: absolute;
+		    transform: translate(-50%,-50%);
+		    left: 50%;
+		    top: 50%;
+		    border-radius: 8px;
+		    font-family: "Poppins",sans-serif;
+		    display: none;
+		    z-index: 1000;
+		    text-align: left;
+		    max-height: 90%;
+            overflow: scroll;
+		}
+		.popup button{
+		    display: block;
+		    margin:  0 0 20px auto;
+		    background-color: transparent;
+		    font-size: 30px;
+		    color: #fdf6e3;
+		    background: #03549a;
+		    border-radius: 100%;
+		    width: 40px;
+		    height: 40px;
+		    border: none;
+		    outline: none;
+		    cursor: pointer;
+		}
+    </style>
+  </head>
+
+
+  <body>
+        <div class="popup" id="div4code.1">
+            <!-- <button id="close">&times;</button> -->
+		    <wc-code-zone mode="python">
+		    <wc-code style="font-size: 14pt;" theme="monokai" mode="python" file-name="python-file.py">
+		      <script type="wc-content">
+class Node:
+    parent = None
+    lft = None
+    rgt = None
+    def __init__(self, key, val):
+        self.key = key
+        self.val = val
+
+def insert(node, key, val):
+    if node is None: return Node(key, val)      # Empty leaf: Add node here
+    if node.key == key: node.val = val          # Found key: Replace val
+    elif key < node.key:                        # Less than the key?
+        node.lft = insert(node.lft, key, val)   # Go left
+        node.lft.parent = node                  # and the parent
+    else:                                       # Otherwise...
+        node.rgt = insert(node.rgt, key, val)   # Go right
+        node.rgt.parent = node                  # and the parent
+    return node
+
+def search(node, key):
+    if node is None: raise KeyError             # Empty leaf: It`s not here
+    if node.key == key: return node             # Found key: Return val
+    elif key < node.key:                        # Less than the key?
+        return search(node.lft, key)            # Go left
+    else:                                       # Otherwise...
+        return search(node.rgt, key)            # Go right
+
+class Tree:                                     # Simple wrapper
+    root = None
+    def __setitem__(self, key, val):
+        self.root = insert(self.root, key, val)
+    def __getitem__(self, key):
+        return search(self.root, key)
+    def __contains__(self, key):
+        try: search(self.root, key)
+        except KeyError: return False
+        return True
+
+def inorder_tree_walk(node):
+    if node is not None:
+        inorder_tree_walk(node.lft)
+        print(node.key)
+        inorder_tree_walk(node.rgt)
+
+def tree_min(node):
+    while node.lft is not None:
+        node = node.lft
+    return node
+
+def tree_max(node):
+    while node.rgt is not None:
+        node = node.rgt
+    return node
+
+def successor(node):
+    if node.rgt is not None:
+        return tree_min(node.rgt)
+    p = node.parent
+    while p is not None and p.rgt is node:
+        node = p
+        p = node.parent
+    return p
+
+def predecessor(node):
+    if node.lft is not None:
+        return tree_max(node.lft)
+    p = node.parent
+    while p is not None and p.lft is node:
+        node = p
+        p = node.parent
+    return p
+
+def transplant(tree, u, v):
+    if u.parent is None:
+        tree.root = v
+    elif u is u.parent.lft:
+        u.parent.lft = v
+    else:
+        u.parent.rgt = v
+    if v is not None:
+        v.parent = u.parent
+
+def tree_delete(tree, node):
+    if node.lft is None:
+        tree_transplant(tree, node, node.rgt)
+    elif node.rgt is None:
+        tree_transplant(tree, node, node.lft)
+    else:
+        y = tree_min(node.rgt)
+        if y is not node.rgt:
+            tree_transplant(tree, y, y.rgt)
+            y.rgt = node.rgt
+            y.rgt.parent = y
+        tree_transplant(tree, node, y)
+        y.lft = node.lft
+        y.lft.parent = y
+
+def print2DUtil(node, space, COUNT=10):
+    if node is None:
+        return
+
+    space += COUNT
+    print2DUtil(node.rgt, space, COUNT=COUNT)
+    prefix = ''.join(['.']*(space-COUNT))
+    print(prefix + str(node.key))
+    print2DUtil(node.lft, space, COUNT=COUNT)
+
+def print2D(node, COUNT=10):
+    print2DUtil(node, 0, COUNT=COUNT)
+
+t = Tree()
+t[8] = 8
+t[4] = 4
+t[12] = 12
+t[2] = 2
+t[6] = 6
+t[10] = 10
+t[14] = 14
+t[1] = 1
+t[3] = 3
+t[5] = 5
+t[7] = 7
+t[9] = 9
+t[11] = 11
+t[13] = 13
+t[15] = 15
+print2D(t.root)
+	       </script>
+		    </wc-code>
+		    </wc-code-zone>
+        </div>
+
+    <div class="reveal">
+      <!-- In between the <div="reveal"> and the <div class="slides">-->
+          <!-- <header style="position: absolute; top: 10px; left: 100px; z-index: 500; font-size:100px;background-color: rgba(0,0,0,0); text-align: center !important"></header>  -->
+          <!-- In between the <div="reveal"> and the <div class="slides">-->
+              <!-- Any section element inside of this container is displayed as a slide -->
+              <div class="slides">
+		<section>
+		  <section>
+		    <p>
+		      <h2>Design & Analysis: Algorithms</h2>
+                      <h2>14: Binary Search Trees</h2>
+                      <h2>Divide & Conquer</h2>
+		    <p>
+		  </section>
+                  <section data-fullscreen>
+                    <h3>Schedule</h3>
+
+                    <row style="width: 120%">
+                      <col50>
+                        <table style="font-size:16px">
+                          <tr>
+                            <th>#</th>
+                            <th>date</th>
+                            <th>topic</th>
+                            <th>description</th>
+                          </tr>
+                          <tr><td>1</td>
+                            <td> 09-Jan-2023 </td>
+                            <td> Introduction and Introductions </td>
+                            <td> </td>
+                          </tr>
+                          <tr><td>2</td>
+                            <td> 11-Jan-2023 </td>
+                            <td> Basics of Algorithm Analysis </td>
+                            <td> </td>
+                          </tr>
+                          <tr style='background-color: #FBEEC2;'><td>    </td><td> 16-Jan-2023 </td><td> <em>Holiday</em>     </td><td>              </td></tr>
+                          <tr><td>  3 </td><td> 18-Jan-2023 </td><td> Asymptotic Analysis         </td><td> hw1        </td></tr>
+                          <tr><td>  4 </td><td> 23-Jan-2023 </td><td> Recurrence Relations: Substitution </td><td>      </td></tr>
+                          <tr><td>  5 </td><td> 25-Jan-2023 </td><td> Recursion Trees and the Master Theorem     </td><td>  </td></tr>
+                          <tr><td>  6 </td><td> 30-Jan-2023  </td><td> Recurrence Relations: Annihilators    </td></td></td><td> </td></tr>
+<tr><td>  7 </td><td> 1-Feb-2023  </td><td> Recurrence Relations: Transformations  </td><td> hw2, hw1 <i class="fa-solid fa-calendar-check"></i> </td></tr>
+<tr><td>  8 </td><td> 6-Feb-2023  </td><td> Heap & Invariants</td><td>        </td></tr>
+<tr><td>  9 </td><td> 8-Feb-2023 </td><td> Queue & Qsort                      </td><td>          </td></tr>
+<tr><td> 10 </td><td> 13-Feb-2023 </td><td> Analyzing RQsort </td><td>             </td></tr>
+<tr><td>  11 </td><td> 15-Feb-2023  </td><td>  Comparison-based Sorting Analysis  </td><td> hw3, hw2 <i class="fa-solid fa-calendar-check"></i> </td></tr>
+<tr><td> 12 </td><td> 20-Feb-2023 </td><td> Dictionary</td><td>             </td></tr>
+<tr><td> 13 </td><td> 22-Feb-2023 </td><td> Open Address Hashing & Refresher                </td><td>     </td></tr>
+<tr  style='background-color: #E5DDCB;'><td> 14 </td><td> 27-Feb-2023 </td><td> Midterm exam           </td><td>   <em>midpoint</em>         </td></tr>
+<tr style='background-color: #E0E4CC;'><td> 15 </td><td> 1-Mar-2023  </td><td>   Binary Search Trees    </td><td>       <i class='fa fa-map-marker' style='color: #FA6900;'></i>  </td></tr>
+<tr><td> 16 </td><td> 6-Mar-2023  </td><td> </td><td>hw4, hw3 <i class="fa-solid fa-calendar-check"></i> </td></tr>
+<tr><td> 17 </td><td> 8-Mar-2023  </td><td>                     </td><td>       </td></tr>
+</table>
+</col50>
+<col50>
+  <table style="font-size:14px; vertical-align: top;">
+    <tr>
+      <th>#</th>
+      <th>date</th>
+      <th>topic</th>
+      <th>description</th>
+    </tr>
+    <tr style='background-color: #FBEEC2;'><td>  </td><td> 13-Mar-2023 </td><td> <em>Spring Break<em>       </td><td> </td></tr>
+    <tr style='background-color: #FBEEC2;'><td>  </td><td> 15-Mar-2023 </td><td> <em>Spring Break<em>         </td><td>             </td></tr>
+    <tr><td>  18  </td><td> 20-Mar-2023 </td><td> </td><td>hw5, hw4 <i class="fa-solid fa-calendar-check"></i> </td></tr>
+    <tr><td>  19  </td><td> 22-Mar-2023 </td><td>   </td><td>  </td></tr>
+    <tr><td> 20 </td><td> 27-Mar-2023 </td><td> </td><td> </td></tr>
+    <tr><td> 21 </td><td> 29-Mar-2023 </td><td> </td><td></td></tr>
+    <tr><td> 22 </td><td> 3-Apr-2023 </td><td> </td><td> hw6, hw5 <i class="fa-solid fa-calendar-check"></i>         </td></tr>
+    <tr><td> 23 </td><td> 5-Apr-2023  </td><td>  </td><td>             </td></tr>
+    <tr><td> 24 </td><td> 10-Apr-2023  </td><td>  </td><td>            </td></tr>
+    <tr><td> 25 </td><td> 12-Apr-2023 </td><td> </td><td>    hw7, hw6 <i class="fa-solid fa-calendar-check"></i>     </td></tr>
+    <tr><td> 26 </td><td> 17-Apr-2023 </td><td> </td><td>        </td></tr>
+    <tr><td> 27 </td><td> 19-Apr-2023 </td><td> </td><td>  </td></tr>
+    <tr><td> 28 </td><td> 24-Apr-2023 </td><td>  </td><td> hw7 <i class="fa-solid fa-calendar-check"></i>      </td></tr>
+    <tr  style='background-color: #E5DDCB;'><td> 29 </td><td> 26-Apr-2023 </td><td> Final exam </td><td>             </td></tr>
+    <tr style='color: #ccd5d8ff;'><td> 30 </td><td> 2-May-2022 </td><td> </td><td> hw7         </td></tr>
+    <tr style='color: #ccd5d8ff;'><td> 31 </td><td> 4-May-2022  </td><td> </td><td>             </td></tr>
+  </table>
+</col50>
+</row>
+</section>
+
+	          <section>
+		    <h3>Outline of the lecture</h3>
+                    <ul>
+                      <li class="fragment roll-in"> Traversal
+                      <li class="fragment roll-in"> Binary Search Trees
+		    </ul>
+                  </section>
+                </section>
+
+
+
+<section>
+  <section data-background="figures/pale_color_trees.jpeg">
+    <h1 style="text-shadow: 4px 4px 4px #002b36; color: #f1f1f1; margin-top: -100px;">Binary Search Trees</h1>
+  </section>
+
+    <section>
+      <h2>Binary Search Trees</h2>
+      <blockquote style="background-color: #93a1a1; color: #fdf6e3; width:100%; text-align:left;" class="fragment roll-in" >
+        Binary search trees (BST) are another data structure for implementing the dictionary ADT
+        </blockquote>
+    </section>
+
+    <section>
+      <h2><alert>Red</alert>-<span style="color:#000000;">Black</span> Trees</h2>
+      <div style="text-align: left;">
+        <alert>Red</alert>-<span style="color:#000000;">Black</span> trees (a kind of binary tree) also implement the Dictionary ADT:
+      </div>
+    <ul>
+<li class="fragment roll-in"><b><code>Insert(x)</code></b> - $O(\log n)$ time
+<li class="fragment roll-in"><b><code>Lookup(x)</code></b> - $O(\log n)$ time
+<li class="fragment roll-in"><b><code>Delete(x)</code></b> - $O(\log n)$ time
+    </ul>
+    </section>
+    <section>
+      <h2>Why BST</h2>
+      <ul>
+        <li class="fragment roll-in"> When would you use a Search Tree for Dictionary?
+        <li class="fragment roll-in"> When need a hard guarantee on the worst case run times ("mission critical" code)
+        <li class="fragment roll-in"> When want something more dynamic than a hash table (do not want to enlarge a hash table when the load factor gets too large)
+        <li class="fragment roll-in"> Search trees can implement other important operations (Min/Max, Predecessor/Successor)
+      </ul>
+    </section>
+    <section>
+      <h2>Search Tree Operations</h2>
+      <ul>
+<li class="fragment roll-in"><b><code>Insert</code></b>
+<li class="fragment roll-in"><b><code>Lookup</code></b>
+<li class="fragment roll-in"><b><code>Delete</code></b>
+<li class="fragment roll-in"><b><code>Minimum/Maximum</code></b>
+<li class="fragment roll-in"><b><code>Predecessor/Successor</code></b>
+      </ul>
+    </section>
+    <section>
+      <h2>What is a BST?</h2>
+      <ul>
+        <li class="fragment roll-in">It’s a binary tree
+<li class="fragment roll-in">Each node holds a key and record field, and a pointer to left
+and right children
+<li class="fragment roll-in">Binary Search Tree Property is maintained
+      </ul>
+    </section>
+        <section>
+          <h2>Binary Search Tree Property</h2>
+          <blockquote style="background-color: #93a1a1; color: #fdf6e3; width:100%; text-align:left;" class="fragment roll-in" >
+            Let $x$ be a node in a binary search tree. If $y$ is a node in the
+left subtree of $x$, then <code>key(y)≤key(x)</code>. If $y$ is a node in the
+right subtree of $x$ then <code>key(x)≤key(y)</code>
+          </blockquote>
+        </section>
+    <section data-vertical-align-top data-background="figures/balanced_bst.svg"  data-background-size="contain">
+    </section>
+    <section>
+      <h2>Compare with max heap</h2>
+      <row>
+        <col50>
+          <img style="border:0; box-shadow: 0px 0px 0px rgba(255, 255, 255, 255);" width="100%"
+               src="figures/balanced_bst.svg" alt="BST">
+        </col50>
+        <col50>
+          <img style="border:0; box-shadow: 0px 0px 0px rgba(255, 255, 255, 255);" width="100%"
+               src="figures/max_heap_15.svg" alt="HEAP">
+        </col50>
+      </row>
+    </section>
+        <section data-vertical-align-top data-background="figures/balanced_bst_path.svg"  data-background-size="contain">
+    </section>
+        <section>
+          <h2>Simplified implementation</h2>
+<pre class="python fragment roll-in" style="width: 99%; font-size: 12pt;"><code data-trim data-noescape data-line-numbers>
+class Node:
+    lft = None
+    rgt = None
+    def __init__(self, key, val):
+        self.key = key
+        self.val = val
+
+class Tree:                                     # Simple wrapper
+    root = None
+    def __setitem__(self, key, val):
+        self.root = insert(self.root, key, val)
+    def __getitem__(self, key):
+        return search(self.root, key)
+    def __contains__(self, key):
+        try: search(self.root, key)
+        except KeyError: return False
+        return True
+
+def insert(node, key, val):
+    if node is None: return Node(key, val)      # Empty leaf: Add node here
+    if node.key == key: node.val = val          # Found key: Replace val
+    elif key < node.key:                        # Less than the key?
+        node.lft = insert(node.lft, key, val)   # Go left
+    else:                                       # Otherwise...
+        node.rgt = insert(node.rgt, key, val)   # Go right
+    return node
+
+def search(node, key):
+    if node is None: raise KeyError             # Empty leaf: It is not here
+    if node.key == key: return node.val         # Found key: Return val
+    elif key < node.key:                        # Less than the key?
+        return search(node.lft, key)            # Go left
+    else:                                       # Otherwise...
+        return search(node.rgt, key)            # Go right
+
+</code></pre>
+        </section>
+    <section>
+      <h2>Inorder Tree Walk</h2>
+      <pre class="python fragment roll-in" style="width: 99%; font-size: 22pt;"><code data-trim data-noescape data-line-numbers>
+def inorder_tree_walk(node):
+    if node is not None:
+        inorder_tree_walk(node.lft)
+        print(node.key)
+        inorder_tree_walk(node.rgt)
+      </code></pre>
+    </section>
+    <section>
+      <h2>Inorder Walk</h2>
+      <ul>
+<li class="fragment roll-in">BSTs are arranged in such a way that we can print out the
+elements in sorted order in $\Theta(n)$ time
+<li class="fragment roll-in">Inorder Tree-Walk does this
+      </ul>
+    </section>
+    <section data-background="figures/balanced_bst.svg"  data-background-size="contain">
+            <pre class="python fragment roll-in" style="width: 40%; font-size: 12pt; margin-top: -100pt;"><code data-trim data-noescape data-line-numbers>
+def inorder_tree_walk(node):
+    if node is not None:
+        inorder_tree_walk(node.lft)
+        print(node.key)
+        inorder_tree_walk(node.rgt)
+      </code></pre>
+    </section>
+
+    <section>
+      <h2>Analysis</h2>
+      <ul>
+<li class="fragment roll-in">Correctness?
+<li class="fragment roll-in">Run time?
+      </ul>
+    </section>
+    <section>
+      <h2>Search in a Binary Tree</h2>
+      <pre class="python fragment roll-in" style="width: 99%; font-size: 15pt;"><code data-trim data-noescape data-line-numbers>
+def search(node, key):
+    if node is None: raise KeyError             # Empty leaf: It is not here
+    if node.key == key: return node.val         # Found key: Return val
+    elif key < node.key:                        # Less than the key?
+        return search(node.lft, key)            # Go left
+    else:                                       # Otherwise...
+        return search(node.rgt, key)            # Go right
+</code></pre>
+    </section>
+    <section>
+      <h2>Analysis</h2>
+      <ul>
+        <li class="fragment roll-in">Let $h$ be the height of the tree
+        <li class="fragment roll-in">The run time is $O(h)$
+        <li class="fragment roll-in">Correctness???
+      </ul>
+    </section>
+    <section>
+      <h2>In Class Exercise <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100"
+                                 src="figures/dolphin_swim.webp" alt="dolphin"></h2>
+      <ul style="list-style: none;">
+<li class="fragment roll-in"><span class="fa-li"><i class="fa-regular fa-circle-question"></i></span> What is the loop invariant for <code>tree_search</code>?
+<li class="fragment roll-in"><span class="fa-li"><i class="fa-regular fa-circle-question"></i></span> What is Initialization?
+<li class="fragment roll-in"><span class="fa-li"><i class="fa-regular fa-circle-question"></i></span> Maintenance?
+<li class="fragment roll-in"><span class="fa-li"><i class="fa-regular fa-circle-question"></i></span> Termination?
+      </ul>
+    </section>
+    <section>
+      <h2>Loop Invariant Review</h2>
+      <div style="text-align:left;">
+        A useful tool for proving correctness is loop invariants. Three
+things must be shown about a loop invariant
+      </div>
+      <ul>
+<li class="fragment roll-in"><b>Initialization:</b> Invariant is true before first iteration of loop
+<li class="fragment roll-in"><b>Maintenance:</b> If invariant is true before iteration $i$, it is also true before iteration $i + 1$
+<li class="fragment roll-in"><b>Termination:</b> When the loop terminates, the invariant gives a property which can be used to show the algorithm is correct
+      </ul>
+    </section>
+    <section>
+      <h2>Loop Invariant Review</h2>
+      <ul>
+<li class="fragment roll-in">When <b>Initialization</b> and <b>Maintenance</b> hold, the loop invariant is true prior to every iteration of the loop
+<li class="fragment roll-in">Similar to mathematical induction: must show both base
+case and inductive step
+<li class="fragment roll-in">Showing the invariant holds before the first iteration is like
+the base case. Showing the invariant holds from iteration to
+iteration is like the inductive step
+      </ul>
+    </section>
+    <section>
+      <h2>Loop Invariant Review</h2>
+      <ul>
+        <li class="fragment roll-in"><b>Termination</b> shows that if the loop invariant is true after the last iteration of the loop, then the algorithm is correct
+        <li class="fragment roll-in">The termination condition is different than induction
+      </ul>
+    </section>
+    <section>
+      <h2>Choosing Loop Invariants</h2>
+      <ul>
+<li class="fragment roll-in" style="list-style: none;"><span class="fa-li"><i class="fa-regular fa-circle-question"></i></span> How do we choose the right loop invariant for an algorithm?
+<li class="fragment roll-in">A1: There is no standard recipe for doing this. It’s like
+choosing the right guess for the solution to a recurrence
+relation.
+<li class="fragment roll-in">A2: Following is one possible recipe:
+  <ol style="font-size: 18pt;">
+<li class="fragment roll-in"> Study the algorithm and list what important invariants
+seem true during iterations of the loop - it may help to
+simulate the algorithm on small inputs to get this list of
+invariants
+<li class="fragment roll-in"> From the list of invariants, select one which seems strong
+enough to prove the correctness of the algorithm
+<li class="fragment roll-in"> Try to show <b>Initialization</b>, <b>Maintenance</b> and <b>Termination</b>
+for this invariant. If you’re unable to show all three properties, go back to the step 1.
+  </ol>
+      </ul>
+    </section>
+    <section>
+      <h2>Answers</h2>
+      <ul>
+        <li class="fragment roll-in">To show: If key k exists in the tree, <code>search</code> returns the
+elem with key $k$, otherwise <code>search</code> throws an exception KeyError.
+<li class="fragment roll-in"><b>Loop Invariant:</b> If key $k$ exists in the tree, then it exists in the subtree rooted at node $x$
+      </ul>
+    </section>
+    <section>
+      <h2>Answers: initialization</h2>
+      <ul>
+<li class="fragment roll-in"><b>Initialization:</b> Before the first
+iteration, $x$ is the root of the entire tree, therefor if key $k$
+exists in the tree, then it exists in the subtree rooted at node $x$
+      </ul>
+    </section>
+    <section>
+      <h2>Answers: maintenance</h2>
+      <ul style="margin-top: -30px; font-size: 24pt;">
+<li class="fragment roll-in"><b>Maintenance:</b> Assume at the
+beginning of the procedure, it’s true that if key $k$ exists in the
+tree that it is in the subtree rooted at node $x$. There are three
+cases that can occur during the procedure:
+  <ul>
+<li class="fragment roll-in"> Case 1: $key(x)$ is $k$. In this case, the procedure terminates
+and returns $x$, so the invariant continues to hold
+<li class="fragment roll-in"> Case 2: $k < key(x)$. In this case, by the BST Property,
+all keys in the subtree rooted on the right child of $x$ are
+greater than $k$ (since $key(x) > k$). Thus, if $k$ exists in the
+subtree rooted at $x$, it must exist in the subtree rooted at
+<code>x.lft</code>.
+<li class="fragment roll-in"> Case 3: $k > key(x)$. In this case, by the BST Property, All
+keys in the subtree rooted on the right child of $x$ are less
+than $k$ (since $key(x) < k$). Thus, if $k$ exists in the subtree
+rooted at $x$, it must exist in the subtree rooted at <code>x.rgt</code>.
+                         </ul>
+      </ul>
+    </section>
+    <section>
+      <h2>Answers: termination</h2>
+    </section>
+    <section>
+      <h2>Tree min/max</h2>
+      <ul>
+        <li class="fragment roll-in"><code>tree_min(x)</code>: Return the leftmost child in the tree rooted at $x$
+          <pre class="python fragment roll-in" style="width: 99%; font-size: 15pt;"><code data-trim data-noescape data-line-numbers>
+def tree_min(node):
+    while node.lft is not None:
+        node = node.lft
+    return node
+          </code></pre>
+        <li class="fragment roll-in"><code>tree_max(x)</code>: Return the rightmost child in the tree rooted at $x$
+          <pre class="python fragment roll-in" style="width: 99%; font-size: 15pt;"><code data-trim data-noescape data-line-numbers>
+def tree_min(node):
+    while node.rgt is not None:
+        node = node.rgt
+    return node
+          </code></pre>
+      </ul>
+    </section>
+    <section>
+      <row style="width: 115%; margin-left:-50px;">
+        <col50>
+      <h2>Tree-Successor</h2>
+      <pre class="python fragment roll-in" style="width: 99%; font-size: 15pt;"><code data-trim data-noescape data-line-numbers>
+def successor(node):
+    if node.rgt is not None:
+        return tree_min(node.rgt)
+    p = node.parent
+    while p is not None and p.rgt is node:
+        node = p
+        p = node.parent
+    return p
+      </code></pre>
+        </col50>
+        <col50>
+      <h2>Tree-Predecessor</h2>
+      <pre class="python fragment roll-in" style="width: 99%; font-size: 15pt;"><code data-trim data-noescape data-line-numbers>
+def predecessor(node):
+    if node.lft is not None:
+        return tree_max(node.lft)
+    p = node.parent
+    while p is not None and p.lft is node:
+        node = p
+        p = node.parent
+    return p
+      </code></pre>
+      </col50>
+      </row>
+    </section>
+    <section>
+      <h2>Successor Intuition</h2>
+      <ul>
+<li class="fragment roll-in">Case 1: If right subtree of $x$ is non-empty, <code>successor(x)</code> is
+just the leftmost node in the right subtree
+<li class="fragment roll-in">Case 2: If the right subtree of $x$ is empty and $x$ has a successor, then <code>successor(x)</code> is the lowest ancestor of $x$ whose
+left child is also an ancestor of $x$
+      </ul>
+    </section>
+            <section>
+          <h2>Modified implementation</h2>
+          <pre class="python fragment roll-in" style="width: 99%; font-size: 16pt;"><code data-trim data-noescape data-line-numbers="|2">
+class Node:
+    parent = None
+    lft = None
+    rgt = None
+    def __init__(self, key, val):
+        self.key = key
+        self.val = val
+
+class Tree:                                     # Simple wrapper
+    root = None
+    def __setitem__(self, key, val):
+        self.root = insert(self.root, key, val)
+    def __getitem__(self, key):
+        return search(self.root, key)
+    def __contains__(self, key):
+        try: search(self.root, key)
+        except KeyError: return False
+        return True
+</code></pre>
+        </section>
+
+    <section>
+      <h2>Insertion</h2>
+      <pre class="python fragment roll-in" style="width: 99%; font-size: 15pt;"><code data-trim data-noescape data-line-numbers="|6,9">
+def insert(node, key, val):
+    if node is None: return Node(key, val)      # Empty leaf: Add node here
+    if node.key == key: node.val = val          # Found key: Replace val
+    elif key < node.key:                        # Less than the key?
+        node.lft = insert(node.lft, key, val)   # Go left
+        node.lft.parent = node                  # and the parent
+    else:                                       # Otherwise...
+        node.rgt = insert(node.rgt, key, val)   # Go right
+        node.rgt.parent = node                  # and the parent
+    return node
+      </code></pre>
+    </section>
+    <section>
+      <h2>Deletion</h2>
+      <ul>
+<li class="fragment roll-in">Basically there are three cases, two are easy
+and one is tricky
+<li class="fragment roll-in">Case 1: The node to delete has no children. Then we just
+delete the node
+<li class="fragment roll-in">Case 2: The node to delete has one child. Then we delete
+the node and “splice” together the two resulting trees
+      </ul>
+    </section>
+
+    <section>
+      <h2>Deletion: tricky case</h2>
+      Case 3: The node, $x$ to be deleted has two children
+      <ol>
+<li class="fragment roll-in"> Swap $x$ with <code>successor(x)</code> (<code>successor(x)</code> has no more than 1
+child (why?))
+<li class="fragment roll-in"> Remove $x$, using the procedure for case 1 or case 2.
+      </ol>
+    </section>
+    <section data-vertical-align-top data-background="figures/BST_delete.svg"  data-background-size="contain">
+    </section>
+    <section>
+      <h2>Deletion Implementation</h2>
+      <row style="width: 115%; margin-left:-50px;">
+        <col40>
+      <h3>Transplant</h3>
+      <pre class="python fragment roll-in" style="width: 99%; font-size: 15pt;"><code data-trim data-noescape data-line-numbers>
+def transplant(tree, u, v):
+    if u.parent is None:
+        tree.root = v
+    elif u is u.parent.lft:
+        u.parent.lft = v
+    else:
+        u.parent.rgt = v
+    if v is not None:
+        v.parent = u.parent
+      </code></pre>
+        </col40>
+        <col60>
+      <h3>Delete</h3>
+      <pre class="python fragment roll-in" style="width: 99%; font-size: 15pt;"><code data-trim data-noescape data-line-numbers>
+def tree_delete(tree, node):
+    if node.lft is None:
+        tree_transplant(tree, node, node.rgt)
+    elif node.rgt is None:
+        tree_transplant(tree, node, node.lft)
+    else:
+        y = tree_min(node.rgt)
+        if y is not node.rgt:
+            tree_transplant(tree, y, y.rgt)
+            y.rgt = node.rgt
+            y.rgt.parent = y
+        tree_transplant(tree, node, y)
+        y.lft = node.lft
+        y.lft.parent = y
+      </code></pre>
+      </col60>
+      </row>
+    </section>
+    <section id="code.1">
+  </section>
+    <section>
+      <h2>Analysis</h2>
+      <ul>
+<li class="fragment roll-in">All of these operations take $O(h)$ time where $h$ is the height
+of the tree
+<li class="fragment roll-in">If $n$ is the number of nodes in the tree, in the worst case, $h$
+is $O(n)$
+<li class="fragment roll-in">However, if we can keep the tree balanced, we can ensure
+that $h = O(\log n)$
+<li class="fragment roll-in"><alert>Red</alert>-<span style="color:#000000;">Black</span> trees can maintain a balanced BST
+      </ul>
+    </section>
+    <section>
+      <h2>Randomly Built BST</h2>
+      <ul>
+<li class="fragment roll-in">What if we build a binary search tree by inserting a bunch of
+elements at random?
+<li class="fragment roll-in" style="list-style: none;"><span class="fa-li"><i class="fa-regular fa-circle-question"></i></span> What will be the average depth of a node in such a
+randomly built tree? We’ll show that it’s $O(\log n)$
+<li class="fragment roll-in">For a tree $T$ and node $x$, let $d(x, T )$ be the depth of node $x$
+in $T$
+<li class="fragment roll-in">Define the total path length, $P(T)$, to be the sum over all
+nodes $x$ in $T$ of $d(x, T)$
+      </ul>
+    </section>
+    <section>
+      <h2>Analysis</h2>
+      <ul>
+<li class="fragment roll-in">Note that the average depth of a node in $T$ is
+  $$
+  \frac{1}{n} \underset{x\in T}{\sum} d(x,T) = \frac{1}{n} P(T)
+  $$
+<li class="fragment roll-in">Thus we want to show that $P (T) = O(n \log n)$
+      </ul>
+    </section>
+    <section>
+      <h2>Analysis</h2>
+      <ul>
+<li class="fragment roll-in">Let $T_l$ , $T_r$ be the left and right subtrees of $T$ respectively.
+Let $n$ be the number of nodes in $T$
+<li class="fragment roll-in">Then $P (T ) = P (T_l ) + P (T_r ) + n − 1$. Why?
+      </ul>
+    </section>
+    <section>
+      <h2>Analysis</h2>
+      <ul>
+<li class="fragment roll-in">Let $P (n)$ be the expected total depth of all nodes in a randomly built binary tree with $n$ nodes
+<li class="fragment roll-in">Note that for all $i$, $0 \leq i \leq n − 1$, the probability that $T_l$ has
+$i$ nodes and $T_r$ has $n − i − 1$ nodes is $1/n$.
+<li class="fragment roll-in">Thus $P (n) = \frac{1}{n} \sum_{i=0}^{n-1} (P(i) + P(n-i-1)+n-1)$
+      </ul>
+    </section>
+    <section>
+      <h2>Analysis</h2>
+      <span style="font-size: 22pt;">
+      \begin{align}
+      P(n) & = \frac{1}{n} \sum_{i=0}^{n-1} (P(i) + P(n-i-1)+n-1)\\
+      & = \frac{1}{n} \sum_{i=0}^{n-1} (P(i) + P(n-i-1)) + \frac{1}{n} \sum_{i=0}^{n-1}(n-1)\\
+      & = \frac{1}{n} \sum_{i=0}^{n-1} (P(i) + P(n-i-1)) + \Theta(n)\\
+      & = \frac{1}{n} \sum_{i=0}^{n-1} P(i) + \frac{1}{n} \sum_{i=0}^{n-1} P(n-i-1)  + \Theta(n)\\
+      & = \frac{2}{n} \sum_{i=0}^{n-1} P(i)  + \Theta(n)\\
+      \end{align}
+      </span>
+    </section>
+    <section>
+      <h2>Analysis</h2>
+      <ul>
+        <li class="fragment roll-in"> We have $P(n) =  \frac{2}{n} \sum_{i=0}^{n-1} P(i)  + \Theta(n)$
+        <li class="fragment roll-in"> The same as  randomized Quicksort recurrence
+        <li class="fragment roll-in"> $P (n) = O(n \log n)$ (proof left as homework)
+      </ul>
+    </section>
+    <section>
+      <h2>Take Away</h2>
+      <ul style="width: 105%;">
+<li class="fragment roll-in">$P (n)$ is the expected total depth of all nodes in a randomly
+built binary tree with n nodes.
+<li class="fragment roll-in">We’ve shown that $P (n) = O(n \log n)$
+<li class="fragment roll-in">There are $n$ nodes total
+<li class="fragment roll-in">Thus the expected average depth of a node is $O(\log n)$
+<li class="fragment roll-in">The expected average depth of a node in a randomly built
+binary tree is $O(\log n)$
+<li class="fragment roll-in">This implies that operations like search, insert, delete take
+expected time $O(\log n)$ for a randomly built binary tree
+      </ul>
+    </section>
+    <section>
+      <h2><i class="fa-solid fa-triangle-exclamation"></i> Warning <i class="fa-solid fa-triangle-exclamation"></i></h2>
+      <ul>
+<li class="fragment roll-in">In many cases, data is not inserted randomly into a binary
+search tree
+<li class="fragment roll-in">I.e. many binary search trees are not “randomly built”
+<li class="fragment roll-in">For example, data might be inserted into the binary search
+tree in almost sorted order
+<li class="fragment roll-in">Then the BST would not be randomly built, and so the
+expected average depth of the nodes would not be $O(\log n)$
+      </ul>
+    </section>
+    <section>
+      <h2></h2>
+    </section>
+
+</section>
+
+                <section>
+                  <h2>See you</h2>
+                  Monday March $6^{th}$
+                </section>
+
+              </div>
+
+            </div>
+
+            <script src="dist/reveal.js"></script>
+
+            <!-- <link rel="stylesheet" href="lib/css/monokai.css"> -->
+            <script src="plugin/highlight/highlight.js"></script>
+            <script src="plugin/math/math.js"></script>
+            <script src="plugin/chalkboard/plugin.js"></script>
+            <script src="plugin/notes/notes.js"></script>
+            <script src="plugin/zoom/zoom.js"></script>
+            <script src="node_modules/reveal.js-menu/menu.js"></script>
+
+                <script type="text/javascript">
+
+	// Event start load section on slide
+	Reveal.addEventListener('slidechanged', function(event) {
+		//-- check if current slide with code
+	    var sectionID = Reveal.getCurrentSlide().id;
+
+	    if(sectionID === "code.1") {
+	       document.getElementById("div4code.1").style.display = "block";
+	    } else {
+	       document.getElementById("div4code.1").style.display = "none"
+	    }
+
+	});
+
+
+    </script>
+
+            <script>
+              // Full list of configuration options available at:
+              // https://github.com/hakimel/reveal.js#configuration
+              let notes = document.querySelectorAll('aside.notes');
+              notes.forEach(n => {
+	      let html = n.innerHTML;
+	      html = html.trim().replace(/\n/g, '<br/>');
+	      n.innerHTML = html;
+              });
+              Reveal.initialize({
+                  // history: true,
+                  hash: true,
+                  margin: 0.01,
+                  minScale: 0.01,
+                  maxScale: 1.23,
+                  menu: {
+                      themes: true,
+                      openSlideNumber: true,
+                      openButton: false,
+                  },
+                  customcontrols: {
+                      slideNumberCSS : 'position: fixed; display: block; right: 90px; top: auto; left: auto; width: 50px; bottom: 30px; z-index: 31; font-family: Helvetica, sans-serif; font-size:  12px; line-height: 1; padding: 5px; text-align: center; border-radius: 10px; background-color: rgba(128,128,128,.5)',
+                      controls: [
+                          { icon: '<i class="fa fa-caret-left"></i>',
+                            css: 'position: fixed; right: 60px; bottom: 30px; z-index: 30; font-size: 24px;',
+                            action: 'Reveal.prev(); return false;'
+                          },
+                          { icon: '<i class="fa fa-caret-right"></i>',
+                            css: 'position: fixed; right: 30px; bottom: 30px; z-index: 30; font-size: 24px;',
+                            action: 'Reveal.next(); return false;'
+                          }
+                      ]
+                  },
+                  chalkboard: {
+                      boardmarkerWidth: 1,
+                      chalkWidth: 2,
+                      chalkEffect: 1,
+                      slideWidth: Reveal.width,
+                      slideHeight: Reveal.height,
+                      toggleNotesButton: false,
+                      toggleChalkboardButton: false,
+                      //src: "chalkboards/chalkboard_em2.json",
+                      readOnly: false,
+                      theme: "blackboard",
+                      eraser: { src: "plugin/chalkboard/img/sponge.png", radius: 30},
+                  },
+
+                  math: {
+                      mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
+                      config: 'TeX-AMS_SVG-full',
+                      // pass other options into `MathJax.Hub.Config()`
+                      TeX: {
+                          Macros: {
+        	              RR: '\\mathbb{R}',
+        	              PP: '\\mathbb{P}',
+        	              EE: '\\mathbb{E}',
+        	              NN: '\\mathbb{N}',
+        	              vth: '\\vec{\\theta}',
+                              loss: '{\\cal l}',
+                              hclass: '{\\cal H}',
+                              CD: '{\\cal D}',
+                              def: '\\stackrel{\\text{def}}{=}',
+                              pag: ['\\text{pa}_{{\cal G}^{#1}}(#2)}', 2],
+                              vec: ['\\boldsymbol{\\mathbf #1}', 1],
+        	              set: [ '\\left\\{#1 \\; : \\; #2\\right\\}', 2 ],
+                              bm: ['\\boldsymbol{\\mathbf #1}', 1],
+                              argmin: ['\\operatorname\{arg\\,min\\,\}'],
+                              argmax: ['\\operatorname\{arg\\,max\\,\}'],
+                              prob: ["\\mbox{#1$\\left(#2\\right)$}", 2],
+                              floor: ["\\lfloor #1 \\rfloor",1]
+                          },
+                          loader: {load: ['[tex]/color']},
+                          extensions: ["color.js"],
+                          tex: {packages: {'[+]': ['color']}},
+                          svg: {
+                              fontCache: 'global'
+                          }
+                      }
+                  },
+
+                  plugins: [ RevealMath, RevealChalkboard, RevealHighlight, RevealNotes, RevealZoom, RevealMenu ],
+
+              });
+
+              Reveal.configure({ fragments: false }); // set false when developing to see everything at once
+              Reveal.configure({ slideNumber: true });
+              //Reveal.configure({ history: true });
+              Reveal.configure({ slideNumber: 'c / t' });
+              Reveal.addEventListener( 'darkside', function() {
+                  document.getElementById('theme').setAttribute('href','dist/theme/aml_dark.css');
+              }, false );
+              Reveal.addEventListener( 'brightside', function() {
+                  document.getElementById('theme').setAttribute('href','dist/theme/aml.css');
+              }, false );
+            </script>
+            <style type="text/css">
+              /* 1. Style header/footer <div> so they are positioned as desired. */
+              #header-left {
+                  position: absolute;
+                  top: 0%;
+                  left: 0%;
+              }
+              #header-right {
+                  position: absolute;
+                  top: 0%;
+                  right: 0%;
+              }
+              #footer-left {
+                  position: absolute;
+                  bottom: 0%;
+                  left: 0%;
+              }
+            </style>
+
+            <!-- // 2. Create hidden header/footer -->
+            <div id="hidden" style="background; display:none;">
+              <div id="header">
+                <div id="header-left"><h4>CS4520</h4></div>
+                <div id="header-right"><h4>Algorithms</h4></div>
+                <div id="footer-left">
+                  <!-- <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100" -->
+                  <!--      src="figures/flowchart.png" alt="robot learning"> -->
+                </div>
+              </div>
+            </div>
+
+
+            <script type="text/javascript">
+              // 3. On Reveal.js ready event, copy header/footer <div> into each `.slide-background` <div>
+              var header = $('#header').html();
+              if ( window.location.search.match( /print-pdf/gi ) ) {
+                  Reveal.addEventListener( 'ready', function( event ) {
+                      $('.slide-background').append(header);
+                  });
+              }
+              else {
+                  $('div.reveal').append(header);
+              }
+            </script>
+
+  </body>
+</html>
