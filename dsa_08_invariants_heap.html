@@ -1,0 +1,736 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="css/fontawesome-free-6.2.1-web/css/all.css" rel="stylesheet">
+
+    <script src="lib/colorbrewer.v1.min.js" charset="utf-8"></script>
+    <script src="lib/colorStringStandalone.js" charset="utf-8"></script>
+    <script type="text/javascript" src="lib/jquery-2.2.4.min.js"></script>
+
+    <title>Design & Analysis: Algorithms</title>
+
+    <meta name="description" content="CS4851/6851 GSU class">
+    <meta name="author" content="Sergey M Plis">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+    <!-- <link rel="stylesheet" href="lib/css/zenburn.css"> -->
+    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="dist/theme/aml.css" id="theme">
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.scss';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+
+    </script>
+  </head>
+
+
+  <body>
+    <div class="reveal">
+      <!-- In between the <div="reveal"> and the <div class="slides">-->
+          <!-- <header style="position: absolute; top: 10px; left: 100px; z-index: 500; font-size:100px;background-color: rgba(0,0,0,0); text-align: center !important"></header>  -->
+          <!-- In between the <div="reveal"> and the <div class="slides">-->
+              <!-- Any section element inside of this container is displayed as a slide -->
+              <div class="slides">
+		<section>
+		  <section>
+		    <p>
+		      <h2>Design & Analysis: Algorithms</h2>
+                      <h1>08: Heap</h1>
+		    <p>
+		  </section>
+	          <section>
+		    <h3>Outline of the lecture</h3>
+                    <ul>
+                      <li class="fragment roll-in"> Recurrences: Recap
+		      <li class="fragment roll-in"> Loop Invariants
+		      <li class="fragment roll-in"> Heap
+		    </ul>
+                  </section>
+                </section>
+
+                <section>
+                  <section>
+                    <h1>Recap</h1>
+                    <h2>Recurrence relations</h2>
+                  </section>
+                  <section>
+                    <h2><code>alg1</code></h2>
+                    <pre class="python"><code data-trim data-noescape data-line-numbers>
+def alg1(n):
+    if n < 1:
+        return 1
+    else:
+        return alg1(n//2) + alg1(n//2) + n
+           </code></pre>
+                    <ul>
+<li class="fragment roll-in"> Let $T(n)$ be the run time of <code>alg1</code> on input $n$
+<li class="fragment roll-in"> Then we can write $T(n) = 2T(n/2) + 1$
+<li class="fragment roll-in"> Let $f(n)$ be the value returned by <code>alg1</code> on input $n$
+<li class="fragment roll-in"> Then we can write $f(n) = 2f(n/2) + n$ and $f(1) = 1$
+                    </ul>
+                  </section>
+                  <section data-vertical-align-top>
+                    <h2>Substitution method</h2>
+                  </section>
+                  <section>
+                    <div id="header-right" style="margin-left: 500px; margin-right: -200px; margin-top: -40px">
+                      <blockquote style="text-align: left; font-size:22pt;">
+                        Guess: solution to $T(n) = 2T(n/2) + n$ is $T(n) = O(n \log n)$ <br>and show $\exists c$, $T(n) \leq cn\log n$
+                      </blockquote>
+                    </div>
+                    <h2>Proof</h2>
+                    <p>
+                    <div style="font-size:32px;">
+                    <ul>
+                      <li class="fragment roll-in"> Base Case: $T (2) \leq c\cdot 2$
+                      <li class="fragment roll-in"> Inductive Hypothesis: $\forall j < n$, $T(j) ≤ cj \log j$
+                      <li class="fragment roll-in"> Inductive Step:
+                        \begin{array}
+                        TT(n) &= 2T (n/2) + n\\
+                        & \fragment{4}{ \leq 2(cn/2 \log(n/2)) + n}\\
+                        & \fragment{5}{ \leq cn \log(n/2) + n}\\
+                        & \fragment{6}{ = cn (\log(n) - \log 2) + n}\\
+                        & \fragment{7}{ = cn\log(n) - cn + n}\\
+                        & \fragment{8}{ \leq cn\log(n) }\\
+                        & \fragment{9}{\mbox{The last step holds if } c>1}
+                        \end{array}
+                    </ul>
+                    </div>
+                  </section>
+                  <section data-vertical-align-top>
+                    <h2>Recursion Trees</h2>
+                  </section>
+                  <section>
+                    <h2>Mergesort</h2>
+                    Consider the recurrence for the running time of Mergesort: $T(n) = 2T(n/2) + n$, $T(1) = O(1)$
+                        <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100%"
+                             src="figures/binary_tree01.svg" alt="mergesort colors">
+                  </section>
+                  <section data-vertical-align-top>
+                    <h2>Master theorem</h2>
+                  </section>
+                  <section>
+                    <h2>Master Method (the theorem)</h2>
+                    <div style="text-align: left;">
+                      The recurrence $T(n) = aT(n/b) + f(n)$ can be solved as follows:
+                      </div>
+                    <ul>
+                      <li class="fragment roll-in">If $a f (n/b) \leq Kf(n)$ for some constant $K < 1$, then <alert>$T(n) = \Theta(f (n))$</alert>.
+                                                                                                    <li class="fragment roll-in">If $a f (n/b) \geq K f(n)$ for some constant $K > 1$, then <alert>$T(n) = \Theta(n^{\log_b a})$</alert>.
+                        <li class="fragment roll-in">If $a f (n/b) = f (n)$, then <alert>$T(n) = \Theta(f(n) \log_b n)$</alert>.
+</ul>
+                  </section>
+                  <section data-vertical-align-top>
+                    <h2>Annihilators</h2>
+                  </section>
+                                    <section>
+                    <h2>First, calculate the annihilator</h2>
+                    <div class="fragment roll-in" style="text-align:left;">
+                    </div>
+                    <ul>
+                      <li class="fragment roll-in">Recurrence: $T (n) = 4 \times T (n − 1)$, $T (0) = 2$
+                      <li class="fragment roll-in">Sequence: $T = < 2, 2 \times 4, 2 \times 4^2, 2 \times 4^3, \cdots >$
+                          <li class="fragment roll-in">Calculate the annihilator:
+                            <ul>
+<li class="fragment roll-in"> $\bm{E}T = < 2 \times 4, 2 \times 4^2, 2 \times 4^3, 2 \times 4^4, \cdots >$
+<li class="fragment roll-in"> $4T = < 2 \times 4, 2 \times 4^2, 2 \times 4^3, 2 \times 4^4, \cdots >$
+<li class="fragment roll-in"> Thus $\bm{E}T − 4T = < 0, 0, 0, \cdots >$
+<li class="fragment roll-in"> And so $\bm{E} − 4$ is the annihilator
+                      </ul>
+                    </ul>
+                                    </section>
+                  <section>
+                    <h3>Now use the annihilator to solve the recurrence</h3>
+                    <div class="fragment roll-in" style="text-align:left;">
+                    </div>
+                    <ul>
+                      <li class="fragment roll-in">Look up the annihilator in the “Lookup Table”
+                      <li class="fragment roll-in">The annihilator $\bm{E} − 4$ annihilates any sequence of
+the form $< \alpha \cdot a^n >$
+<li class="fragment roll-in">Thus $T (n) = \alpha 4^n$, but what is $\alpha$?
+<li class="fragment roll-in">We know $T (0) = 2$, so $T (0) = \alpha \cdot 4^0 = 2$ and so $\alpha = 2$
+<li class="fragment roll-in">Thus $T (n) = 2 \cdot 4^n$
+                    </ul>
+                  </section>
+
+                </section>
+
+                <section>
+                  <section>
+                    <h1>Loop Invariants</h1>
+                  </section>
+
+                  <section>
+                    <h2>Correctness of Algorithms</h2>
+                    <ul>
+                      <li class="fragment roll-in">The most important aspect of algorithms is their correctness
+                      <li class="fragment roll-in">An algorithm by definition always gives the right answer to the problem
+                      <li class="fragment roll-in">A procedure which does not always give the right answer is a heuristic
+                      <li class="fragment roll-in">All things being equal, we prefer an algorithm to a heuristic
+                      <li class="fragment roll-in">How do we prove an algorithm is really correct?
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Loop invariants</h2>
+                    <div class="fragment roll-in" style="text-align:left; margin-top:-20px; width:100%;font-size:32pt;">
+                      A useful tool for proving correctness is loop invariants. Three things must be shown about a loop invariant
+                      </div>
+                    <ul>
+                      <li class="fragment roll-in"><b>Initialization</b>: Invariant is true before first iteration of loop
+<li class="fragment roll-in"><b>Maintenance</b>: If invariant is true before iteration $i$, it is also true before iteration $i + 1$ (for any $i$)
+<li class="fragment roll-in"><b>Termination</b>: When the loop terminates, the invariant gives a property which can be used to show the algorithm is correct
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Example Loop Invariant</h2>
+                    <ul>
+                      <li class="fragment roll-in">We&#39;ll prove the correctness of a simple algorithm which solves the following interview question:
+                      <li class="fragment roll-in" style="list-style:none;"><em>Find the middle of a linked list, while only going through the list once</em>
+                      <li class="fragment roll-in">The basic idea is to keep two pointers into the list, one of the pointers moves twice as fast as the other
+                      <li class="fragment roll-in"> (Call the head of the list the $0$-th element, and the tail of the list the $(n-1)$-st element, assume that $n-1$ is an even number)
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Implementation</h2>
+                    <pre class="python"><code data-trim data-noescape data-line-numbers>
+def mklist(*args):
+    result = None
+    for element in reversed(args):
+        result = (element, result)
+    return result
+
+def getMiddle(list1):
+    pSlow = pFast = list1
+    while pSlow[1] is not None \
+        and pFast[1] is not None \
+        and pFast[1][1] is not None:
+        pFast = pFast[1][1]
+        pSlow = pSlow[1]
+    return pSlow
+
+t = mklist(1,2,3,4,5,6,7,8,9,10,11)
+r = getMiddle(t)
+print(r)
+# (6, (7, (8, (9, (10, (11, None))))))
+                      </code></pre>
+                  </section>
+                  <section>
+                    <h2>Example loop invariant</h2>
+                    <ul style="font-size:26pt;">
+                      <li class="fragment roll-in"><b>Invariant</b>: At the start of the $i$-th iteration of the while loop, <code>pSlow</code> points to the $i$-th element in the list and <code>pFast</code> points to the $2i$-th element
+<li class="fragment roll-in"><b>Initialization</b>: True when $i = 0$ since both pointers are at the head
+<li class="fragment roll-in"><b>Maintenance</b>: if <code>pSlow</code>, <code>pFast</code> are at positions $i$ and $2i$ respectively before $i$-th iteration, they will be at positions $i+1$, $2(i+1)$ respectively before the $i + 1$-st iteration
+<li class="fragment roll-in"><b>Termination</b>: When the loop terminates, <code>pFast</code> is at element $n-1$. Then by the loop invariant, <code>pSlow</code> is at element $(n-1)/2$. Thus <code>pSlow</code> points to the middle of the list
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Challenge</h2>
+                    <blockquote style="background-color: #93a1a1; color: #fdf6e3; font-size: 42px; width:100%; text-align: left;">
+                      Figure out how to use a similar idea to determine if there is a loop in a linked list <i>without marking nodes</i> or equivalently using only two additional pointers/memory cells.
+                    </blockquote>
+                    <div style="font-size:22pt; text-align: justify;">
+                      Note, because each node has only a single <code>next</code> pointer, if one of the pointers for some reason ends up pointing to an upstream node, a loop is created. If the linked list is traversed from the head node in increments of 1, the process will go into an infinite loop.
+                    </div>
+                  </section>
+                </section>
+
+                <section>
+                  <section data-background="figures/tree_xkcd835.png" data-background-size="contain" data-vertical-align-top>
+                    <h2 style="text-shadow: 4px 4px 4px #002b36; color: #f1f1f1; margin-left: -600pt;">HEAP</h2>
+                    <div class="slide-footer">
+                      <a href="https://xkcd.com/835/">https://xkcd.com/835/</a>
+                    </div>
+                  </section>
+
+                  <section>
+                    <h2>What is a heap</h2>
+                    <blockquote style="background-color: #93a1a1; color: #fdf6e3; font-size: 42px; width:100%; text-align:left;">
+                      "A heap data structure is <mark>an array</mark> that can be viewed as a nearly complete <mark>binary tree</mark>"
+                      </blockquote>
+                    <ul>
+                      <li class="fragment roll-in">Each element of the array corresponds to a value stored at some node of the tree
+                      <li class="fragment roll-in">The tree is completely filled at all levels except for possibly the last which is filled from left to right
+                    </ul>
+                  </section>
+                  <section>
+                    <h2><code>heap_size</code></h2>
+                    <ul>
+                      <li class="fragment roll-in">An array <code>A</code> that
+                      represents a heap has two attributes
+                        <ul>
+                      <li class="fragment
+                      roll-in"> <code>length</code> which is the
+                      number of elements in the array
+                      <li class="fragment
+                      roll-in"> <code>heap-size</code> which is the
+                      number of elems in the heap stored within the
+                      array
+                        </ul>
+                      <li class="fragment roll-in">I.e. only the
+elements in <code>A[0..heap_size-1]</code> are elements of the heap
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Tree structure</h2>
+                    <ul>
+                      <li class="fragment roll-in"><code>A[0]</code> is the root of the tree
+                      <li class="fragment roll-in"> For all $i$, $0 < i < \text{heap_size}$
+                                                                          <ul>
+                                                                            <li class="fragment roll-in"> <code>parent(i)</code> $= \floor{(i-1)/2}$
+                                                                            <li class="fragment roll-in"><code>left(i) = 2i+1</code>
+                                                                            <li class="fragment roll-in"><code>right(i) = 2i+2</code>
+                                                                          </ul>
+                      <li class="fragment roll-in">If <code>left(i) > heap_size-1</code>, there is no left child of $i$
+                      <li class="fragment roll-in">If <code>right(i) > heap_size-1</code>, there is no right child of $i$
+<li class="fragment roll-in">If <code>parent(i) < 0</code>, there is no parent of $i$
+                                                  </ul>
+                  </section>
+                  <section>
+                      <div id="header-right" style="margin-left: 500px; margin-right: -50px; margin-top: 50px; width: 30%">
+                        <blockquote style="text-align: left; font-size:22pt; width: 110%;">
+                          <ul>
+                            <li> <code>parent(i)</code> $= \floor{(i-1)/2}$
+                            <li><code>left(i) = 2i+1</code>
+                            <li><code>right(i) = 2i+2</code>
+                          </ul>
+                        </blockquote>
+                    </div>
+                    <h2>Example</h2>
+                    <img style="border:0; box-shadow: 0px 0px 0px
+                                rgba(150, 150, 255, 0.8); width:60%;"
+                         class="reveal"  src="figures/heap_lecture7.svg" alt="heap">
+                  </section>
+                  <section data-background="figures/Heap-as-array.svg" data-background-size="contain">
+                    <div class="slide-footer">
+                      <a href="https://en.wikipedia.org/wiki/Heap_(data_structure)">Wikipedia</a>
+                    </div>
+                  </section>
+                  <section>
+                    <h2>max-heap property</h2>
+                    <ul>
+                      <li class="fragment roll-in">For every node $i$ other than the root, <code>A[parent[i]]</code> $\geq$ <code>A[i]</code>
+                      <li class="fragment roll-in">Parent is always at least as large as its children
+                      <li class="fragment roll-in"> Largest element is at the root
+                    </ul>
+                    <div class="slide-footer">
+                      A Min-heap is organized the opposite way
+                    </div>
+                  </section>
+                  <section>
+                    <h2>Height of Heap</h2>
+                    <ul>
+                      <li class="fragment roll-in">Height of a node in a heap is the number of edges in the longest simple downward path from the node to a leaf
+                      <li class="fragment roll-in">Height of a heap of $n$ elements is $\Theta(\log n)$. Why?
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Maintaining Heaps</h2>
+                    <ul>
+                      <li class="fragment roll-in" style="list-style: none;"><i class="fa fa-question-circle" aria-hidden="true"></i> How to maintain the heap property?
+                      <li class="fragment roll-in"><code>max_heapify</code> is given an array and an index $i$. Assumes that the binary trees rooted at <code>left(i)</code> and <code>right(i)</code> are max heaps, but <code>A[i]</code> may be smaller than its children.
+                      <li class="fragment roll-in"><code>max_heapify</code> ensures that after its call, the subtree rooted at $i$ is a Max-Heap
+                    </ul>
+                  </section>
+                  <section>
+                    <h2><em>Max-Heapify</em></h2>
+                    <ul>
+                      <li class="fragment roll-in">Main idea of the <code>max_heapify</code> algorithm is that is percolates down the element that starts at <code>A[i]</code> to the point where the subtree rooted at $i$ is a <code>max-heap</code>
+                      <li class="fragment roll-in">To do this, it repeatedly swaps <code>A[i]</code> with its largest child until <code>A[i]</code> is bigger than both its children
+                      <li class="fragment roll-in">For simplicity the algorithm is described recursively
+                    </ul>
+                  </section>
+                  <section>
+                    <h2><em>Max-Heapify</em></h2>
+                    <pre class="python"><code data-trim data-noescape data-line-numbers="9|10|11|12-13|14-15|16-18">
+def parent(i): return (i-1)//2
+def left(i): return 2*i+1
+def right(i): return 2*i+2
+def swap(A, i, j): A[i], A[j] = A[j], A[i]
+
+def max_heapify(A, i, heap_size=None):
+    if heap_size is None:
+        heap_size = len(A)
+    l = left(i)
+    r = right(i)
+    largest = i
+    if l < heap_size and A[l] > A[i]:
+        largest = l
+    if r < heap_size and A[r] > A[largest]:
+        largest = r
+    if largest != i:
+        swap(A, i, largest)
+        max_heapify(A, largest, heap_size=heap_size)
+                    </code></pre>
+                  </section>
+                  <section>
+                    <h2 style="margin-bottom:-100px;">Example</h2>
+                    <row>
+                      <col50>
+                        <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="70%"
+                             src="figures/maxheapify_h1.svg" class="fragment roll-in" alt="max_heapify">
+                      </col50>
+                      <col50>
+                        <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="70%"
+                             src="figures/maxheapify_h2.svg" class="fragment roll-in" alt="max_heapify">
+                      </col50>
+                    </row>
+                    <row style="margin-top:-30px;">
+                      <col50>
+                        <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="70%"
+                             src="figures/maxheapify_h3.svg" class="fragment roll-in" alt="max_heapify">
+                      </col50>
+                      <col50>
+                        <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="70%"
+                             src="figures/maxheapify_h4.svg" class="fragment roll-in" alt="max_heapify">
+                      </col50>
+                    </row>
+                  </section>
+                  <section>
+                    <row>
+                      <col50>
+                        <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100%"
+                             src="figures/maxhepify.gif" alt="max_heapify-gif">
+                      </col50>
+                      <col50>
+                        <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100%"
+                             src="figures/gaussian_percolation.gif" class="fragment roll-in" alt="Galton Board">
+                      </col50>
+                    </row>
+                  </section>
+
+                  <section>
+                    <h2>Analysis</h2>
+                    <ul>
+                      <li class="fragment roll-in">Let $T(h)$ be the runtime of <em>Max-Heapify</em> on a subtree of height $h$
+                      <li class="fragment roll-in">Then $T(1) = \Theta(1)$, $T(h) = T(h-1) + 1$
+                      <li class="fragment roll-in">Solution to this recurrence is $T(h) = \Theta(h)$
+                      <li class="fragment roll-in">Thus, if we let $T(h)$ be the runtime of <em>Max-Heapify</em> on a sub-tree of size $n$, $T(n) = O(\log n)$, since $\log n$ is the maximum height of heap of size $n$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Build Max Heap</h2>
+                    <ul>
+                      <li class="fragment roll-in" style="list-style: none;"><i class="fa fa-question-circle" aria-hidden="true"></i> How can we convert an arbitrary array into a max-heap?
+                      <li class="fragment roll-in"> Use <code>max_heapify</code> in a bottom up manner
+                      <li class="fragment roll-in"> <em>Note</em>: The elements <code>A[$\floor{n/2}+1$]..A[n]</code> are all leaf nodes of the tree, so each is a $1$ element heap to begin with
+                    </ul>
+                  </section>
+                  <section>
+                    <h2><em>Build-Max-Heap</em></h2>
+                    <pre class="python"><code data-trim data-noescape data-line-numbers>
+def build_max_heap(A):
+    heap_size = len(A)
+    for i in range(heap_size//2,-1,-1):
+        max_heapify(A,i, heap_size=heap_size)
+                    </code></pre>
+                    $$
+                    A = [4, 2, 1, 6, 7, 9, 11, 5, 3, 8]
+                    $$
+                  </section>
+                  <section>
+                    $
+                    A = [4, 2, 1, 6, 7, 9, 11, 5, 3, 8]
+                    $
+                    <row>
+                      <col30>
+                        <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100%"
+                             src="figures/build_heap_h1.svg" class="fragment roll-in" alt="build_heap">
+                      </col30>
+                      <col30>
+                        <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100%"
+                             src="figures/build_heap_h2.svg" class="fragment roll-in" alt="build_heap">
+                      </col30>
+                      <col30>
+                        <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100%"
+                             src="figures/build_heap_h3.svg" class="fragment roll-in" alt="build_heap">
+                      </col30>
+                    </row>
+                    <row>
+                      <col30>
+                        <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100%"
+                             src="figures/build_heap_h4.svg" class="fragment roll-in" alt="build_heap">
+
+                      </col30>
+                      <col30>
+                        <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100%"
+                             src="figures/build_heap_h5.svg" class="fragment roll-in" alt="build_heap">
+
+                      </col30>
+                      <col30>
+                        <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100%"
+                             src="figures/build_heap_h6.svg" class="fragment roll-in" alt="build_heap">
+                      </col30>
+                    </row>
+                  </section>
+                  <section>
+                    <h2>Loop Invariant</h2>
+                    <blockquote style="background-color: #93a1a1; color: #fdf6e3; width:100%; text-align:left;" class="fragment roll-in" >
+                      At the start of the $i^{th}$ iteration of the for loop, each node $i+1$, $i+2$, $\dots n$ is the root of a <em>Max-Heap</em>
+                      </blockquote>
+                  </section>
+                  <section>
+                    <h2 style="margin-bottom: -20px;">Correctness <i class="fa-solid fa-check-double"></i></h2>
+                    <ul>
+                      <li class="fragment roll-in"><b>Initialization:</b> $i = \floor{n/2}$ prior to first iteration. But each node $\floor{n/2}+1$, $\floor{n/2}+2$, $\dots$, $n$ is a leaf so is the root of a trivial <em>Max Heap</em>
+                      <li class="fragment roll-in"><b>Termination:</b> At termination, $i=0$, so each node $0,\dots, n-1$ is the root of a <em>Max Heap</em>. In particular, node $0$ is the root of a <em>Max Heap</em>.
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Maintenance <i class="fa-solid fa-screwdriver-wrench"></i></h2>
+                    <ul>
+                      <li class="fragment roll-in"><b>Maintenance:</b>First, note that if the nodes $i+1, \dots, n$ are the roots of <em>Max Heaps</em> before the call to <code>max_heapify(A,i)</code>, then they will be the roots of <em>Max Heaps</em> after the call.
+                      <li class="fragment roll-in"> Further, note that the children of node $i$ are numbered higher than $i$ and thus by the loop invariant are both roots of <em>Max Heaps</em>.
+                      <li class="fragment roll-in"> Thus, after the call to <code>max_heapify(A,i)</code>, the node $i$ is the root of a <em>Max Heap</em>.
+                      <li class="fragment roll-in"> Hence, when we decrement $i$ in the for loop, the loop invariant is established.
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>(Naive) Time Analysis <i class="fa-solid fa-stopwatch"></i></h2>
+                    <ul>
+                      <li class="fragment roll-in"> <code>max_heapify</code> takes $O(\log n)$ time per call
+                      <li class="fragment roll-in"> There are $O(n)$ calls to <code>max_heapify</code>
+                      <li class="fragment roll-in"> Thus, the running tim is $O(n\log n)$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>(Better) Time Analysis <i class="fa-solid fa-stopwatch-20"></i></h2>
+                    <ul>
+                      <li class="fragment roll-in">An $n$ element heap has height no more than $\log n$
+                      <li class="fragment roll-in">There are at most $n/2^h$ nodes at any height $h$ (to see this, consider the minimum number of nodes in a heap of height $h$)
+                      <li class="fragment roll-in">Time required by <code>max_heapify</code> when called on a node of height $h$ is $O(h)$
+                      <li class="fragment roll-in">Thus, total time is $\sum_{h=0}^{\log n} \frac{n}{2^h} O(h)$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>(Better) Time Analysis <i class="fa-solid fa-stopwatch-20"></i></h2>
+                    \begin{align}
+                    \sum_{h=0}^{\log n} \frac{n}{2^h} O(h) & = O\left(n \sum_{h=0}^{\log n} \frac{h}{2^h}\right)\\
+                    & = O\left(n \sum_{h=0}^{\infty} \frac{h}{2^h}\right)\\
+                    & = O(n)
+                    \end{align}
+                    <div class="slide-footer">
+                      $\sum_{i=0}^\infty i x^i = \frac{x}{(1-x)^2}$, can derive from the already known $\sum_{i=0}^\infty x^i = \frac{1}{1-x}$ and taking derivative of both sides
+                    </div>
+                  </section>
+
+                  <section>
+                    <h2><code>heap_sort</code></h2>
+                    <pre class="python"><code data-trim data-noescape data-line-numbers>
+def heap_sort(A):
+    # build maxheap
+    build_max_heap(A)
+    heap_size = len(A)
+    while heap_size > 0:
+        swap(A, 0, heap_size-1)
+        heap_size -= 1
+        max_heapify(A,0,heap_size=heap_size)
+                    </code></pre>
+                  </section>
+                  <section>
+                    <h2>Analysis</h2>
+                    <ul>
+                      <li class="fragment roll-in"> <code>build_max_heap</code> takes $O(n)$, and each of the $O(n)$ calls to <code>max_heapify</code> takes $O(\log n)$, so <code>heap_sort</code> takes $O(n \log n)$
+                      <li class="fragment roll-in" style="list-style: none;"> <i class="fa fa-question-circle" aria-hidden="true"></i> What is best case runtime?
+                      <li class="fragment roll-in" style="list-style: none;"> <i class="fa fa-question-circle" aria-hidden="true"></i> What is runtime if the array is already in sorted order?
+                      <li class="fragment roll-in" style="list-style: none;"> <i class="fa fa-question-circle" aria-hidden="true"></i> Correctness?
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Correctness</h2>
+                    <ul>
+                      <li class="fragment roll-in" style="list-style: none;"> We can prove <em>correctness</em> by using the following loop invariant:
+                      <li class="fragment roll-in"> At the start of each iteration of the for loop, the subarray <code>A[0:i-1]</code> is a max-heap containing the <code>i</code> smallest elements of <code>A[0:n-1]</code> and the subarray <code>A[i..n-1]</code> contains the <code>n-i</code> largest elements of <code>A[0:n-1]</code> in sorted order.
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Assigned reading</h2>
+                    <row>
+                      <col60>
+                        <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="80%"
+                             src="figures/cormen_algs.jpeg" alt="Cormen Algs">
+                      </col60>
+                      <col40>
+                        Chapter 6: Heapsort<p>
+                      </col40>
+                    </row>
+                  </section>
+
+                </section>
+
+                <section>
+                  <h2>See you</h2>
+                  Wednesday February $8^{th}$
+                </section>
+
+              </div>
+
+            </div>
+
+            <script src="dist/reveal.js"></script>
+
+            <!-- <link rel="stylesheet" href="lib/css/monokai.css"> -->
+            <script src="plugin/highlight/highlight.js"></script>
+            <script src="plugin/math/math.js"></script>
+            <script src="plugin/chalkboard/plugin.js"></script>
+            <script src="plugin/notes/notes.js"></script>
+            <script src="plugin/zoom/zoom.js"></script>
+            <!-- <script src="node_modules/reveal.js-menu/menu.js"></script> -->
+            <script>
+              // Full list of configuration options available at:
+              // https://github.com/hakimel/reveal.js#configuration
+              let notes = document.querySelectorAll('aside.notes');
+              notes.forEach(n => {
+	      let html = n.innerHTML;
+	      html = html.trim().replace(/\n/g, '<br/>');
+	      n.innerHTML = html;
+              });
+              Reveal.initialize({
+                  // history: true,
+                  hash: true,
+                  margin: 0.01,
+                  minScale: 0.01,
+                  maxScale: 1.23,
+                  menu: {
+                      themes: true,
+                      openSlideNumber: true,
+                      openButton: false,
+                  },
+                  customcontrols: {
+                      slideNumberCSS : 'position: fixed; display: block; right: 90px; top: auto; left: auto; width: 50px; bottom: 30px; z-index: 31; font-family: Helvetica, sans-serif; font-size:  12px; line-height: 1; padding: 5px; text-align: center; border-radius: 10px; background-color: rgba(128,128,128,.5)',
+                      controls: [
+                          { icon: '<i class="fa fa-caret-left"></i>',
+                            css: 'position: fixed; right: 60px; bottom: 30px; z-index: 30; font-size: 24px;',
+                            action: 'Reveal.prev(); return false;'
+                          },
+                          { icon: '<i class="fa fa-caret-right"></i>',
+                            css: 'position: fixed; right: 30px; bottom: 30px; z-index: 30; font-size: 24px;',
+                            action: 'Reveal.next(); return false;'
+                          }
+                      ]
+                  },
+                  chalkboard: {
+                      boardmarkerWidth: 1,
+                      chalkWidth: 2,
+                      chalkEffect: 1,
+                      slideWidth: Reveal.width,
+                      slideHeight: Reveal.height,
+                      toggleNotesButton: false,
+                      toggleChalkboardButton: false,
+                      //src: "chalkboards/chalkboard_em2.json",
+                      readOnly: false,
+                      theme: "blackboard",
+                      eraser: { src: "plugin/chalkboard/img/sponge.png", radius: 30},
+                  },
+
+                  math: {
+                      mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
+                      config: 'TeX-AMS_SVG-full',
+                      // pass other options into `MathJax.Hub.Config()`
+                      TeX: {
+                          Macros: {
+        	              RR: '\\mathbb{R}',
+        	              PP: '\\mathbb{P}',
+        	              EE: '\\mathbb{E}',
+        	              NN: '\\mathbb{N}',
+        	              vth: '\\vec{\\theta}',
+                              loss: '{\\cal l}',
+                              hclass: '{\\cal H}',
+                              CD: '{\\cal D}',
+                              def: '\\stackrel{\\text{def}}{=}',
+                              pag: ['\\text{pa}_{{\cal G}^{#1}}(#2)}', 2],
+                              vec: ['\\boldsymbol{\\mathbf #1}', 1],
+        	              set: [ '\\left\\{#1 \\; : \\; #2\\right\\}', 2 ],
+                              bm: ['\\boldsymbol{\\mathbf #1}', 1],
+                              argmin: ['\\operatorname\{arg\\,min\\,\}'],
+                              argmax: ['\\operatorname\{arg\\,max\\,\}'],
+                              prob: ["\\mbox{#1$\\left(#2\\right)$}", 2],
+                              floor: ["\\lfloor #1 \\rfloor",1]
+                          },
+                          loader: {load: ['[tex]/color']},
+                          extensions: ["color.js"],
+                          tex: {packages: {'[+]': ['color']}},
+                          svg: {
+                              fontCache: 'global'
+                          }
+                      }
+                  },
+
+                  plugins: [ RevealMath, RevealChalkboard, RevealHighlight, RevealNotes, RevealZoom ],
+
+              });
+
+              Reveal.configure({ fragments: true }); // set false when developing to see everything at once
+              Reveal.configure({ slideNumber: true });
+              //Reveal.configure({ history: true });
+              Reveal.configure({ slideNumber: 'c / t' });
+              Reveal.addEventListener( 'darkside', function() {
+                  document.getElementById('theme').setAttribute('href','dist/theme/aml_dark.css');
+              }, false );
+              Reveal.addEventListener( 'brightside', function() {
+                  document.getElementById('theme').setAttribute('href','dist/theme/aml.css');
+              }, false );
+
+            </script>
+
+            <style type="text/css">
+              /* 1. Style header/footer <div> so they are positioned as desired. */
+              #header-left {
+                  position: absolute;
+                  top: 0%;
+                  left: 0%;
+              }
+              #header-right {
+                  position: absolute;
+                  top: 0%;
+                  right: 0%;
+              }
+              #footer-left {
+                  position: absolute;
+                  bottom: 0%;
+                  left: 0%;
+              }
+            </style>
+
+            <!-- // 2. Create hidden header/footer -->
+            <div id="hidden" style="background; display:none;">
+              <div id="header">
+                <div id="header-left"><h4>CS4520</h4></div>
+                <div id="header-right"><h4>Algorithms</h4></div>
+                <div id="footer-left">
+                  <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100"
+                       src="figures/flowchart.png" alt="robot learning">
+                </div>
+              </div>
+            </div>
+
+
+            <script type="text/javascript">
+              // 3. On Reveal.js ready event, copy header/footer <div> into each `.slide-background` <div>
+              var header = $('#header').html();
+              if ( window.location.search.match( /print-pdf/gi ) ) {
+                  Reveal.addEventListener( 'ready', function( event ) {
+                      $('.slide-background').append(header);
+                  });
+              }
+              else {
+                  $('div.reveal').append(header);
+              }
+            </script>
+
+  </body>
+</html>
