@@ -1,0 +1,773 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="css/fontawesome-free-5.15.4-web/css/all.css" rel="stylesheet">
+
+    <script src="lib/colorbrewer.v1.min.js" charset="utf-8"></script>
+    <script src="lib/colorStringStandalone.js" charset="utf-8"></script>
+    <script type="text/javascript" src="lib/jquery-2.2.4.min.js"></script>
+
+    <title>Design & Analysis: Algorithms</title>
+
+    <meta name="description" content="CS4851/6851 GSU class">
+    <meta name="author" content="Sergey M Plis">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+    <!-- <link rel="stylesheet" href="lib/css/zenburn.css"> -->
+    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="dist/theme/aml.css" id="theme">
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.scss';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+
+    </script>
+  </head>
+
+
+  <body>
+    <div class="reveal">
+      <!-- In between the <div="reveal"> and the <div class="slides">-->
+          <!-- <header style="position: absolute; top: 10px; left: 100px; z-index: 500; font-size:100px;background-color: rgba(0,0,0,0); text-align: center !important"></header>  -->
+          <!-- In between the <div="reveal"> and the <div class="slides">-->
+              <!-- Any section element inside of this container is displayed as a slide -->
+              <div class="slides">
+		<section>
+		  <section>
+		    <p>
+		      <h2>Design & Analysis: Algorithms</h2>
+                      <h1>04: Recurrences</h1>
+		    <p>
+		  </section>
+	          <section>
+		    <h3>Outline of the lecture</h3>
+                    <ul>
+		      <li class="fragment roll-in"> ... finishing the last lecture
+		      <li class="fragment roll-in"> Substitution Method
+                      <li class="fragment roll-in"> Recursion Trees
+		    </ul>
+                  </section>
+                                    <section>
+                    <h2>Relative Ranking</h2>
+                    <row>
+                    <img style="border:0; box-shadow: 0px 0px 0px
+                                rgba(150, 150, 255, 0.8); width:60%;"
+                         class="reveal"  src="figures/competition_time.gif" alt="competition">
+                    <img style="border:0; box-shadow: 0px 0px 0px
+                                rgba(150, 150, 255, 0.8); width:18%;"
+                         class="reveal"  src="figures/course_score01.png" alt="competition">
+                    </row>
+                    <div style="margin-top: -20px;">
+                      Send me your private nicknames ASAP
+                    </div>
+                  </section>
+
+                </section>
+
+                <section>
+                  <section>
+                    <h1>... end of the last lecture</h1>
+                  </section>
+                  <section>
+                    <h2>definitions (recap)</h2>
+                    <blockquote style="background-color: #93a1a1; color: #fdf6e3; font-size: 32px; width:100%; text-align:left;" class="fragment" data-fragment-index="0">
+                      $O(g(n)) = \{f(n) :$ there exist positive constants $c$ and $n_0$ such that $0 \leq f(n) \leq cg(n)$ for all $n \geq n_0\}$
+                    </blockquote>
+                    <blockquote shade style="width:100%;text-align:left; font-size: 32px;" class="fragment" data-fragment-index="1">
+                      $o(g(n)) = \{f(n):$ for any positive constant $c
+                      > 0$ there exists $n_0 > 0$ such that $0 \leq
+                      f(n) < cg(n)$ for all $n \geq n_0\}$
+                             </blockquote>
+                    <h2 class="fragment" data-fragment-index="2">Exercise <i class="fas fa-pen-square"></i> (from Wednesday)</h2>
+                    <div style="text-align:left;">
+                    <span class="fragment" data-fragment-index="3">Let $f(n)$ be an asympotitically positive function</span><span class="fragment" data-fragment-index="4"> and let $g(n) = f(n) \log n$.</span> <span class="fragment" data-fragment-index="5">Show that $f(n) = o(g(n))$</span>
+                    </div>
+                  </section>
+                  <section>
+                    <h2> Solution (Tyler) </h2>
+                    \begin{align}
+                    0 \leq f(n) & \leq c\log n f(n) \\
+                    0 \leq \frac{f(n)}{\log n f(n)} & \leq \frac{c\log n f(n)}{\log n f(n)}\\
+                    0 \leq \frac{1}{\log n} & \leq c\\
+                    \mbox{for } c=2 \quad n_0=1 & \mbox{ the inequality holds } \forall n>n_0\\
+                        \end{align}
+                        <blockquote shade style="width:100%;text-align:left; font-size: 32px;" class="fragment" data-fragment-index="1">
+                          $o(g(n)) = \{f(n):$ for any positive constant $c
+                          > 0$ there exists $n_0 > 0$ such that $0 \leq
+                          f(n) < cg(n)$ for all $n \geq n_0\}$
+                                 </blockquote>
+                  </section>
+                  <section>
+                    <h2> Solution (1/2) </h2>
+                    <div style="text-align:left;">
+                      Let $f(n)$ be an asympotitically positive function and let $g(n) = f(n) \log n$. Show that $f(n) = o(g(n))$
+                    </div>
+                    <ul style="font-size:28pt;">
+                      <li class="fragment roll-in"> For any positive
+                      constant $c$, we want to show there is a $n_0 >
+                      0$ such that $0 \leq f(n) < cg(n)$ for all $n
+                      \geq n_0$.
+
+                                                  <li class="fragment
+                      roll-in"> In other words, we want to show that
+                      $\exists n_0 > 0$ such that
+          <blockquote style="width:100%;text-align:center;">
+            $0 \leq f(n) < cf(n)\log n$
+          </blockquote>
+          <li class="fragment roll-in"> Dividing by $f(n)\log n$, we get: $0 \leq \frac{1}{\log n} < c$
+          <li class="fragment roll-in"> We know that $\lim_{n\rightarrow \infty} \frac{1}{\log n} = 0$. Thus for any constant $c$, there must be a $n_0$ such that the above inequality is satisfied for all $n>n_0$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2> Solution (2/2) </h2>
+                    <div style="text-align:left;font-size:20pt;">
+                      Let $f(n)$ be an asympotitically positive function and let $g(n) = f(n) \log n$. Show that $f(n) = o(g(n))$
+                    </div>
+                    <ul style="font-size:20pt;">
+                      <li class="fragment roll-in"> For any positive
+                      constant $c$, we want to show there is a $n_0 >
+                      0$ such that $0 \leq f(n) < cg(n)$ for all $n
+                      \geq n_0$.
+
+                                                  <li class="fragment roll-in"> In other words, we want to show that
+                      $\exists n_0 > 0$ such that
+          <blockquote style="width:100%;text-align:center;">
+            $0 \leq f(n) < cf(n)\log n$
+          </blockquote>
+                <li class="fragment roll-in"> Dividing by $f(n)\log n$, we get:
+                  \begin{align}
+                  \frac{1}{\log n} & < c \mbox{ multiply both sides by } \log n\\
+                                       1 & < \log n^c \mbox{ raise both sides to power of }2                   \\
+                                             2^\frac{1}{c} & < n\\
+                                            \end{align}
+          <li class="fragment roll-in"> <alert>  $\forall c$ when $n_0 > 2^\frac{1}{c}$, $\forall n> n_0$, $f(n) < cg(n)$
+              </alert>
+
+                    </ul>
+                  </section>
+</section>
+<section>
+                    <section>
+                    <h1>Substitution Method</h1>
+                  </section>
+                  <section>
+                    <h2>Substitution Method</h2>
+                    <ul>
+                      <li class="fragment roll-in"> One way to solve
+                      recurrences is the substitution method aka
+                      “guess and check”
+                      <li class="fragment roll-in"> What we do is make
+                      a good guess for the solution to $T(n)$, and then
+                      try to prove this is the solution by induction
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Example</h2>
+                    <ul>
+<li class="fragment roll-in"> Let’s guess that the solution to $T(n) = 2T(n/2) + n$ is $T(n) = O(n \log n)$
+<li class="fragment roll-in"> We want to show that $T(n) \leq cn\log n$ for appropriate choice
+of constant $c$
+<li class="fragment roll-in"> We can prove this by induction.
+                    </ul>
+                  </section>
+                  <section data-background="figures/A_Treatise_of_Human_Nature_by_David_Hume.jpeg">
+                    <div id="header-right" style="margin-right: -200px; margin-top: -170px">
+                      <img src="figures/Painting_of_David_Hume.jpeg" alt="Hume" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1); margin-bottom: -5%" width="160px" >
+                      <div style="font-size:10pt;">David Hume</div>
+                    </div>
+                    <blockquote style="background-color: #eee8d5; width: 100%; font-size: 32px; text-align:left; box-shadow: 5px 5px 10px rgb(51, 51, 51); padding: 10px;" class="left bordered">
+                      "Even  after  the  observation  of  the  frequent
+                      conjunction  of objects,  we have  no reason  to
+                      draw any inference  concerning any object beyond
+                      those of  which we have had  experience."<p>
+
+                      <a href="https://en.wikipedia.org/wiki/David_Hume">David
+                      Hume</a>,
+                      in <a href="https://en.wikipedia.org/wiki/A_Treatise_of_Human_Nature">A
+                      Treatise of Human Nature</a>, Book I, part 3,
+                      Section 12.
+                    </blockquote>
+                  </section>
+
+                  <section data-background="figures/win_by_induction.png"  data-background-size="contain" data-vertical-align-top>
+                    <h3>Yet, in Platonic world induction works</h3>
+                    <h2 style="margin-top:-30px;">Win by induction</h2>
+                    <div class="slide-footer" style="text-align: left;">
+                      <a href="https://xkcd.com/1516/">xkcd 1516</a>
+                    </div>
+                  </section>
+
+                  <section>
+                    <div id="header-left" style="margin-left: -200px; margin-top: -80px">
+                      <img src="figures/bookConcreteMath.jpeg" alt="Hume" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1); margin-bottom: -5%" width="160px" >
+                    </div>
+                    <blockquote style="background-color: #eee8d5; width: 101%; font-size: 32px; text-align:left; box-shadow: 5px 5px 10px rgb(51, 51, 51); padding: 15px;" class="left bordered fragment" data-fragment-index="1">
+                      <alert>Mathematical induction</alert> is a
+                      general way to prove that some statement about
+                      the integer $n$ is true for all $n > n_0$. First
+                      we prove the statement when $n$ has its smallest
+                      value, $n_0$; this is called
+                      the <alert>basis</alert>. Then we prove the
+                      statement for $n > n_0$, assuming that it has
+                      already been proved for all values between no
+                      and $n - 1$, inclusive; this is called
+                      the <alert>induction</alert>. Such a proof gives
+                      infinitely many results with only a finite
+                      amount of work.
+          </blockquote>
+          <blockquote style="background-color: #93a1a1; color: #fdf6e3;width:100%;text-align:left;" class="fragment" data-fragment-index="2">
+            <mark>Mathematical induction</mark> proves that we can
+climb as high as we like on a ladder, by proving that we can climb
+onto the bottom rung (<mark>the basis</mark>) and that from each
+rung we can climb up to the next one (<mark>the induction</mark>).
+          </blockquote>
+                  </section>
+                  <section>
+                    <div style="height:100vh">
+                      <row>
+                        <col80>
+                          <!-- <div style="height:90vh"> -->
+                            <iframe src="https://docs.google.com/gview?url=https://jeffe.cs.illinois.edu/teaching/algorithms/notes/98-induction.pdf&embedded=true" style="width: 100%;height: 100%;border: none;"></iframe>
+                          <!-- </div> -->
+                        </col80>
+                        <col20 style="font-size:22pt;">
+                          <img src="figures/Algorithms-JeffE_cover.svg" alt="Algorithms" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1); margin-bottom: -5%" width="160px" >
+                          <p>
+                          From the recommended reading by Jeff Erikson the "<a href="https://jeffe.cs.illinois.edu/teaching/algorithms/#book">Algorithms</a>" book<p>
+                        </col20>
+                      </row>
+                    </div>
+                  </section>
+                  <section>
+                    <div id="header-right" style="margin-left: 500px; margin-right: -200px; margin-top: -40px">
+                      <blockquote style="text-align: left; font-size:22pt;">
+                        Guess: solution to $T(n) = 2T(n/2) + n$ is $T(n) = O(n \log n)$ <br>and show $\exists c$, $T(n) \leq cn\log n$
+                      </blockquote>
+                    </div>
+                    <h2>Proof</h2>
+                    <p>
+                    <div style="font-size:32px;">
+                    <ul>
+                      <li class="fragment roll-in"> Base Case: $T (2) \leq c\cdot 2$
+                      <li class="fragment roll-in"> Inductive Hypothesis: $\forall j < n$, $T(j) ≤ cj \log j$
+                      <li class="fragment roll-in"> Inductive Step:
+                        \begin{array}
+                        TT(n) &= 2T (n/2) + n\\
+                        & \fragment{4}{ \leq 2(cn/2 \log(n/2)) + n}\\
+                        & \fragment{5}{ \leq cn \log(n/2) + n}\\
+                        & \fragment{6}{ = cn (\log(n) - \log 2) + n}\\
+                        & \fragment{7}{ = cn\log(n) - cn + n}\\
+                        & \fragment{8}{ \leq cn\log(n) }\\
+                        & \fragment{9}{\mbox{The last step holds if } c>1}
+                        \end{array}
+                    </ul>
+                    </div>
+                  </section>
+                  <section>
+                    <h2>Recurrences and Induction</h2>
+                    Recurrences and Induction are closely related:
+                    <ul>
+                      <li class="fragment roll-in"> To find some solution to $f(n)$, solve a recurrence
+                      <li class="fragment roll-in"> To prove that a solution for $f(n)$ is correct, use induction
+                    </ul>
+                    <blockquote style="background-color: #93a1a1; color: #fdf6e3; width:100%; text-align:left;" class="fragment roll-in" >
+                      For both recurrences and induction, we always
+                      solve a big problem by reducing it to smaller
+                      problems!
+                    </blockquote>
+                  </section>
+                  <section>
+                    <h2>Some Examples</h2>
+                    <ul>
+                      <li class="fragment roll-in"> The next several problems can be attacked by induction/recurrences
+                      <li class="fragment roll-in"> For each problem, we’ll need to reduce it to smaller problems
+                      <li class="fragment roll-in"> <i class="fa fa-question-circle" aria-hidden="true"></i> How can we reduce each problem to a smaller subproblem?
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Sum Problem</h2>
+                    <blockquote style="background-color: #93a1a1; color: #fdf6e3;width:100%;text-align:left;" class="fragment" data-fragment-index="2">
+                      $f(n)$ is the sum of the integers $1, \dots , n$
+                    </blockquote>
+                  </section>
+                  <section>
+                    <h2>Tree Problem</h2>
+                    <blockquote style="background-color: #93a1a1; color: #fdf6e3;width:100%;text-align:left;" class="fragment" data-fragment-index="2">
+                      $f(n)$ is the maximum number of leaf nodes in a binary tree of height $n$
+                    </blockquote>
+                    <ul>
+                      <li class="fragment roll-in"> In a binary tree, each node has at most two children
+                      <li class="fragment roll-in"> A <mark>leaf</mark> node is a node with no children
+                      <li class="fragment roll-in"> The height of a tree is the length of the longest path from
+                        the root to a leaf node.
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Binary Search Problem</h2>
+                    <blockquote style="background-color: #93a1a1; color: #fdf6e3;width:100%;text-align:left;" class="fragment" data-fragment-index="2">
+                      $f(n)$ is the maximum number of queries that need to be
+                      made for binary search on a sorted array of size $n$
+                      </blockquote>
+                  </section>
+                  <section>
+                    <h2>Domino Tiling Problem</h2>
+                    <blockquote style="background-color: #93a1a1; color: #fdf6e3;width:100%;text-align:left;" class="fragment roll-in">
+                      $f(n)$ is the number of ways to tile a $2 \times n$ rectangle with
+dominoes (a domino is a $2 \times 1$ rectangle)
+                    </blockquote>
+                    <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="80%" class="fragment roll-in"
+                       src="figures/domino_tiling.svg" alt="tiling">
+
+
+                  </section>
+                  <section>
+                    <h2>Simpler Subproblems</h2>
+                    <ul style="margin-top: -40px;">
+                      <li class="fragment roll-in"> <b>Sum Problem</b>: What
+                        is the sum of all numbers between $1$ and $n −
+                        1$ (i.e. $f(n − 1)$)?
+                      <li class="fragment roll-in"> <b>Tree Problem</b>: What is the maximum number of leaf nodes
+                        in a binary tree of height $n − 1$? i.e. $f(n − 1)$
+                      <li class="fragment roll-in"> <b>Binary Search
+                        Problem</b>: What is the maximum number of queries
+                        that need to be made for binary search on a
+                        sorted array of size $n/2$? (i.e. $f(n/2)$)
+                      <li class="fragment roll-in"> <b>Dominoes problem</b>:
+                        What is the number of ways to tile a $2$ by $n
+                        − 1$ rectangle with dominoes? What is the
+                        number of ways to tile a $2$ by $n − 2$
+                        rectangle with dominoes? (i.e.  $f(n − 1)$,
+                        $f(n − 2)$)
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Recurrences</h2>
+                    <ul>
+                      <li class="fragment roll-in"> Sum Problem: $f(n) = f(n − 1) + n$, $f(1) = 1$
+                      <li class="fragment roll-in"> Tree Problem: $f(n) = 2f(n − 1)$, $f(0) = 1$
+                      <li class="fragment roll-in"> Binary Search Problem: $f(n) = f(n/2) + 1$, $f(2) = 1$
+                      <li class="fragment roll-in"> Dominoes problem: $f(n) = f(n − 1) + f(n − 2)$, $f(1) = 1$,
+                      $f(2) = 1$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Guesses</h2>
+                    <ul>
+                      <li class="fragment roll-in"> Sum Problem: $f(n) = (n + 1)n/2$
+                      <li class="fragment roll-in"> Tree Problem: $f(n) = 2^n$
+                      <li class="fragment roll-in"> Binary Search Problem: $f(n) =\log n$
+                      <li class="fragment roll-in"> Dominoes problem: $f(n) = \frac{1}{\sqrt{5}}(\frac{1+\sqrt{5}}{2})^n - \frac{1}{\sqrt{5}}(\frac{1-\sqrt{5}}{2})^n$
+                    </ul>
+                  </section>
+                  <section data-background-iframe="https://www.youtube.com/embed/CNOutomr5XI?autoplay=1&controls=0&rel=0&modestbranding=1&showinfo=0&mute=0">
+                  </section>
+                  <section>
+                    <h2>Inductive Proofs</h2>
+                    <ul>
+                      <li class="fragment roll-in"> Now that we’ve made these guesses, we can try using induction to prove they’re correct (the substitution method)
+                      <li class="fragment roll-in"> We’ll give inductive proofs that these guesses are correct for the first three problems
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Sum Problem</h2>
+                    <ul>
+                      <li class="fragment roll-in"> Want to show that $f(n) = (n + 1)n/2$
+                      <li class="fragment roll-in"> Prove by induction on $n$
+                      <li class="fragment roll-in"> Base case: $f(1) = 2 \frac{1}{2} = 1$
+                      <li class="fragment roll-in"> Inductive hypothesis: $\forall j < n$, $f(j) = (j + 1)j/2$
+                      <li class="fragment roll-in"> Inductive step:
+                        \begin{align}
+                        f(n) & \fragment{6}{ = f(n-1)+n}\\
+                             & \fragment{7}{ = n(n-1)/2 + n}\\
+                             & \fragment{8}{ = (n+1)n/2}\\
+                        \end{align}
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Tree Problem</h2>
+                    <ul>
+                      <li class="fragment roll-in"> Want to show that $f(n) = 2^n$.
+                      <li class="fragment roll-in"> Prove by induction on $n$
+                      <li class="fragment roll-in"> Base case: $f(0) = 2^0 = 1$
+                      <li class="fragment roll-in"> Inductive hypothesis: $\forall j < n$, $f(j) = 2^j$
+                      <li class="fragment roll-in"> Inductive step:
+                        \begin{align}
+                        f(n) & \fragment{6}{= 2f(n − 1)}\\
+                             & \fragment{7}{= 2(2^{n−1})}\\
+                             & \fragment{8}{= 2^n}
+                        \end{align}
+
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Binary Search Problem</h2>
+                    <ul>
+                      <li class="fragment roll-in"> Want to show that $f(n) = \log n$. (assume $n$ is a power of $2$)
+                      <li class="fragment roll-in"> Prove by induction on $n$
+                      <li class="fragment roll-in"> Base case: $f(2) = \log 2 = 1$
+                      <li class="fragment roll-in"> Inductive hypothesis: $\forall j < n$, $f(j) = \log j$
+                      <li class="fragment roll-in"> Inductive step:
+                        <div style="margin-top:-60px;margin-left:100px;">
+                        \begin{align}
+                        f(n) & \fragment{6}{= f(n/2) + 1}\\
+                        & \fragment{7}{= \log n/2 + 1}\\
+                        & \fragment{8}{= \log n − \log 2 + 1}\\
+                        & \fragment{9}{= \log n}
+                        \end{align}
+                        </div>
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>In Class Exercise                         <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100"
+                             src="figures/dolphin_swim.webp" alt="Cormen Algs">
+</h2>
+                    <ul>
+                      <li class="fragment roll-in"> Consider the recurrence $f(n) = 2f(n/2) + 1$, $f(1) = 1$
+                      <li class="fragment roll-in"> Guess that $f(n) \leq cn − 1$:
+                      <li class="fragment roll-in"> Q1: Show the base case - for what values of c does it hold?
+                      <li class="fragment roll-in"> Q2: What is the inductive hypothesis?
+                      <li class="fragment roll-in"> Q3: Show the inductive step.
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Assigned reading</h2>
+                    <row>
+                      <col60>
+                        <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="80%"
+                             src="figures/cormen_algs.jpeg" alt="Cormen Algs">
+                      </col60>
+                      <col40>
+                        Chapter 4: Divide and Conquer<p>
+                        focus on the recurrence relations starting 4.3
+                      </col40>
+                    </row>
+                  </section>
+                </section>
+
+		<section>
+		  <section>
+                    <h1>Recursion Trees</h1>
+		  </section>
+
+                  <section>
+                    <h2><code>alg1</code></h2>
+                    <pre class="python"><code data-trim data-noescape data-line-numbers>
+def alg1(n):
+    if n < 1:
+        return 1
+    else:
+        return alg1(n//2) + alg1(n//2) + n
+           </code></pre>
+                    <ul>
+                      <li class="fragment roll-in"> Let $T(n)$ be the <mark>run time</mark> of <code>alg1</code> on input $n$
+                      <li class="fragment roll-in"> Then we can write $T(n) = 2T(n/2) + 1$
+                      <li class="fragment roll-in"> How to solve for $T(n)$?                                           <li class="fragment roll-in"> Till now the good "guesses" were handed to you
+                      <li class="fragment roll-in"> <i class="fa fa-question-circle" aria-hidden="true"></i> How do we get these guesses?
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Getting Good Guesses</h2>
+                    <div style="text-align: left;">
+                      Following are some good guesses for solutions to recurrences.
+                    </div>
+                    \begin{align}
+                    & \fragment{1}{\log n}\\
+                    & \fragment{2}{\sqrt{n}}\\
+                    & \fragment{3}{n}\\
+                    & \fragment{4}{n \log n}\\
+                    & \fragment{5}{n^2}\\
+                    & \fragment{6}{n^3}\\
+                    & \fragment{7}{2^n}\\
+                    \end{align}
+                  </section>
+                  <section>
+                    <h2>Better techniques</h2>
+                    We will review three useful techniques:
+                    <ul>
+                      <li class="fragment roll-in"> Recursion tree method
+                      <li class="fragment roll-in"> Master Theorem
+                      <li class="fragment roll-in"> Annihilators
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Recursion-tree method</h2>
+                    <ul>
+                      <li class="fragment roll-in"> Each node
+                      represents the cost of a single subproblem in a
+                      recursive call
+                      <li class="fragment roll-in"> First, we sum the
+                      costs of the nodes in each level of the tree
+                      <li class="fragment roll-in"> Then, we sum the
+                      costs of all of the levels
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Recursion-tree method</h2>
+                    <ul>
+                      <li class="fragment roll-in"> Used to get a good
+                      guess which is then refined and verified using
+                      substitution method
+                      <li class="fragment roll-in"> Best method
+(usually) for recurrences where a term like $T(n/c)$ appears on the
+right hand side of the equality
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Mergesort</h2>
+                        <pre class="python" style="font-size:14pt;width:101%;"><code data-line-numbers data-trim data-noescape>
+def mergesort(seq):
+    mid = len(seq)//2                           # Midpoint for division
+    lft, rgt = seq[:mid], seq[mid:]
+    if len(lft) > 1: lft = mergesort(lft)       # Sort by halves
+    if len(rgt) > 1: rgt = mergesort(rgt)
+    res = []
+    while lft and rgt:                          # Neither half is empty
+        if lft[-1] >= rgt[-1]:                  # lft has greatest last value
+            res.append(lft.pop())               # Append it
+        else:                                   # rgt has greatest last value
+            res.append(rgt.pop())               # Append it
+    res.reverse()                               # Result is backward
+    return (lft or rgt) + res                   # Also add the remainder
+                          </code></pre>
+                    <row>
+                      <col50>
+                        <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100%"
+                             src="figures/mergesort_colors_t.gif" alt="mergesort colors">
+                      </col50>
+                      <col50>
+                        <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100%"
+                             src="figures/mergesort_numbers_t.gif" alt="mergesort colors">
+                      </col50>
+                    </row>
+                  </section>
+                  <section>
+                    <h2>Example 1: Mergesort</h2>
+                    Consider the recurrence for the running time of Mergesort: $T(n) = 2T(n/2) + n$, $T(1) = O(1)$
+                        <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100%"
+                             src="figures/binary_tree01.svg" alt="mergesort colors">
+                  </section>
+                  <section>
+                    <div id="header-left" style="margin-left: -210px; margin-top: -160px">
+                      <img src="figures/binary_tree01.svg" alt="binary tree" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1); margin-bottom: -5%" width="460px" >
+                    </div>
+                    <h2>Example 1: Mergesort</h2>
+                    <ul>
+                      <li class="fragment roll-in"> We can see that each level of the tree sums to $n$
+                      <li class="fragment roll-in"> Further the depth
+of the tree is $\log n$ ($\frac{n}{2^d} = 1$ implies that $d = \log
+n$).
+<li class="fragment roll-in"> Thus there are $\log n + 1$ levels each of which sums to $n$
+<li class="fragment roll-in"> Hence $T(n) = \Theta(n log n)$
+                    </ul>
+                  </section>
+                  <section data-background="figures/strassen_tree.svg" data-background-size="contain">
+                    <div id="header-right" style="margin-right: -180px; margin-top: -200px">
+                      <h3>Example 2: $T(n) = 3T(n/4) + n^2$</h3>
+                    </div>
+                                          <blockquote style="background-color: #eee8d5; width: 100%; font-size: 36px; text-align:left; box-shadow: 5px 5px 10px rgb(51, 51, 51); padding: 10px;" class="left bordered fragment">
+                      <ul>
+                        <li class="fragment roll-in"> We can see that
+                        the i-th level of the tree sums to
+                        $(3/16)^in^2$.
+                        <li class="fragment roll-in"> Further the
+depth of the tree is $\log_4 n$ <br> $n/4^d = 1$ implies that $d = \log_4 n$
+<li class="fragment roll-in"> So we can see that $T(n) = \sum_{i=0}^{\log_4 n} (3/16)^in^2$
+                      </ul>
+                      </blockquote>
+                      <aside class="notes">
+                        What does each level sum to?
+                        The first (3/16)^1 n^2
+                        The second (3/16)^2 n^2
+                        The next (3/16)^3 n^2
+                        Only then press the button to show itemized list
+                      </aside>
+                  </section>
+                  <section>
+                    <h2>Solution</h2>
+                    \begin{align}
+                    T(n) & \fragment{1}{= \sum_{i=0}^{\log_4 n} (3/16)^in^2} \\
+                    & \fragment{2}{< n^2 \sum_{i=0}^{\infty} (3/16)^i}\\
+                        & \fragment{3}{= \frac{1}{1-{3\over 16}} n^2}\\
+                        & \fragment{4}{ = O(n^2)\\}
+                    \end{align}
+                                     </section>
+                  <section data-background="figures/master_theorem_oogway.gif">
+                  </section>
+</section>
+
+
+                <section>
+                  <h2>See you</h2>
+                  Wednesday January 25th
+                </section>
+
+              </div>
+
+            </div>
+
+            <script src="dist/reveal.js"></script>
+
+            <!-- <link rel="stylesheet" href="lib/css/monokai.css"> -->
+            <script src="plugin/highlight/highlight.js"></script>
+            <script src="plugin/math/math.js"></script>
+            <script src="plugin/chalkboard/plugin.js"></script>
+            <script src="plugin/notes/notes.js"></script>
+            <script src="plugin/zoom/zoom.js"></script>
+            <!-- <script src="node_modules/reveal.js-menu/menu.js"></script> -->
+            <script>
+              // Full list of configuration options available at:
+              // https://github.com/hakimel/reveal.js#configuration
+              let notes = document.querySelectorAll('aside.notes');
+              notes.forEach(n => {
+	      let html = n.innerHTML;
+	      html = html.trim().replace(/\n/g, '<br/>');
+	      n.innerHTML = html;
+              });
+              Reveal.initialize({
+                  // history: true,
+                  hash: true,
+                  margin: 0.01,
+                  minScale: 0.01,
+                  maxScale: 1.23,
+                  menu: {
+                      themes: true,
+                      openSlideNumber: true,
+                      openButton: false,
+                  },
+                  customcontrols: {
+                      slideNumberCSS : 'position: fixed; display: block; right: 90px; top: auto; left: auto; width: 50px; bottom: 30px; z-index: 31; font-family: Helvetica, sans-serif; font-size:  12px; line-height: 1; padding: 5px; text-align: center; border-radius: 10px; background-color: rgba(128,128,128,.5)',
+                      controls: [
+                          { icon: '<i class="fa fa-caret-left"></i>',
+                            css: 'position: fixed; right: 60px; bottom: 30px; z-index: 30; font-size: 24px;',
+                            action: 'Reveal.prev(); return false;'
+                          },
+                          { icon: '<i class="fa fa-caret-right"></i>',
+                            css: 'position: fixed; right: 30px; bottom: 30px; z-index: 30; font-size: 24px;',
+                            action: 'Reveal.next(); return false;'
+                          }
+                      ]
+                  },
+                  chalkboard: {
+                      boardmarkerWidth: 1,
+                      chalkWidth: 2,
+                      chalkEffect: 1,
+                      slideWidth: Reveal.width,
+                      slideHeight: Reveal.height,
+                      toggleNotesButton: false,
+                      toggleChalkboardButton: false,
+                      //src: "chalkboards/chalkboard_em2.json",
+                      readOnly: false,
+                      theme: "blackboard",
+                      eraser: { src: "plugin/chalkboard/img/sponge.png", radius: 30},
+                  },
+
+                  math: {
+                      mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
+                      config: 'TeX-AMS_SVG-full',
+                      // pass other options into `MathJax.Hub.Config()`
+                      TeX: {
+                          Macros: {
+        	              RR: '\\mathbb{R}',
+        	              PP: '\\mathbb{P}',
+        	              EE: '\\mathbb{E}',
+        	              NN: '\\mathbb{N}',
+        	              vth: '\\vec{\\theta}',
+                              loss: '{\\cal l}',
+                              hclass: '{\\cal H}',
+                              CD: '{\\cal D}',
+                              def: '\\stackrel{\\text{def}}{=}',
+                              pag: ['\\text{pa}_{{\cal G}^{#1}}(#2)}', 2],
+                              vec: ['\\boldsymbol{\\mathbf #1}', 1],
+        	              set: [ '\\left\\{#1 \\; : \\; #2\\right\\}', 2 ],
+                              bm: ['\\boldsymbol{\\mathbf #1}', 1],
+                              argmin: ['\\operatorname\{arg\\,min\\,\}'],
+                              argmax: ['\\operatorname\{arg\\,max\\,\}'],
+                              prob: ["\\mbox{#1$\\left(#2\\right)$}", 2],
+                          },
+                          loader: {load: ['[tex]/color']},
+                          extensions: ["color.js"],
+                          tex: {packages: {'[+]': ['color']}},
+                          svg: {
+                              fontCache: 'global'
+                          }
+                      }
+                  },
+
+                  plugins: [ RevealMath, RevealChalkboard, RevealHighlight, RevealNotes, RevealZoom ],
+
+              });
+
+              Reveal.configure({ fragments: true }); // set false when developing to see everything at once
+              Reveal.configure({ slideNumber: true });
+              //Reveal.configure({ history: true });
+              Reveal.configure({ slideNumber: 'c / t' });
+              Reveal.addEventListener( 'darkside', function() {
+                  document.getElementById('theme').setAttribute('href','dist/theme/aml_dark.css');
+              }, false );
+              Reveal.addEventListener( 'brightside', function() {
+                  document.getElementById('theme').setAttribute('href','dist/theme/aml.css');
+              }, false );
+
+            </script>
+
+            <style type="text/css">
+              /* 1. Style header/footer <div> so they are positioned as desired. */
+              #header-left {
+                  position: absolute;
+                  top: 0%;
+                  left: 0%;
+              }
+              #header-right {
+                  position: absolute;
+                  top: 0%;
+                  right: 0%;
+              }
+              #footer-left {
+                  position: absolute;
+                  bottom: 0%;
+                  left: 0%;
+              }
+            </style>
+
+            <!-- // 2. Create hidden header/footer -->
+            <div id="hidden" style="background; display:none;">
+              <div id="header">
+                <div id="header-left"><h4>CS4520</h4></div>
+                <div id="header-right"><h4>Algorithms</h4></div>
+                <div id="footer-left">
+                  <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100"
+                       src="figures/flowchart.png" alt="robot learning">
+                </div>
+              </div>
+            </div>
+
+
+            <script type="text/javascript">
+              // 3. On Reveal.js ready event, copy header/footer <div> into each `.slide-background` <div>
+              var header = $('#header').html();
+              if ( window.location.search.match( /print-pdf/gi ) ) {
+                  Reveal.addEventListener( 'ready', function( event ) {
+                      $('.slide-background').append(header);
+                  });
+              }
+              else {
+                  $('div.reveal').append(header);
+              }
+            </script>
+
+  </body>
+</html>
