@@ -1,0 +1,1245 @@
+<!Doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="css/fontawesome-free-6.2.1-web/css/all.css" rel="stylesheet">
+
+    <script src="lib/colorbrewer.v1.min.js" charset="utf-8"></script>
+    <script src="lib/colorStringStandalone.js" charset="utf-8"></script>
+    <script type="text/javascript" src="lib/jquery-2.2.4.min.js"></script>
+
+    <title>Design & Analysis: Algorithms</title>
+
+    <meta name="description" content="CS4851/6851 GSU class">
+    <meta name="author" content="Sergey M Plis">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+    <!-- <link rel="stylesheet" href="lib/css/zenburn.css"> -->
+    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="dist/theme/aml.css" id="theme">
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.scss';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+                    <script type="module" src="js/wc_code/wc-code.js"></script>
+
+    <!--Popup Window CSS-->
+    <style media="screen">
+		*,*:before,*:after{
+		    padding: 0;
+		    margin: 0;
+		    box-sizing: border-box;
+		}
+
+		.popup{
+		    background-color: #fdf6e3;
+		    width: 80%;
+		    padding: 30px 40px;
+		    position: absolute;
+		    transform: translate(-50%,-50%);
+		    left: 50%;
+		    top: 50%;
+		    border-radius: 8px;
+		    font-family: "Poppins",sans-serif;
+		    display: none;
+		    z-index: 1000;
+		    text-align: left;
+		    max-height: 90%;
+            overflow: scroll;
+		}
+		.popup button{
+		    display: block;
+		    margin:  0 0 20px auto;
+		    background-color: transparent;
+		    font-size: 30px;
+		    color: #fdf6e3;
+		    background: #03549a;
+		    border-radius: 100%;
+		    width: 40px;
+		    height: 40px;
+		    border: none;
+		    outline: none;
+		    cursor: pointer;
+		}
+    </style>
+  </head>
+
+
+  <body>
+        <div class="popup" id="div4code.1">
+            <!-- <button id="close">&times;</button> -->
+		    <wc-code-zone mode="python">
+		    <wc-code style="font-size: 14pt;" theme="monokai" mode="python" file-name="python-file.py">
+		      <script type="wc-content">
+import numpy as np
+print(np.__version__ )
+# try writing your solution here. This is a functional python console
+		      </script>
+		    </wc-code>
+		    </wc-code-zone>
+        </div>
+
+    <div class="reveal">
+      <!-- In between the <div="reveal"> and the <div class="slides">-->
+          <!-- <header style="position: absolute; top: 10px; left: 100px; z-index: 500; font-size:100px;background-color: rgba(0,0,0,0); text-align: center !important"></header>  -->
+          <!-- In between the <div="reveal"> and the <div class="slides">-->
+              <!-- Any section element inside of this container is displayed as a slide -->
+              <div class="slides">
+		<section>
+		  <section>
+		    <p>
+		      <h2>Design & Analysis: Algorithms</h2>
+                      <h1>13: Dictionary</h1>
+		    <p>
+		  </section>
+	          <section>
+		    <h3>Outline of the lecture</h3>
+                    <ul>
+                      <li class="fragment roll-in"> Open Address Hashing
+                      <li class="fragment roll-in"> Review Session
+		    </ul>
+                  </section>
+                </section>
+
+                <section>
+                  <section data-background-video="figures/review_session.mp4" data-background-size="cover" data-background-video-loop=true>
+                    <h1 style="text-shadow: 4px 4px 4px #002b36; color: #f1f1f1; margin-top: 300px;">Review Session</h1>
+                  </section>
+                  <section data-fullscreen>
+                    <h3>Schedule</h3>
+
+                    <row style="width: 120%">
+                      <col50>
+                        <table style="font-size:16px">
+                          <tr>
+                            <th>#</th>
+                            <th>date</th>
+                            <th>topic</th>
+                            <th>description</th>
+                          </tr>
+                          <tr><td>1</td>
+                            <td> 09-Jan-2023 </td>
+                            <td> Introduction and Introductions </td>
+                            <td> </td>
+                          </tr>
+                          <tr><td>2</td>
+                            <td> 11-Jan-2023 </td>
+                            <td> Basics of Algorithm Analysis </td>
+                            <td> </td>
+                          </tr>
+                          <tr style='background-color: #FBEEC2;'><td>    </td><td> 16-Jan-2023 </td><td> <em>Holiday</em>     </td><td>              </td></tr>
+                          <tr><td>  3 </td><td> 18-Jan-2023 </td><td> Asymptotic Analysis         </td><td> hw1        </td></tr>
+                          <tr><td>  4 </td><td> 23-Jan-2023 </td><td> Recurrence Relations: Substitution </td><td>      </td></tr>
+                          <tr><td>  5 </td><td> 25-Jan-2023 </td><td> Recursion Trees and the Master Theorem     </td><td>  </td></tr>
+                          <tr><td>  6 </td><td> 30-Jan-2023  </td><td> Recurrence Relations: Annihilators    </td></td></td><td> </td></tr>
+<tr><td>  7 </td><td> 1-Feb-2023  </td><td> Recurrence Relations: Transformations  </td><td> hw2, hw1 <i class="fa-solid fa-calendar-check"></i> </td></tr>
+<tr><td>  8 </td><td> 6-Feb-2023  </td><td> Heap & Invariants</td><td>        </td></tr>
+<tr><td>  9 </td><td> 8-Feb-2023 </td><td> Queue & Qsort                      </td><td>          </td></tr>
+<tr><td> 10 </td><td> 13-Feb-2023 </td><td> Analyzing RQsort </td><td>             </td></tr>
+<tr><td>  11 </td><td> 15-Feb-2023  </td><td>  Comparison-based Sorting Analysis  </td><td> hw3, hw2 <i class="fa-solid fa-calendar-check"></i> </td></tr>
+<tr><td> 12 </td><td> 20-Feb-2023 </td><td> Dictionary</td><td>             </td></tr>
+<tr style='background-color: #E0E4CC;'><td> 13 </td><td> 22-Feb-2023 </td><td> Open Address Hashing & Refresher                </td><td>     <i class='fa fa-map-marker' style='color: #FA6900;'></i>     </td></tr>
+<tr  style='background-color: #E5DDCB;'><td> 14 </td><td> 27-Feb-2023 </td><td> Midterm exam           </td><td>   <em>midpoint</em>         </td></tr>
+<tr><td> 15 </td><td> 1-Mar-2023  </td><td>       </td><td>   </td></tr>
+<tr><td> 16 </td><td> 6-Mar-2023  </td><td> </td><td>hw4, hw3 <i class="fa-solid fa-calendar-check"></i> </td></tr>
+<tr><td> 17 </td><td> 8-Mar-2023  </td><td>                     </td><td>       </td></tr>
+</table>
+</col50>
+<col50>
+  <table style="font-size:14px; vertical-align: top;">
+    <tr>
+      <th>#</th>
+      <th>date</th>
+      <th>topic</th>
+      <th>description</th>
+    </tr>
+    <tr style='background-color: #FBEEC2;'><td>  </td><td> 13-Mar-2023 </td><td> <em>Spring Break<em>       </td><td> </td></tr>
+    <tr style='background-color: #FBEEC2;'><td>  </td><td> 15-Mar-2023 </td><td> <em>Spring Break<em>         </td><td>             </td></tr>
+    <tr><td>  18  </td><td> 20-Mar-2023 </td><td> </td><td>hw5, hw4 <i class="fa-solid fa-calendar-check"></i> </td></tr>
+    <tr><td>  19  </td><td> 22-Mar-2023 </td><td>   </td><td>  </td></tr>
+    <tr><td> 20 </td><td> 27-Mar-2023 </td><td> </td><td> </td></tr>
+    <tr><td> 21 </td><td> 29-Mar-2023 </td><td> </td><td></td></tr>
+    <tr><td> 22 </td><td> 3-Apr-2023 </td><td> </td><td> hw6, hw5 <i class="fa-solid fa-calendar-check"></i>         </td></tr>
+    <tr><td> 23 </td><td> 5-Apr-2023  </td><td>  </td><td>             </td></tr>
+    <tr><td> 24 </td><td> 10-Apr-2023  </td><td>  </td><td>            </td></tr>
+    <tr><td> 25 </td><td> 12-Apr-2023 </td><td> </td><td>    hw7, hw6 <i class="fa-solid fa-calendar-check"></i>     </td></tr>
+    <tr><td> 26 </td><td> 17-Apr-2023 </td><td> </td><td>        </td></tr>
+    <tr><td> 27 </td><td> 19-Apr-2023 </td><td> </td><td>  </td></tr>
+    <tr><td> 28 </td><td> 24-Apr-2023 </td><td>  </td><td> hw7 <i class="fa-solid fa-calendar-check"></i>      </td></tr>
+    <tr  style='background-color: #E5DDCB;'><td> 29 </td><td> 26-Apr-2023 </td><td> Final exam </td><td>             </td></tr>
+    <tr style='color: #ccd5d8ff;'><td> 30 </td><td> 2-May-2022 </td><td> </td><td> hw7         </td></tr>
+    <tr style='color: #ccd5d8ff;'><td> 31 </td><td> 4-May-2022  </td><td> </td><td>             </td></tr>
+  </table>
+</col50>
+</row>
+</section>
+
+<section>
+  <h2>Midterm</h2>
+  <ul>
+    <li class="fragment roll-in"><i class="fa-solid fa-map-location-dot"></i> Monday, February 27th in class
+<li class="fragment roll-in">You can bring 2 pages of “cheat sheets” to use during the
+exam. Otherwise the exam is closed book and closed note.
+<li class="fragment roll-in">Many of the questions on my midterm will
+be in flavor of the homework questions and to exercises in the
+book. Just simpler, yet the topics and knowledge required is the same.
+  </ul>
+</section>
+
+<section>
+  <h2>What you are expected to know 1/5</h2>
+  <div style="text-align:left;font-size:28pt; margin-top: -30px;">
+    Be able to address true/false and short answer questions:
+  </div>
+  <ul style="font-size:26pt;">
+<li class="fragment roll-in"><b>Asymptotic notation</b> e.g. given a list of
+ functions give the simplest possible $\Theta$ notation for each
+<li class="fragment roll-in"><b>Recurrences</b> e.g. solve a recurrence
+<li class="fragment roll-in"><b>Heaps</b> e.g. questions about properties of heaps
+and priority queues
+<li class="fragment roll-in"><b>Sorting Algorithms</b> heapsort, quicksort, bucketsort, mergesort, (know resource bounds for these algorithms)
+<li class="fragment roll-in"><b>Probability</b> Random variables,
+expectation, linearity of expectation, birthday paradox, analysis of
+  expected runtime of quicksort and bucketsort
+<li class="fragment roll-in"><b>Dictionary ADT</b> and implementation. Make sure you understand what are we optimizing with the dictionary.
+  </ul>
+</section>
+<section>
+  <h2>What you are expected to know 2/5</h2>
+  <div style="text-align:left;font-size:28pt; margin-top: -30px;">
+    Solving recurrence relations:
+  </div>
+  <ul>
+<li class="fragment roll-in">Like problems on hw 2 and Problem 7 on hw 3.
+<li class="fragment roll-in">You’ll need to know annihilators, change of variables, handling homogeneous and non-homogeneous parts of recurrences, recursion trees, and the Master Method
+<li class="fragment roll-in">You’ll need to know the formulas for sums of convergent and
+divergent geometric series
+  </ul>
+</section>
+<section>
+  <h2>What you are expected to know 3/5</h2>
+  <div style="text-align:left;">
+    Asymptotic notation
+  </div>
+  <ul>
+    <li class="fragment roll-in"> Be able to solve problems similar to homework 1 Problem 4.
+  </ul>
+</section>
+<section>
+  <h2>What you are expected to know 4/5</h2>
+  <div style="text-align:left;">
+    Recurrence proof using induction (i.e. the substitution method):
+  </div>
+  <ul>
+<li class="fragment roll-in">You’ll need to give base case, inductive hypothesis and then
+show the inductive step
+<li class="fragment roll-in">Similar to Exercise 1 in Homework 2
+  </ul>
+</section>
+<section>
+  <h2>What you are expected to know 5/5</h2>
+  Make sure you
+  <ul>
+    <li class="fragment roll-in"> Understand the difference between ADT and an actual implementation.
+    <li class="fragment roll-in">  Understand how to exploit or rely on randomness the way quicksort and bucketsort do.
+    <li class="fragment roll-in"> Understand the difference between expected and worst case running time and why are we interested in the expected running time at all.
+    <li class="fragment roll-in"> Be able to reason through loop invariants proofs (give initialization, maintenance, and termination)
+  </ul>
+</section>
+                  <section>
+                    <h2>Formal Definitions: $O$, $\Theta$, $\Omega$</h2>
+                    <ul style="font-size:28pt;">
+                      <li class="fragment roll-in"> $O(g(n)) = \{f(n) :$ there exist positive constants $c$ and $n_0$ such that $0 \leq f(n) \leq cg(n)$ for all $n \geq n_0\}$
+<li class="fragment roll-in"> $\Theta(g(n)) = \{f(n) :$ there exist positive constants $c_1$, $c_2$, and $n_0$
+such that $0 \leq c_1g(n) \leq f(n) \leq c_2g(n)$ for all $n \geq n_0\}$
+<li class="fragment roll-in"> $\Omega(g(n)) = \{f(n):$ there exist positive constants $c$ and $n_0$
+such that $0 \leq cg(n) \leq f(n)$ for all $n \geq n_0\}$
+
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Formal Definitions: $o$, $\omega$</h2>
+                    <ul style="font-size:28pt;">
+<li class="fragment roll-in"> $o(g(n)) = \{f(n):$ for any positive constant $c > 0$ there exists
+$n_0 > 0$ such that $0 \leq f(n) < cg(n)$ for all $n \geq n_0\}$
+<li class="fragment roll-in"> $\omega(g(n)) = \{f(n):$ for any positive constant $c > 0$ there exists
+$n_0 > 0$ such that $0 \leq cg(n) < f(n)$ for all $n \geq n_0\}$
+                    </ul>
+                  </section>
+
+<section>
+  <h2>A Procedure</h2>
+      Goal: prove that $f(n) = O(g(n))$
+  <ol>
+<li class="fragment roll-in"> Write down what this means mathematically
+<li class="fragment roll-in"> Write down the inequality $f (n) \leq c g(n)$
+<li class="fragment roll-in"> Simplify this inequality so that $c$ is
+isolated on the right hand side
+<li class="fragment roll-in"> Now find a $n_0$ and a $c$ such that for
+all $n \geq n_0$, this simplified inequality is true
+  </ol>
+</section>
+
+<section data-vertical-align-top>
+  <h2>Example 1</h2>
+  <ul style="list-style:none;">
+    <li class="fragment roll-in"> Prove that $2^{n+1} = O(2^n)$
+    <li class="fragment roll-in"><b>Goal:</b> Show there exist positive constants $c$ and $n_0$ such that
+      $2^{n+1} \leq c 2^n$ for all $n \geq n_0$
+    <li class="fragment roll-in">
+      \begin{align}
+      2^{n+1} & \leq c2^n\\
+      2 \times 2^n &\leq c2^n\\
+      2 &\leq c\\
+      \end{align}
+  </ul>
+  <li class="fragment roll-in">Hence for $c = 2$ and $n_0 = 1$, $2^{n+1} \leq c2^n$ for all $n \geq n_0$
+</section>
+
+<section data-vertical-align-top>
+  <h2>Example 2</h2>
+  Prove that $n + \sqrt{n} = O(n)$
+</section>
+
+<section  data-vertical-align-top>
+  <h2>Example 3</h2>
+  Prove that $2^{2n} = O(5^n)$
+</section>
+
+<section>
+    <h2>In Class Exercise <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100"
+                               src="figures/dolphin_swim.webp" alt="dolphin">
+    </h2>
+    <div style="text-align:left;">
+      Show that $n2^n$ is $O(4^n)$
+  </div>
+    <ul style="list-style:none;">
+<li class="fragment roll-in"> <span class="fa-li"><i class="fa-regular fa-circle-question"></i></span>What is the exact mathematical statement of what you
+need to prove?
+<li class="fragment roll-in"> <span class="fa-li"><i class="fa-regular fa-circle-question"></i></span>What is the first inequality in the chain of inequalities?
+<li class="fragment roll-in"> <span class="fa-li"><i class="fa-regular fa-circle-question"></i></span>What is the simplified inequality where $c$ is isolated?
+<li class="fragment roll-in"> <span class="fa-li"><i class="fa-regular fa-circle-question"></i></span>What is a $n_0$ and $c$ such that the inequality of the last
+question is always true?
+    </ul>
+</section>
+
+<section>
+  <h2>Example: Substitution</h2>
+  <ul>
+<li class="fragment roll-in">Consider the following recurrence:
+$$T (n) = 2^{2−n} \times T (n − 1) \times T (n − 1)$$
+where $T(1) = 2$.
+<li class="fragment roll-in">Show that $T (n) = 2^n$ by induction. Include the following
+  in your proof:
+  <ol>
+    <li>the base case(s)
+    <li>the inductive hypothesis and
+    <li>the inductive step.
+  </ol>
+  </ul>
+</section>
+<section>
+  <h2>Example: Substitution</h2>
+  <ul>
+<li class="fragment roll-in"><b>Base Case:</b> $T (1) = 2$ which is in fact $2^1$.
+<li class="fragment roll-in"><b>Inductive Hypothesis:</b> For all $j < n$, $T (j) = 2^j$
+<li class="fragment roll-in"><b>Inductive Step:</b> We must show that $T (n) = 2^n$, assuming the
+  inductive hypothesis.
+  \begin{align}
+  T (n) &= 2^{2−n} T (n − 1) T (n − 1) \\
+  T (n) &= 2^{2−n} 2^{n−1} 2^{n−1}\\
+  T (n) &= 2^n
+\end{align}
+where the inductive hypothesis allows us to make the replacements in the second step.
+
+  </ul>
+</section>
+
+                 <section>
+                    <h2>Example 1/2</h2>
+                    <ul>
+                      <li class="fragment roll-in"> Let’s show that
+                      $f(n) = 10n + 100$ is $O(g(n))$ where $g(n) = n$
+                      <li class="fragment roll-in"> We need to give
+constants $c$ and $n_0$ such that $f(n) \leq cg(n)$ for all $n \geq n_0$
+                      <li class="fragment roll-in"> In other words, we
+need constants $c$ and $n_0$ such that $10n + 100 \leq cn$ for all $n
+\geq n_0$
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>Example 2/2</h2>
+                    <ul>
+                      <li class="fragment roll-in"> We can solve for appropriate constants:
+                       \begin{align}
+                        10n + 100 & \leq cn \\
+                        10 + 100/n & \leq c
+                        \end{align}
+                      <li class="fragment roll-in"> So if $n > 1$, then c should be greater than $110$.
+                      <li class="fragment roll-in"> In other words, for all $n > 1$, $10n + 100 \leq 110n$
+                      <li class="fragment roll-in"> So $10n + 100$ is $O(n)$
+                    </ul>
+                  </section>
+
+                                    <section>
+                    <h2>True or False (justify your answer) <i class="far fa-comments"></i></h2>
+                    <ol>
+                      <li class="fragment roll-in"> $n^3+4$ is $\omega(n^2)$
+                      <li class="fragment roll-in"> $n \log n^3$ is $\Theta(n\log n)$
+                      <li class="fragment roll-in"> $\log^3 5n^2$ is $\Theta(\log n)$
+                      <li class="fragment roll-in"> $10^{-10}n^2 + n$ is $\Theta(n)$
+                      <li class="fragment roll-in"> $n\log n$ is $\Omega(n)$
+                      <li class="fragment roll-in"> $n^3 + 4$ is $o(n^4)$
+                    </ol>
+                                    </section>
+                  <section>
+                    <div id="header-right" style="margin-right: -180px; margin-top: -10px">
+                      <h3>Example 1</h3>
+                    </div>
+
+                    <div style="text-align:left;">
+                      Let $f(n) = 10\log^2 n + \log n$, $g(n) = \log^2 n$. Let’s show that $f(n) = \Theta(g(n))$.
+                    </div>
+                    <ul>
+                      <li class="fragment  roll-in"> We  want positive
+constants $c_1$, $c_2$  and $n_0$ such that $0 \leq  c_1g(n) \leq f(n)
+\leq c_2g(n)$ for all $n \geq n_0$
+                      <li class="fragment roll-in"> In other words, we
+                      want $c_1$, $c_2$ and $n_0$ such that:
+                        <blockquote style="width:100%;text-align:center;">
+                          $0 \leq c_1 \log^2 n \leq 10 \log^2 n + \log n \leq c_2 \log^2 n$
+                        </blockquote>
+                      <li class="fragment roll-in"> Dividing by $\log^2 n$, we get:
+                        <blockquote style="width:100%;text-align:center;">
+                          $0 \leq c_1 \leq 10 + 1/\log n \leq c_2$
+                        </blockquote>
+                      <li class="fragment roll-in"> If we choose $c_1
+= 1$, $c_2 = 11$ and $n_0 = 2$, then the above inequality will hold
+for all $n \geq n_0$
+
+                    </ul>
+                  </section>
+                 <section>
+                    <div id="header-right" style="margin-right: -180px; margin-top: -10px">
+                      <h3>Example 2</h3>
+                    </div>
+
+                    <div style="text-align:left;font-size:28pt;">
+                      Let $f(n) = \log^a n$, $g(n) = n^b$ for any constants $a$ and $b > 0$. Let’s show that $f(n) = o(g(n))$.
+                    </div>
+                    <ul style="font-size:28pt;">
+                      <li class="fragment roll-in"> For any positive constant $c$, we want to show $\exists n_0 > 0$
+such that $0 \leq f(n) < cg(n)$ for all $n \geq n_0$.
+<li class="fragment roll-in"> In other words, we want to show that $\exists n_0 > 0$ such
+                          that
+                          <blockquote style="width:100%;text-align:center;">
+                            $0 \leq log^a n < cn^b$
+                          </blockquote>
+                          <li class="fragment roll-in"> Dividing by $n^b$, we get:
+                          <blockquote style="width:100%;text-align:center;">
+                            $0 \leq \frac{log^a n}{n^b} \leq c$
+                          </blockquote>
+                          <li class="fragment roll-in"> We know that $\lim_{n\rightarrow \infty} \frac{\log^a n}{n^b} = 0$ (by L’Hopital) so for any
+constant $c$, there must be a $n_0$ such that the above inequality is satisfied for all $n \geq n_0$.
+                    </ul>
+                  </section>
+                  <section>
+                    <div id="header-right" style="margin-right: -180px; margin-top: -10px">
+                      <h3>Example 3</h3>
+                    </div>
+
+                    <div style="text-align:left;font-size:28pt;">
+                      Let $f(n)$ be asymptotically positive and let $g(n) = 10f(n)$. Let’s show that $f(n) = \Theta(g(n))$.
+                    </div>
+                    <ul style="font-size:28pt;">
+                      <li class="fragment roll-in"> We must show that
+                        there are positive constants $c_1$, $c_2$ and
+                        $n_0$ such that:
+                        <blockquote style="width:100%;text-align:center;">
+                          $c_1 10f(n) \leq f(n) \leq c_210f(n)$
+                        </blockquote>
+                      <li class="fragment roll-in"> Dividing through by $f(n)$, we have
+                        <blockquote style="width:100%;text-align:center;">
+                          $c_110 ≤ 1 ≤ c_210$
+                        </blockquote>
+                      <li class="fragment roll-in"> If we choose $c_1 = c_2 = 1/10$ and $n_0 = 1$, then the above
+inequality is satisfied for all $n \geq n_0$
+                    </ul>
+                  </section>
+
+                 <section>
+                    <h2>Exercise <i class="fas fa-pen-square"></i></h2>
+                    <div style="text-align:left;">
+                    Let $f(n)$ be an asympotitically positive function and let $g(n) = f(n) \log n$. Show that $f(n) = o(g(n))$
+                    </div>
+                    <ul>
+<li class="fragment roll-in"> Write down exactly what needs to be shown to prove that
+$f (n) = o(g(n))$
+<li class="fragment roll-in"> Now solve for $n_0$ as a function of $c$ in the above statement
+                    </ul>
+                  </section>
+                  <section>
+                    <h2> Solution (1/2) </h2>
+                    <div style="text-align:left;">
+                      Let $f(n)$ be an asympotitically positive function and let $g(n) = f(n) \log n$. Show that $f(n) = o(g(n))$
+                    </div>
+                    <ul style="font-size:28pt;">
+                      <li class="fragment roll-in"> For any positive
+                      constant $c$, we want to show there is a $n_0 >
+                      0$ such that $0 \leq f(n) < cg(n)$ for all $n
+                      \geq n_0$.
+
+                                                  <li class="fragment
+                      roll-in"> In other words, we want to show that
+                      $\exists n_0 > 0$ such that
+          <blockquote style="width:100%;text-align:center;">
+            $0 \leq f(n) < cf(n)\log n$
+          </blockquote>
+          <li class="fragment roll-in"> Dividing by $f(n)\log n$, we get: $0 \leq \frac{1}{\log n} < c$
+          <li class="fragment roll-in"> We know that $\lim_{n\rightarrow \infty} \frac{1}{\log n} = 0$. Thus for any constant $c$, there must be a $n_0$ such that the above inequality is satisfied for all
+ $n>n_0$
+                    </ul>
+                 </section>
+                  <section>
+                    <h2> Solution (2/2) </h2>
+                    <div style="text-align:left;font-size:20pt;">
+                      Let $f(n)$ be an asympotitically positive function and let $g(n) = f(n) \log n$. Show that $f(n) = o(g(n))$
+                    </div>
+                    <ul style="font-size:20pt;">
+                      <li class="fragment roll-in"> For any positive
+                      constant $c$, we want to show there is a $n_0 >
+                      0$ such that $0 \leq f(n) < cg(n)$ for all $n
+                      \geq n_0$.
+
+                                                  <li class="fragment roll-in"> In other words, we want to show that
+                      $\exists n_0 > 0$ such that
+          <blockquote style="width:100%;text-align:center;">
+            $0 \leq f(n) < cf(n)\log n$
+          </blockquote>
+                <li class="fragment roll-in"> Dividing by $f(n)\log n$, we get:
+                  \begin{align}
+                  \frac{1}{\log n} & < c\\
+                                       1 & < \log n^c                    \\
+                                             2^\frac{1}{c} & < n\\
+                                            \end{align}
+          <li class="fragment roll-in"> <alert>  $\forall c$ when $n_0 > 2^\frac{1}{c}$, $\forall n> n_0$, $f(n) < cg(n)$
+              </alert>
+
+                    </ul>
+</section>
+                  <section>
+                    <div id="header-right" style="margin-left: 500px; margin-right: -200px; margin-top: -40px">
+                      <blockquote style="text-align: left; font-size:22pt;">
+                        Guess: solution to $T(n) = 2T(n/2) + n$ is $T(n) = O(n \log n)$ <br>and show $\exists c$, $T(n) \leq cn\log n$
+                      </blockquote>
+                    </div>
+                    <h2>Proof</h2>
+                    <p>
+                    <div style="font-size:32px;">
+                    <ul>
+                      <li class="fragment roll-in"> Base Case: $T (2) \leq c\cdot 2$
+                      <li class="fragment roll-in"> Inductive Hypothesis: $\forall j < n$, $T(j) ≤ cj \log j$
+                      <li class="fragment roll-in"> Inductive Step:
+                        \begin{array}
+                        TT(n) &= 2T (n/2) + n\\
+                        & \fragment{4}{ \leq 2(cn/2 \log(n/2)) + n}\\
+                        & \fragment{5}{ \leq cn \log(n/2) + n}\\
+                        & \fragment{6}{ = cn (\log(n) - \log 2) + n}\\
+                        & \fragment{7}{ = cn\log(n) - cn + n}\\
+                        & \fragment{8}{ \leq cn\log(n) }\\
+                        & \fragment{9}{\mbox{The last step holds if } c>1}
+                        \end{array}
+                    </ul>
+                    </div>
+                  </section>
+                  <section>
+                    <h2>Sum Problem</h2>
+                    <ul>
+                      <li class="fragment roll-in"> Want to show that $f(n) = (n + 1)n/2$
+                      <li class="fragment roll-in"> Prove by induction on $n$
+                      <li class="fragment roll-in"> Base case: $f(1) = 2 \frac{1}{2} = 1$
+                      <li class="fragment roll-in"> Inductive hypothesis: $\forall j < n$, $f(j) = (j + 1)j/2$
+                      <li class="fragment roll-in"> Inductive step:
+                        \begin{align}
+                        f(n) & \fragment{6}{ = f(n-1)+n}\\
+                             & \fragment{7}{ = n(n-1)/2 + n}\\
+                             & \fragment{8}{ = (n+1)n/2}\\
+                        \end{align}
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Tree Problem</h2>
+                    <ul>
+                      <li class="fragment roll-in"> Want to show that $f(n) = 2^n$.
+                      <li class="fragment roll-in"> Prove by induction on $n$
+                      <li class="fragment roll-in"> Base case: $f(0) = 2^0 = 1$
+                      <li class="fragment roll-in"> Inductive hypothesis: $\forall j < n$, $f(j) = 2^j$
+                      <li class="fragment roll-in"> Inductive step:
+                        \begin{align}
+                        f(n) & \fragment{6}{= 2f(n − 1)}\\
+                             & \fragment{7}{= 2(2^{n−1})}\\
+                             & \fragment{8}{= 2^n}
+                        \end{align}
+
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Binary Search Problem</h2>
+                    <ul>
+                      <li class="fragment roll-in"> Want to show that $f(n) = \log n$. (assume $n$ is a power of $2$)
+                      <li class="fragment roll-in"> Prove by induction on $n$
+                      <li class="fragment roll-in"> Base case: $f(2) = \log 2 = 1$
+                      <li class="fragment roll-in"> Inductive hypothesis: $\forall j < n$, $f(j) = \log j$
+                      <li class="fragment roll-in"> Inductive step:
+                        <div style="margin-top:-60px;margin-left:100px;">
+                        \begin{align}
+                        f(n) & \fragment{6}{= f(n/2) + 1}\\
+                        & \fragment{7}{= \log n/2 + 1}\\
+                        & \fragment{8}{= \log n − \log 2 + 1}\\
+                        & \fragment{9}{= \log n}
+                        \end{align}
+                        </div>
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Master Method (the theorem)</h2>
+                    <div style="text-align: left;">
+                      The recurrence $T(n) = aT(n/b) + f(n)$ can be solved as follows:
+                      </div>
+                    <ul>
+                      <li class="fragment roll-in">If $a f (n/b) \leq Kf(n)$ for some constant $K < 1$, then <alert>$T(n) = \Theta(f (n))$</alert>.
+                                                                                                    <li class="fragment roll-in">If $a f (n/b) \geq K f(n)$ for some constant $K > 1$, then <alert>$T(n) = \Theta(n^{\log_b a})$</alert>.
+                        <li class="fragment roll-in">If $a f (n/b) = f (n)$, then <alert>$T(n) = \Theta(f(n) \log_b n)$</alert>.
+</ul>
+                  </section>
+                  <section>
+                    <h2>Example 1</h2>
+                    <ul>
+                      <li class="fragment roll-in"> $T(n) = T (3n/4) + n$
+<li class="fragment roll-in">If we write this as $T (n) = aT (n/b) + f (n)$, then $a = 1$, $b =
+4/3$, $f(n) = n$
+<li class="fragment roll-in">Here a $f(n/b) = 3n/4$ is smaller than $f (n) = n$ by a factor of $4/3$, so $T(n) = \Theta(n)$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Example 2: multiplication</h2>
+                    <ul>
+                      <li class="fragment roll-in">Karatsuba’s multiplication algorithm: $T(n) = 3T (n/2) + n$
+<li class="fragment roll-in">If we write this as $T(n) = aT (n/b) + f (n)$, then $a = 3$, $b =
+2$, $f(n) = n$
+<li class="fragment roll-in">Here $af(n/b) = 3n/2$ is larger than $f (n) = n$ by a factor of
+$3/2$, so $T(n) = \Theta(n^{\log_2 3})$
+                    </ul>
+                    <div class="slide-footer">
+                      <a href="https://en.wikipedia.org/wiki/Karatsuba_algorithm">https://en.wikipedia.org/wiki/Karatsuba_algorithm</a>
+                    </div>
+                  </section>
+                  <section>
+                    <h2>Example 3: Mergesort</h2>
+<ul>
+                    <li class="fragment roll-in"> Mergesort: $T (n) = 2T (n/2) + n$
+<li class="fragment roll-in">If we write this as $T (n) = aT (n/b) + f (n)$, then $a = 2$, $b = 2$, $f (n) = n$
+<li class="fragment roll-in">Here a $f(n/b) = f (n)$, so $T (n) = \Theta(n \log n)$
+</ul>
+                  </section>
+                  <section>
+                    <h2>Example 4</h2>
+                    <ul>
+                      <li class="fragment roll-in"> $T (n) = T (n/2) + n \log n$
+<li class="fragment roll-in">If we write this as $T (n) = aT (n/b) + f (n)$, then $a = 1$, $b = 2$, $f(n) = n \log n$
+<li class="fragment roll-in">Here a $f (n/b) = n/2 \log n/2$ is smaller than $f (n) = n \log n$ by
+a constant factor, so $T (n) = \Theta(n \log n)$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Annihilator Description</h2>
+                    <ul>
+                      <li class="fragment roll-in">We first express
+                      our recurrence as a sequence $T$
+                      <li class="fragment roll-in">We use these three
+operators to “annihilate” $T$ , i.e. make it all $0$’s
+                      <li class="fragment roll-in">Key rule: can’t
+                      multiply by the constant $0$
+                      <li class="fragment roll-in">We can then
+  determine the solution to the recurrence from the sequence of
+  operations performed to annihilate $T$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Example (1/2)</h2>
+                    <ul>
+                      <li class="fragment roll-in"> Consider the recurrence $T(n) = 2T(n − 1)$, $T (0) = 1$
+                      <li class="fragment roll-in"> If we solve for the first few terms of this sequence, we can
+see they are $< 2^0, 2^1, 2^2, 2^3, \dots >$
+<li class="fragment roll-in">Thus this recurrence becomes the sequence:
+$$T = < 2^0, 2^1, 2^2, 2^3, \dots >$$
+
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Example (2/2)</h2>
+                    <div class="fragment roll-in" style="text-align:left;">
+                      Let’s annihilate $T = < 2^0, 2^1, 2^2, 2^3, \dots >$
+                    </div>
+                    <div  style="text-align:left;font-size:26pt;">
+                    <ul>
+<li class="fragment roll-in">Multiplying by a constant $c = 2$ gets:
+  $2T = < 2 \times 2^0, 2 \times 2^1, 2 \times 2^2, 2 \times 2^3, \dots >$
+<li class="fragment roll-in"> $2T = < 2^1, 2^2, 2^3, 2^4, \dots >$
+<li class="fragment roll-in">Shifting one place to the left gets ${\bf L}T = < 2^1, 2^2, 2^3, 2^4, \dots >$
+    <li class="fragment roll-in">Adding the sequence ${\bf L}T$ and $−2T$ gives:
+      <div style="margin-top: -20pt; margin-bottom: -20pt;">
+  \begin{align}
+  {\bf L}T − 2T & = < 2^1 − 2^1, 2^2 − 2^2, 2^3 − 2^3, \dots >\\
+    & = < 0, 0, 0, \dots >
+            \end{align}
+      </div>
+<li class="fragment roll-in">The annihilator of $T$ is thus ${\bf L} − 2$
+                    </ul>
+                    </div>
+                  </section>
+                  <section data-vertical-align-top>
+                    <h2></h2>
+                    <blockquote style="background-color: #93a1a1; color: #fdf6e3; width:100%; text-align:left;" class="fragment roll-in" >
+                      $
+                      (\bm{L} - a_0)^{b_0}(\bm{L} - a_1)^{b_1}\dots(\bm{L} - a_k)^{b_k}$<br>
+                      $
+                      < p_0(n)a_0^n + p_1(n)a_1^n + \dots p_k(n)a_k^n>
+                      $
+                    </blockquote>
+                    <ul>
+                      <li class="fragment roll-in">
+                        Q: What does $(\bm{L} − 3)(\bm{L} − 2)(\bm{L} − 1)$ annihilate?
+                      <li class="fragment roll-in">A: $< c_01^n + c_12^n + c_23^n >$
+                          <li class="fragment roll-in">Q: What does $(\bm{L} − 3)^2(\bm{L} − 2)(\bm{L} − 1)$ annihilate?
+                          <li class="fragment roll-in">A: $< c_01^n + c_12^n + (c_2n + c_3)3^n >$
+                          <li class="fragment roll-in">Q: What does $(\bm{L} − 1)^4$ annihilate?
+                          <li class="fragment roll-in">A: $(c_0n^3 + c_1n^2 + c_2n + c_3)1^n$
+                          <li class="fragment roll-in">Q: What does $(\bm{L} − 1)^3(\bm{L} − 2)^2$ annihilate?
+                          <li class="fragment roll-in">A: $(c_0n^2 + c_1n + c_2)1^n + (c_3n + c_4)2^n$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Example 1</h2>
+                    <div class="fragment roll-in" style="text-align:left; margin-top:-40px; width:100%;">
+                      Consider the recurrence $T (n) = 2T (n − 1) − T (n − 2)$, $T (0) = 0$,
+                      $T (1) = 1$. Note that:
+                      \begin{align}
+                      \bm{L}^2T &= < T_{n+2} >\\
+                        & = < 2T_{n+1} - T_{n} >\\
+                          \bm{L}T &= < T_{n+1} >\\
+                            T & = < T_n >
+                      \end{align}
+                    </div>
+                    <ul>
+                      <li class="fragment roll-in">Thus $\bm{L}^2T − 2\bm{L}T + T = < 0 >$
+                      <li class="fragment roll-in">So $\bm{L}^2 − 2\bm{L} + 1$ is the annihilator of $T$
+                    </ul>
+                  </section>
+                  <section>
+                    <div class="fragment roll-in" style="margin-left:-50px;text-align:left;width:100%;color: #268bd2;">
+                      $T (n) = 2T (n − 1) − T (n − 2), T (0) = 0, T (1) = 1$
+                    </div>
+                    <ul style="font-size:28pt;">
+                      <li class="fragment roll-in"><b>Write down the annihilator</b>: From the definition of the sequence, we can see that $\bm{L}^2T −2\bm{L}T +T = 0$, so the annihilator
+is $\bm{L}^2 − 2\bm{L} + 1$
+                      <li class="fragment roll-in"><b>Factor the annihilator</b>: We can factor by hand or using the
+quadratic formula to get $\bm{L}^2 − 2\bm{L} + 1 = (\bm{L} − 1)^2$
+                      <li class="fragment roll-in"><b>Look up to get general solution</b>: The annihilator $(\bm{L} − 1)^2$
+annihilates sequences of the form $(c_0n + c_1)1^n$
+                      <li class="fragment roll-in"><b>Solve for constants</b>: $T (0) = 0 = c_1$, $T (1) = 1 = c_0 + c_1$,
+We’ve got two equations and two unknowns. Solving by
+hand, we get that $c_0 = 1$, $c_1 = 0$. <b>Thus</b>: $T (n) = n$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Example 2</h2>
+                    <div class="fragment roll-in" style="text-align:left; margin-top:-40px; margin-bottom:-40px; width:100%;font-size:26pt;">
+                      Consider the recurrence $ T (n) = 7T (n − 1) − 16T (n − 2) + 12T (n −
+                      3)$, $T (0) = 1$,
+                      $T (1) = 5$, $T (2) = 17$. Note that:
+                    </div>
+                      \begin{align}
+                      \bm{L}^3T &\fragment{1}{= < T_{n+3} >}\\
+                        & \fragment{2}{= < 7T_{n+2} - 16T_{n+1} + 12T_{n} >}\\
+                          \bm{L}^2T &\fragment{3}{= < T_{n+2} >}\\
+                            \bm{L}T &\fragment{4}{= < T_{n+1} >}\\
+                            T & \fragment{5}{= < T_n >}
+                      \end{align}
+                    <ul style="font-size:26pt;margin-top:-40px;" class="fragment roll-in" data-fragment-index="6">
+                      <li class="fragment roll-in">Thus $\bm{L}^3T -7\bm{L}^2T + 16\bm{L}T -12 T = < 0 >$
+                      <li class="fragment roll-in">So $\bm{L}^3 -7\bm{L}^2 + 16\bm{L} - 12$ is the annihilator of $T$
+                    </ul>
+                  </section>
+                  <section>
+                    <div class="fragment roll-in" style="margin-left:-50px;text-align:left;width:100%;color: #268bd2;">
+                      $ T (n) = 7T (n − 1) − 16T (n − 2) + 12T (n −
+                      3)$, $T(0)=1$,
+                      $T (1) = 5$, $T (2) = 17$.
+                    </div>
+                    <ul style="font-size:26pt;">
+                      <li class="fragment roll-in"><b>Write down the annihilator</b>: From the definition of the
+sequence $\bm{L}^3T − 7\bm{L}^2T + 16\bm{L}T − 12T = 0$,
+so the annihilator is $\bm{L}3 − 7\bm{L}2 + 16\bm{L} − 12$
+<li class="fragment roll-in"><b>Factor the annihilator</b>: We can factor by hand or using a
+CAS $\bm{L}^3 −7\bm{L}^2 +16\bm{L}−12 = (\bm{L}−2)^2(\bm{L}−3)$
+<li class="fragment roll-in"><b>Look up to get general solution</b>: $(\bm{L} − 2)^2(\bm{L} − 3)$ annihilates sequences $< (c_0n + c_1)2^n+c_2 3^n >$
+<li class="fragment roll-in"><b>Solve for constants</b>: $T (0) = 1 = c_1 + c_2$, $T (1) = 5 = 2c_0 + 2c_1 + 3c_2$, $T (2) = 17 = 8c_0 + 4c_1 + 9c_2$. Three equations and three unknowns. Solving by hand, we get that $c_0 = 1$, $c_1 = 0$, $c_2 = 1$. <b>Thus</b>: $T (n) = n2^n + 3^n$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Another example 1</h2>
+                    <ul>
+                      <li class="fragment roll-in">Consider $T (n) = T (n − 1) + T (n − 2) + 2$.
+                      <li class="fragment roll-in">The residue is $\langle 2, 2, 2, \dots \rangle$ and
+                      <li class="fragment roll-in">The annihilator is still $(\bm{L}^2 − \bm{L} − 1)(\bm{L} − 1)$, but the equation for $T (2)$ changes!
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Another example 2</h2>
+                    <ul>
+<li class="fragment roll-in">Consider $T (n) = T (n − 1) + T (n − 2) + 2^n$.
+<li class="fragment roll-in">The residue is $\langle 1, 2, 4, 8, \cdots \rangle$ and
+<li class="fragment roll-in">The annihilator is now $(\bm{L}^2 − \bm{L} − 1)(\bm{L} − 2)$.
+
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Another example 3</h2>
+                    <ul>
+<li class="fragment roll-in">Consider $T (n) = T (n − 1) + T (n − 2) + n$.
+<li class="fragment roll-in">The residue is $\langle 1, 2, 3, 4, \cdots \rangle$
+<li class="fragment roll-in">The annihilator is now $(\bm{L}^2 − \bm{L} − 1)(\bm{L} − 1)^2$.
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Another example 4</h2>
+                    <ul>
+<li class="fragment roll-in">Consider $T (n) = T (n − 1) + T (n − 2) + n^2$.
+<li class="fragment roll-in">The residue is $\langle 1, 4, 9, 16, \cdots \rangle$ and
+<li class="fragment roll-in">The annihilator is $(\bm{L}^2 − \bm{L} − 1)(\bm{L} − 1)^3$.
+
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Another example 5</h2>
+                    <ul>
+                      <li class="fragment roll-in">Consider $T (n) = T (n − 1) + T (n − 2) + n^2 − 2^n$.
+                      <li class="fragment roll-in">The residue is $\langle 1 − 1, 4 − 4, 9 − 8, 16 − 16, \cdots \rangle$
+                      <li class="fragment roll-in">The annihilator is $(\bm{L}^2 − \bm{L} − 1)(\bm{L} − 1)^3(\bm{L} − 2)$.
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Another Example</h2>
+                    <ul>
+                      <li class="fragment roll-in">Consider the
+recurrence $T (n) = 9T ( \frac{n}{3} ) + kn$, where $T (1) = 1$ and
+$k$ is some constant
+                      <li class="fragment roll-in">Let $n = 3^i$ and rewrite $T (n)$:
+                      <li class="fragment roll-in">$T(2^0) = 1$ and $T(3^i) = 9T (3^{i−1}) + k3^i$
+                      <li class="fragment roll-in">Now define a sequence $t$ as follows $t(i) = T (3^i)$
+                      <li class="fragment roll-in">Then $t(0) = 1$, $t(i) = 9t(i − 1) + k3^i$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Now Solve</h2>
+                    <ul>
+                      <li class="fragment roll-in">$t(0) = 1$, $t(i) = 9t(i − 1) + k3^i$
+                      <li class="fragment roll-in">This is annihilated by $(\bm{L} − 9)(\bm{L} − 3)$
+                      <li class="fragment roll-in">So $t(i)$ is of the form $t(i) = c_19^i + c_23^i$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Reverse Transformation</h2>
+                    <ul>
+                      <li class="fragment roll-in">$t(i) = c_19^i + c_23^i$
+                      <li class="fragment roll-in">Recall: $t(i) = T (3^i)$ and $3^i = n$
+                        \begin{align}
+                        t(i) &\fragment{3}{= c_19^i + c_23^i}\\
+                        T (3^i) &\fragment{4}{= c_19^i + c_23^i}\\
+                        T (n) &\fragment{5}{= c_1(3^i)^2 + c_23^i}\\
+                        &\fragment{6}{= c_1 n^2 + c_2 n}\\
+                        &\fragment{7}{= \Theta(n^2)}
+                      \end{align}
+                    </ul>
+                  </section>
+
+</section>
+
+<section>
+  <section data-background="figures/dictionary_page.jpeg">
+    <h1 style="text-shadow: 4px 4px 4px #002b36; color: #f1f1f1; margin-top: -100px;">Dictionary ADT II</h1>
+  </section>
+
+  <section>
+    <h2>Open Addressing</h2>
+    <ul>
+<li class="fragment roll-in">All elements are stored in the hash table, there are no separate linked lists
+<li class="fragment roll-in">When we do a search, we probe the hash table until we find
+an empty slot
+<li class="fragment roll-in">Sequence of probes depends on the key
+<li class="fragment roll-in">Thus hash function maps from a key to a “probe sequence”
+(i.e. a permutation of the numbers $0, \dots , m − 1$)
+    </ul>
+  </section>
+  <section>
+    <ul>
+      <li class="fragment roll-in"> In general, for open addressing, the hash function depends on both the key to be inserted and the <em>probe number</em>
+      <li class="fragment roll-in"> Thus, for a key $k$, we get the probe sequence $k(k,0), h(k,1),\dots,h(k,m-1)$
+    </ul>
+  </section>
+  <section>
+    <ul>
+      <li class="fragment roll-in"> If we use open addressing, the hash table can never fill up. The load factor $\alpha$ can never exceed $1$.
+      <li class="fragment roll-in"> An advantage of open addressing is that it avoids pointers and the overhead of storing lists in each slot of the table.
+      <li class="fragment roll-in"> This freed up memory can be used to create more slots in the table which can reduce the load-factor and potentially speed up retrieval time.
+      <li class="fragment roll-in"> A disadvantage is that <em>deletion is difficult</em>. If deletion occurs in the hash table, chaining is usually used.
+    </ul>
+  </section>
+
+  <section>
+    <h2><code>oa_insert</code></h2>
+    <pre class="python fragment roll-in" style="width: 99%; font-size: 12pt;"><code data-trim data-noescape data-line-numbers>
+def oa_insert(mydict, k):
+    i = 0
+    while i < m:
+        j = h(k, i)
+        if mydict[j] is None:
+            mydict[j] = k
+            return j
+        i += 1
+    return None
+    </code></pre>
+  </section>
+
+  <section>
+    <h2><code>oa_find</code></h2>
+    <pre class="python fragment roll-in" style="width: 99%; font-size: 12pt;"><code data-trim data-noescape data-line-numbers>
+def oa_find(mydict, k):
+    i = 0
+    while i < m:
+        j = h(k, i)
+        if mydict[j] is None:
+            return None
+        if mydict[j] == k:
+            return j
+        i += 1
+    return None
+    </code></pre>
+  </section>
+
+  <section>
+    <h2>Open Address Delete</h2>
+    <row>
+      <col70>
+    <ul>
+      <li class="fragment roll-in"> Deletion from an open-address hash table is difficult
+      <li class="fragment roll-in">When we delete a key from slot $i$, we cannot just mark that slot as empty by storing <code>None</code> there.
+      <li class="fragment roll-in">The problem is that this would make it impossible to find some key $k$ during whose insertion we probed slot $i$ and found it occupied.
+    </ul>
+      </col70>
+      <col30>
+    <pre class="python fragment roll-in" style="width: 100%; font-size: 11pt;"><code data-trim data-noescape data-line-numbers>
+def oa_insert(mydict, k):
+    i = 0
+    while i < m:
+        j = h(k, i)
+        if mydict[j] is None:
+            mydict[j] = k
+            return j
+        i += 1
+    return None
+              </code></pre>
+        <pre class="python fragment roll-in" style="width: 100%; font-size: 11pt;"><code data-trim data-noescape data-line-numbers>
+def oa_find(mydict, k):
+    i = 0
+    while i < m:
+        j = h(k, i)
+        if mydict[j] is None:
+            return None
+        if mydict[j] == k:
+            return j
+        i += 1
+    return None
+    </code></pre>
+
+      </col30>
+      </row>
+  </section>
+
+  <section>
+    <h2>Open Address Delete</h2>
+    <ul>
+      <li class="fragment roll-in">One solution is to mark the slot by storing in it the value "DELETED"
+      <li class="fragment roll-in">Then we modify <code>oa_insert</code> to treat such a slot as if it were empty so that something can be stored in it
+      <li class="fragment roll-in"><code>oa_search</code> passes over these special slots while searching
+      <li class="fragment roll-in">Note, if we use this trick, search times are no longer dependent on the load-factor $\alpha$. For this reason, chaining is more commonly used when keys must be deleted
+    </ul>
+  </section>
+
+  <section>
+    <h2>Implementation</h2>
+    <ul>
+      <li class="fragment roll-in"> To analyze open-address hashing, we make the assumption of <em>uniform hashing</em>: we assume that each key is equally likely to have any of the $m!$ permutations of $\{0,1,\dots,m-1\}$ as its probe sequence
+      <li class="fragment roll-in">True uniform hashing is difficult to implement, so in practice, we generally use one of three approximations <i class="fa-solid fa-forward"></i>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Open Addressing</h2>
+    <ul>
+All positions are taken modulo $m$, and $i$ ranges from $1$ to $m − 1$
+<li class="fragment roll-in"><b>Linear Probing</b>: Initial probe is to
+position $h(k)$, successive probes are to positions $h(k) + i$,
+<li class="fragment roll-in"><b>Quadratic Probing</b>: Initial probes
+is to position $h(k)$, successive probes are to position $h(k) + c_1i
++ c_2i_2$
+<li class="fragment roll-in"><b>Double Hashing</b>: Initial probe is
+to position $h_1(k)$, successive probes are to positions $h_1(k) +
+ih_2(k)$
+    </ul>
+  </section>
+
+  <section>
+    <h2>Analysis</h2>
+    <ul style="font-size: 28pt;">
+      <li class="fragment roll-in">Recall that the load factor, $\alpha$, is the number of elements stored in the hash table, $n$, divided by the total number of slots $m$
+      <li class="fragment roll-in"> In open-address hashing, we have at most one element per slot so $\alpha < 1$
+      <li class="fragment roll-in"> We assume uniform hashing i.e. each probe maps to essentially a random slot in the table
+      <li class="fragment roll-in">We can show that the expected time for insertions is at most $1/(1-\alpha)$, the expected time for an unsuccessful search is $1/(1-\alpha)$ and the expected time for a successful search is $\frac{1}{\alpha} \log(1/(1-\alpha))$
+    </ul>
+  </section>
+
+    <section>
+    <h2>Hash Tables (take home)</h2>
+    Hash Tables implement the Dictionary ADT, namely:
+    <ul>
+<li class="fragment roll-in"><b><code>Insert(x)</code></b> - $O(1)$ expected time, $\Theta(n)$ worst case
+<li class="fragment roll-in"><b><code>Lookup(x)</code></b> - $O(1)$ expected time, $\Theta(n)$ worst case
+<li class="fragment roll-in"><b><code>Delete(x)</code></b> - $O(1)$ expected time, $\Theta(n)$ worst case
+    </ul>
+    </section>
+
+    <section>
+      <h2>Binary Search Trees</h2>
+      <blockquote style="background-color: #93a1a1; color: #fdf6e3; width:100%; text-align:left;" class="fragment roll-in" >
+        Binary search trees (BST) are another data structure for implementing the dictionary ADT
+        </blockquote>
+    </section>
+
+    <section>
+      <h2><alert>Red</alert>-<span style="color:#000000;">Black</span> Trees</h2>
+      <div style="text-align: left;">
+        <alert>Red</alert>-<span style="color:#000000;">Black</span> trees (a kind of binary tree) also implement the Dictionary ADT:
+      </div>
+    <ul>
+<li class="fragment roll-in"><b><code>Insert(x)</code></b> - $O(\log n)$ time
+<li class="fragment roll-in"><b><code>Lookup(x)</code></b> - $O(\log n)$ time
+<li class="fragment roll-in"><b><code>Delete(x)</code></b> - $O(\log n)$ time
+    </ul>
+    </section>
+    <section>
+      <h2>Why BST</h2>
+      <ul>
+        <li class="fragment roll-in"> When would you use a Search Tree for Dictionary?
+        <li class="fragment roll-in"> When need a hard guarantee on the worst case run times ("mission critical" code)
+        <li class="fragment roll-in"> When want something more dynamic than a hash table (do not want to enlarge a hash table when the load factor gets too large)
+        <li class="fragment roll-in"> Search trees can implement other important operations (Min/Max, Predecessor/Successor)
+      </ul>
+    </section>
+</section>
+
+                <section>
+                  <h2>See you</h2>
+                  Monday February $27^{th}$ at the midterm
+                </section>
+
+              </div>
+
+            </div>
+
+            <script src="dist/reveal.js"></script>
+
+            <!-- <link rel="stylesheet" href="lib/css/monokai.css"> -->
+            <script src="plugin/highlight/highlight.js"></script>
+            <script src="plugin/math/math.js"></script>
+            <script src="plugin/chalkboard/plugin.js"></script>
+            <script src="plugin/notes/notes.js"></script>
+            <script src="plugin/zoom/zoom.js"></script>
+            <!-- <script src="node_modules/reveal.js-menu/menu.js"></script> -->
+
+                <script type="text/javascript">
+
+	// Event start load section on slide
+	Reveal.addEventListener('slidechanged', function(event) {
+		//-- check if current slide with code
+	    var sectionID = Reveal.getCurrentSlide().id;
+
+	    if(sectionID === "code.1") {
+	       document.getElementById("div4code.1").style.display = "block";
+	    } else {
+	       document.getElementById("div4code.1").style.display = "none"
+	    }
+
+	});
+
+
+    </script>
+
+            <script>
+              // Full list of configuration options available at:
+              // https://github.com/hakimel/reveal.js#configuration
+              let notes = document.querySelectorAll('aside.notes');
+              notes.forEach(n => {
+	      let html = n.innerHTML;
+	      html = html.trim().replace(/\n/g, '<br/>');
+	      n.innerHTML = html;
+              });
+              Reveal.initialize({
+                  // history: true,
+                  hash: true,
+                  margin: 0.01,
+                  minScale: 0.01,
+                  maxScale: 1.23,
+                  menu: {
+                      themes: true,
+                      openSlideNumber: true,
+                      openButton: false,
+                  },
+                  customcontrols: {
+                      slideNumberCSS : 'position: fixed; display: block; right: 90px; top: auto; left: auto; width: 50px; bottom: 30px; z-index: 31; font-family: Helvetica, sans-serif; font-size:  12px; line-height: 1; padding: 5px; text-align: center; border-radius: 10px; background-color: rgba(128,128,128,.5)',
+                      controls: [
+                          { icon: '<i class="fa fa-caret-left"></i>',
+                            css: 'position: fixed; right: 60px; bottom: 30px; z-index: 30; font-size: 24px;',
+                            action: 'Reveal.prev(); return false;'
+                          },
+                          { icon: '<i class="fa fa-caret-right"></i>',
+                            css: 'position: fixed; right: 30px; bottom: 30px; z-index: 30; font-size: 24px;',
+                            action: 'Reveal.next(); return false;'
+                          }
+                      ]
+                  },
+                  chalkboard: {
+                      boardmarkerWidth: 1,
+                      chalkWidth: 2,
+                      chalkEffect: 1,
+                      slideWidth: Reveal.width,
+                      slideHeight: Reveal.height,
+                      toggleNotesButton: false,
+                      toggleChalkboardButton: false,
+                      //src: "chalkboards/chalkboard_em2.json",
+                      readOnly: false,
+                      theme: "blackboard",
+                      eraser: { src: "plugin/chalkboard/img/sponge.png", radius: 30},
+                  },
+
+                  math: {
+                      mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
+                      config: 'TeX-AMS_SVG-full',
+                      // pass other options into `MathJax.Hub.Config()`
+                      TeX: {
+                          Macros: {
+        	              RR: '\\mathbb{R}',
+        	              PP: '\\mathbb{P}',
+        	              EE: '\\mathbb{E}',
+        	              NN: '\\mathbb{N}',
+        	              vth: '\\vec{\\theta}',
+                              loss: '{\\cal l}',
+                              hclass: '{\\cal H}',
+                              CD: '{\\cal D}',
+                              def: '\\stackrel{\\text{def}}{=}',
+                              pag: ['\\text{pa}_{{\cal G}^{#1}}(#2)}', 2],
+                              vec: ['\\boldsymbol{\\mathbf #1}', 1],
+        	              set: [ '\\left\\{#1 \\; : \\; #2\\right\\}', 2 ],
+                              bm: ['\\boldsymbol{\\mathbf #1}', 1],
+                              argmin: ['\\operatorname\{arg\\,min\\,\}'],
+                              argmax: ['\\operatorname\{arg\\,max\\,\}'],
+                              prob: ["\\mbox{#1$\\left(#2\\right)$}", 2],
+                              floor: ["\\lfloor #1 \\rfloor",1]
+                          },
+                          loader: {load: ['[tex]/color']},
+                          extensions: ["color.js"],
+                          tex: {packages: {'[+]': ['color']}},
+                          svg: {
+                              fontCache: 'global'
+                          }
+                      }
+                  },
+
+                  plugins: [ RevealMath, RevealChalkboard, RevealHighlight, RevealNotes, RevealZoom ],
+
+              });
+
+              Reveal.configure({ fragments: true }); // set false when developing to see everything at once
+              Reveal.configure({ slideNumber: true });
+              //Reveal.configure({ history: true });
+              Reveal.configure({ slideNumber: 'c / t' });
+              Reveal.addEventListener( 'darkside', function() {
+                  document.getElementById('theme').setAttribute('href','dist/theme/aml_dark.css');
+              }, false );
+              Reveal.addEventListener( 'brightside', function() {
+                  document.getElementById('theme').setAttribute('href','dist/theme/aml.css');
+              }, false );
+            </script>
+            <style type="text/css">
+              /* 1. Style header/footer <div> so they are positioned as desired. */
+              #header-left {
+                  position: absolute;
+                  top: 0%;
+                  left: 0%;
+              }
+              #header-right {
+                  position: absolute;
+                  top: 0%;
+                  right: 0%;
+              }
+              #footer-left {
+                  position: absolute;
+                  bottom: 0%;
+                  left: 0%;
+              }
+            </style>
+
+            <!-- // 2. Create hidden header/footer -->
+            <div id="hidden" style="background; display:none;">
+              <div id="header">
+                <div id="header-left"><h4>CS4520</h4></div>
+                <div id="header-right"><h4>Algorithms</h4></div>
+                <div id="footer-left">
+                  <!-- <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100" -->
+                  <!--      src="figures/flowchart.png" alt="robot learning"> -->
+                </div>
+              </div>
+            </div>
+
+
+            <script type="text/javascript">
+              // 3. On Reveal.js ready event, copy header/footer <div> into each `.slide-background` <div>
+              var header = $('#header').html();
+              if ( window.location.search.match( /print-pdf/gi ) ) {
+                  Reveal.addEventListener( 'ready', function( event ) {
+                      $('.slide-background').append(header);
+                  });
+              }
+              else {
+                  $('div.reveal').append(header);
+              }
+            </script>
+
+  </body>
+</html>
