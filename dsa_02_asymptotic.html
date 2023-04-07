@@ -1,0 +1,921 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="css/fontawesome-free-5.15.4-web/css/all.css" rel="stylesheet">
+
+    <script src="lib/colorbrewer.v1.min.js" charset="utf-8"></script>
+    <script src="lib/colorStringStandalone.js" charset="utf-8"></script>
+    <script type="text/javascript" src="lib/jquery-2.2.4.min.js"></script>
+
+    <title>Design & Analysis: Algorithms</title>
+
+    <meta name="description" content="CS4851/6851 GSU class">
+    <meta name="author" content="Sergey M Plis">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+    <!-- <link rel="stylesheet" href="lib/css/zenburn.css"> -->
+    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="dist/theme/aml.css" id="theme">
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.scss';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+  </head>
+
+
+  <body>
+    <div class="reveal">
+      <!-- In between the <div="reveal"> and the <div class="slides">-->
+          <!-- <header style="position: absolute; top: 10px; left: 100px; z-index: 500; font-size:100px;background-color: rgba(0,0,0,0); text-align: center !important"></header>  -->
+          <!-- In between the <div="reveal"> and the <div class="slides">-->
+              <!-- Any section element inside of this container is displayed as a slide -->
+              <div class="slides">
+		<section>
+		  <section>
+		    <p>
+		      <h2>Design & Analysis: Algorithms</h2>
+                      <h3>02: Asymptotic Analysis</h3>
+		    <p>
+		  </section>
+	          <section>
+		    <h3>Outline of the lecture</h3>
+                    <ul>
+		      <li class="fragment roll-in"> How to analyze an algorithm
+                      <li class="fragment roll-in"> More analysis
+                      <li class="fragment roll-in"> Another interview
+		    </ul>
+                  </section>
+                </section>
+
+		<section>
+		  <section>
+                    <h1>How to analyze an algorithm</h1>
+		  </section>
+
+                  <section>
+                    <h2>How to analyze an algorithm?</h2>
+                    <ul>
+		      <li class="fragment roll-in"> There are several
+                        resource bounds we could be concerned about:
+                        time, space, communication bandwidth, logic
+                        gates, etc.
+                      <li class="fragment roll-in"> However, we are usually most concerned about time
+                      <li class="fragment roll-in"> Recall that algorithms are independent of programming languages and machine types
+                      <li class="fragment roll-in"> <i class="fa fa-question-circle" aria-hidden="true"></i> So how do we measure resource bounds of algorithms?
+                  </section>
+
+                  <section>
+                    <h2>Random-access machine model</h2>
+                    <ul>
+		      <li class="fragment roll-in"> We will use RAM model of computation in this class
+		      <li class="fragment roll-in"> All instructions operate in serial
+		      <li class="fragment roll-in"> All basic operations (e.g. add, multiply, read, store, etc.) take unit time
+		      <li class="fragment roll-in"> All "atomic" data (chars, ints, doubles, pointers, etc.) take unit space
+                    </ul>
+                  </section>
+
+
+                  <section>
+                    <h2>Worst Case Analysis</h2>
+                    <ul>
+		      <li class="fragment roll-in"> We'll generally be
+pessimistic when we evaluate resource bounds
+                      <li class="fragment roll-in"> We'll evaluate the
+run time of the algorithm on the worst possible input sequence
+                      <li class="fragment roll-in"> Amazingly, in most
+cases, we'll still be able to get pretty good bounds
+                      <li class="fragment roll-in"> Justification: The
+"average case" is often about as bad as the worst case.
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>Example Analysis</h2>
+                    <ul>
+                      <li class="fragment roll-in"> Consider the
+problem discussed last lecture about finding a redundant element in an
+array
+                      <li class="fragment roll-in"> Let's consider the
+more general problem, where the numbers are $1$ to $n$ instead of $1$
+to $1, 000, 000$
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>Algorithm 1</h2>
+                    <ul>
+                      <li class="fragment roll-in"> Create a new
+“count” array of ints of size n, which we’ll use to count the
+occurences of each number. Initialize all entries to $0$
+                      <li class="fragment roll-in"> Go through the
+input array and each time a number is seen, update its count in the
+“count” array
+                      <li class="fragment roll-in"> As soon as a
+number is seen in the input array which has already been counted once,
+return this number
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>Algorithm 2</h2>
+                    <ul>
+                      <li class="fragment roll-in"> Iterate through the input array, summing up all the numbers,
+let $S$ be this sum
+<li class="fragment roll-in"> Let $x = S − (n + 1)n/2$
+<li class="fragment roll-in"> Return $x$
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>Example Analysis: Time <i class="fa fa-clock" aria-hidden="true"></i></h2>
+                    <ul>
+                      <li class="fragment roll-in"> Worst case:
+<em>Algorithm 1</em> does $5n$ operations ($n$ inits to $0$ in “count”
+array, $n$ reads of input array, $n$ reads of “count” array (to see if
+value is $1$), $n$ increments, and $n$ stores into count array)
+                      <li class="fragment roll-in"> Worst case:
+<em>Algorithm 2</em> does $2n + 4$ operations ($n$ reads of input
+array, $n$ additions to value $S$, $4$ computations to determine $x$
+given $S$)
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>Example Analysis: Space <i class="fa fa-download"></i></h2>
+                    <ul>
+                      <li class="fragment roll-in"> Worst Case:
+<em>Algorithm 1</em> uses $n$ additional units of space to store the “count”
+array
+                      <li class="fragment roll-in"> Worst Case:
+                      <em>Algorithm 2</em> uses 2 additional units of space
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>A Simpler Analysis</h2>
+                    <ul>
+                      <li class="fragment roll-in"> Analysis above can
+                      be tedious for more complicated algorithms
+<li class="fragment roll-in"> In many cases, we don’t care about
+constants. $5n$ is about the same as $2n + 4$ which is about the same
+as $an + b$ for any constants $a$ and $b$
+<li class="fragment roll-in"> However we do still care about the
+difference in space: $n$ is very different from $2$
+<li class="fragment roll-in"> Asymptotic analysis is the solution to
+removing the tedium but ensuring good analysis
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>Asymptotic analysis?</h2>
+                    <ul>
+                      <li class="fragment roll-in"> A tool for
+                      analyzing time and space usage of algorithms
+                      <li class="fragment roll-in"> Assumes input size
+is a variable, say $n$, and gives time and space bounds as a function
+of $n$
+                      <li class="fragment roll-in"> Ignores
+multiplicative and additive constants
+                      <li class="fragment roll-in"> Concerned only
+                      with the rate of growth
+                      <li class="fragment roll-in"> E.g. Treats run
+times of $n$, $10000n + 2000$, and $0.5n + 2$ all the same (We
+use the term $O(n)$ to refer to all of them)
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>What is Asymptotic Analysis?</h2>
+                    <ul>
+                      <li class="fragment roll-in"> Informally, $O$ notation is the leading (i.e. quickest growing)
+term of a formula with the coefficient stripped off
+<li class="fragment roll-in"> $O$ is sort of a relaxed version of
+“$\leq$”
+<li class="fragment roll-in"> E.g. n is $O(n)$ and n is also $O(n^2)$
+<li class="fragment roll-in"> By convention, we use the smallest
+possible $O$ value i.e. we say $n$ is $O(n)$ rather than $n$ is
+$O(n^2)$
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>Examples</h2>
+                    <table style="font-size:38px">
+                      <tr>
+                        <td>$n$, $10n$, $1000n − 2000$, and $.5n + 2$</td>
+                        <td>$O(n)$</td>
+                      </tr>
+                      <tr>
+                        <td>$n + \log n$, $n − \sqrt{n}$</td>
+                        <td>$O(n)$</td>
+                      </tr>
+                      <tr>
+                        <td>$n^2 + n + \log n$, $10n^2 + n − \sqrt{n}$</td>
+                        <td>$O(n^2)$</td>
+                      </tr>
+                      <tr>
+                        <td>$n \log n + 10n$ </td>
+                        <td> $O(n\log n)$</td>
+                      </tr>
+                      <tr>
+                        <td>$n\sqrt{n} + n \log n + 10n$</td>
+                        <td>$O(n\sqrt{n})$</td>
+                      </tr>
+                      <tr>
+                        <td>$10, 000, 250$ and $4$</td>
+                        <td>$O(1)$</td>
+                      </tr>
+                    </table>
+                  </section>
+
+                  <section>
+                    <h2>More Examples</h2>
+                    <ul>
+                      <li class="fragment roll-in"> <em>Algorithm 1</em> and 2 both take time $O(n)$
+                      <li class="fragment roll-in"> <em>Algorithm 1</em> uses $O(n)$ extra space
+                      <li class="fragment roll-in"> But, <em>Algorithm 2</em> uses $O(1)$ extra space
+                    </ul>
+                  </section>
+
+                  <section data-vertical-align-top>
+                    <h2>Formal Definition of Big-$O$</h2>
+                    <blockquote style="background-color: #93a1a1; color: #fdf6e3; font-size: 38px; width: 100%;">
+                      A function $f(n)$ is $O(g(n))$ if there exist positive constants $c$
+and $n_0$ such that $f(n) \leq cg(n)$ for all $n \geq n_0$
+                    </blockquote>
+                  </section>
+
+                  <section>
+                    <h2>Example</h2>
+                    <ul>
+                      <li class="fragment roll-in"> Let’s show that
+                      $f(n) = 10n + 100$ is $O(g(n))$ where $g(n) = n$
+                      <li class="fragment roll-in"> We need to give
+constants $c$ and $n_0$ such that $f(n) \leq cg(n)$ for all $n \geq n_0$
+                      <li class="fragment roll-in"> In other words, we
+need constants $c$ and $n_0$ such that $10n + 100 \leq cn$ for all $n
+\geq n_0$
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>Example</h2>
+                    <ul>
+                      <li class="fragment roll-in"> We can solve for appropriate constants:
+                       \begin{align}
+                        10n + 100 & \leq cn \\
+                        10 + 100/n & \leq c
+                        \end{align}
+                      <li class="fragment roll-in"> So if $n > 1$, then c should be greater than $110$.
+                      <li class="fragment roll-in"> In other words, for all $n > 1$, $10n + 100 \leq 110n$
+                      <li class="fragment roll-in"> So $10n + 100$ is $O(n)$
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2><i class="fa fa-question-circle" aria-hidden="true"></i> </h2>
+                    Express the following in $O$ notation
+                    <ul>
+<li class="fragment roll-in"> $n^3/1000 − 100n^2 − 100n + 3$
+<li class="fragment roll-in"> $\log n + 100$
+<li class="fragment roll-in"> $10 \log^2 n + 100$
+<li class="fragment roll-in"> $\sum_{i=1}^n i$
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>Assigned reading</h2>
+                    <row>
+                      <col60>
+                        <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="80%"
+                             src="figures/cormen_algs.jpeg" alt="Cormen Algs">
+                      </col60>
+                      <col40>
+                        Read Chapter 1
+                      </col40>
+                    </row>
+                  </section>
+
+		</section>
+
+
+                <section>
+                  <section>
+                    <h1>More Analysis</h1>
+                  </section>
+
+                  <section>
+                    <h2>Computing Big-$O$ of an Algorithm</h2>
+                    <ul>
+                      <li class="fragment roll-in"> Write down a formula, $f(n)$, which gives the number of elementary operations performed by the algorithm as a function of the input size, $n$
+                        <li class="fragment roll-in"> Compute the big-$O$ value for $f(n)$
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>Example</h2>
+                    Consider the following (silly) algorithm:
+<pre class="python"><code>
+    for i in range(n + 1):
+        for j in range(i + 1):
+            print("hi")
+
+</code></pre>
+                  </section>
+
+                  <section>
+                    <h2>Example</h2>
+                    <ul>
+                      <li class="fragment roll-in"> First, we write down the formula $f$ giving the number of basic operations the algorithm performs:
+                        <blockquote>
+                        $f = \sum_{i=1}^n i = (n+1)n/2$
+                        </blockquote>
+                      <li class="fragment roll-in"> Next, we compute big-$O$ value for $f$:
+                        <blockquote>
+                        $(n+1)n/2 \quad \text{ is }\quad O(n^2)$
+                        </blockquote>
+
+                      <li class="fragment roll-in"> We can say, the algorithm takes $O(n^2)$ time, or for short, the algorithm is $O(n^2)$
+                    </ul>
+                  </section>
+
+                  <section>
+                    <table style="font-size:38px">
+                      <tr>
+                        <td>$n$, $10n$, $1000n − 2000$, and $.5n + 2$</td>
+                        <td>$O(n)$</td>
+                      </tr>
+                      <tr>
+                        <td>$n + \log n$, $n − \sqrt{n}$</td>
+                        <td>$O(n)$</td>
+                      </tr>
+                      <tr>
+                        <td>$n^2 + n + \log n$, $10n^2 + n − \sqrt{n}$</td>
+                        <td>$O(n^2)$</td>
+                      </tr>
+                      <tr>
+                        <td>$n \log n + 10n$ </td>
+                        <td> $O(n\log n)$</td>
+                      </tr>
+                      <tr>
+                        <td>$n\sqrt{n} + n \log n + 10n$</td>
+                        <td>$O(n\sqrt{n})$</td>
+                      </tr>
+                      <tr>
+                        <td>$10, 000, 250$ and $4$</td>
+                        <td>$O(1)$</td>
+                      </tr>
+                    </table>
+                  </section>
+
+                  <section>
+                    <h2>Computing big-$O$</h2>
+                    <table style="font-size:38px">
+                      <tr>
+                        <td>
+                          "Atomic operations"
+                        </td>
+                        <td>Constant time</td>
+                      </tr>
+                      <tr>
+                        <td>Consecutive statements</td>
+                        <td>Sum of times</td>
+                      </tr>
+                      <tr>
+                        <td>Conditionals</td>
+                        <td>Larger branch time + test</td>
+                      </tr>
+                      <tr>
+                        <td>Loops</td>
+                        <td>Sum of iterations</td>
+                      </tr>
+                      <tr>
+                        <td>Function Calls</td>
+                        <td>Time of function body</td>
+                      </tr>
+                      <tr>
+                        <td>Recursive Functions</td>
+                        <td>Solve Recurrence Relation</td>
+                      </tr>
+                    </table>
+                  </section>
+
+                  <section>
+                    <h2>Linear search</h2>
+                    <pre class="python"><code data-line-numbers data-trim data-noescape>
+def linear_search(sequence, key):
+    for element in sequence:
+        if element == key:
+            return True
+    return False
+                    </code></pre>
+                  </section>
+
+                  <section>
+                    <h2>Binary Search</h2>
+                    <pre class="python"><code data-trim data-noescape data-line-numbers>
+def binary_search(sequence, start, end, key):
+    if end <= start:
+        return False
+    middle = (end + start) // 2
+    if sequence[middle] == key:
+        return True
+    elif sequence[middle] > key:
+        return binary_search(sequence, start, middle - 1, key)
+    else:
+        return binary_search(sequence, middle + 1, end, key)
+                    </code></pre>
+                  </section>
+
+                  <section>
+                    <h2>Linear Search Analysis</h2>
+                    <ul>
+                      <li class="fragment roll-in"> To analyze the linear search algorithm, we consider the worst case
+                      <li class="fragment roll-in"> The worst case occurs when the key is the very last element in the array
+                      <li class="fragment roll-in"> In this case, the algorithm takes $O(n)$ time
+                      <li class="fragment roll-in"> Thus, we say that the run time of Linear Search is $O(n)$
+                      <li class="fragment roll-in"> (Note, the average time of linear search is also $O(n)$)
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>Binary Search Analysis</h2>
+                    <ul style="font-size:28pt;">
+                      <li class="fragment roll-in">Note that even in the worst case, the size of the array we search is being split in half each call
+                      <li class="fragment roll-in">Thus, if $x$ is the number of recursive calls, and $n$ is the original size of the array $n(\frac{1}{2})^x = 1 = \frac{n}{2^x}$
+                      <li class="fragment roll-in">This implies $2^x = n$
+                      <li class="fragment roll-in">Taking $\log$ of both sides, we get $x = \log n$, which means that there are $\log n$ recursive calls in the worst case
+                        <li class="fragment roll-in"> Since each invocation of the function takes $O(1)$ (minus the recursive calls), and the total number of invocations is at most $\log n$, the running time is $O(\log n)$
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>Comparison</h2>
+                    <ul>
+                      <li class="fragment roll-in">Linear Search is $O(n)$ time
+                      <li class="fragment roll-in">Binary Search is $O(\log n)$ time
+                      <li class="fragment roll-in">Binary Search is a <em>much</em> faster algorithm, particularly for large input sizes
+                    </ul>
+                  </section>
+
+                  <section data-background-iframe="https://www.youtube.com/embed/5Y0dGHkAkIY?autoplay=1&controls=0&rel=0&modestbranding=1&showinfo=0&mute=0">
+                    <h2 style="text-shadow: 4px 4px 4px #002b36; color: #e1e9e9">A digression on logs</h2>
+                  </section>
+
+                  <section>
+                    <h2>A digression on logs</h2>
+                    <ul>
+                      <li class="fragment roll-in"> The log function shows up very frequently in algorithm analysis
+                      <li class="fragment roll-in"> As computer scientists, when we use $\log$, we'll mean $\log_2$ (if no base is given, assume base 2)
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2></h2>
+                    <blockquote shade style="width:100%;">
+                      Definition
+                    </blockquote>
+                    <blockquote style="background-color: #93a1a1; color: #fdf6e3; font-size: 38px; width: 100%;">
+                      <ul style="list-style-type: none;">
+                        <li> $\log_x y$ is defined as the value $z$ such that $x^z = y$
+                        <li> follows that $x^{\log_x y} = y$
+                      </ul>
+                      </blockquote>
+                  </section>
+
+                  <section>
+                    <h2>Examples</h2>
+                    <ul style="list-style-type: none;">
+                      <li class="fragment roll-in"> $\log 1 = 0$
+                      <li class="fragment roll-in"> $\log 2 = 1$
+                      <li class="fragment roll-in"> $\log 32 = 5$
+                      <li class="fragment roll-in"> $\log 2^k = k$
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>Examples</h2>
+                    <ul style="list-style-type: none;">
+                      <li class="fragment roll-in"> $\log_3 9 = 2$
+                      <li class="fragment roll-in"> $\log_5 125 = 3$
+                      <li class="fragment roll-in"> $\log_4 16 = 2$
+                      <li class="fragment roll-in"> $\log_{24} 24^{100} = 100$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Facts about exponents</h2>
+                    Recall that: <br>
+                    <ul style="list-style-type: none;">
+                      <li class="fragment roll-in"> $(x^y)^z = x^{yz}$
+                      <li class="fragment roll-in"> $x^yx^z = x^{y+z}$
+                      <li class="fragment roll-in"> From these, we can derive some facts about logs
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Facts about logs</h2>
+                    <ul style="list-style-type: none;">
+                      <li class="fragment roll-in"> Fact 1: $$\log(xy) = \log x + \log y$$
+                      <li class="fragment roll-in"> Fact 2: $$\log a^c = c\log a$$
+                      <li class="fragment roll-in">
+                    <blockquote shade style="width:100%;">
+                      To prove both equations, raise both sides to the power of 2, and use facts about exponents
+                    </blockquote>
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>Incredibly useful fact about logs</h2>
+                    <ul style="list-style-type: none;">
+                      <li class="fragment roll-in"> Fact 3: $$\log_c a = \frac{\log a}{\log c}$$
+                      <li class="fragment roll-in">
+                    <blockquote shade style="width:100%;">
+                      To prove this, consider the equation $a = c^{\log_c a}$, take $\log_2$ of both sides, and use Fact 2.
+                    </blockquote>
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>Log facts to memorize</h2>
+                    <ul style="list-style-type: none;">
+                      <li> Fact 1: $\quad \log(xy) = \log x + \log y$
+                      <li> Fact 2: $\quad \log a^c = c\log a$
+                      <li> Fact 3: $\quad \log_c a = \frac{\log a}{\log c}$
+                      <li class="fragment roll-in">
+                    <blockquote shade style="width:100%;">
+These facts are sufficient for all your logarithm needs. Learn to use them!
+                    </blockquote>
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>Take Away</h2>
+                    <ul>
+                      <li class="fragment roll-in"> All $\log$ functions of form $k_1 \log_{k_2} k_3n^{k_4}$ for constants $k_1$, $k_2$, $k_3$ and $k_4$ are $O(\log n)$
+                      <li class="fragment roll-in"> For this reason, we don't really "care" about the base of the log function when we do asymptotic notation
+                      <li class="fragment roll-in"> Thus, binary search, ternary search and $k$-ary seach all take $O(\log n)$ time
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Important Note</h2>
+                    <ul style="list-style-type: none;">
+                      <li class="fragment roll-in"> $\log^2 n = (\log n)^2$
+                      <li class="fragment roll-in"> $\log^2 n$ is $O(\log^2 n)$, not $O(\log n)$
+                      <li class="fragment roll-in"> This is true since $\log^2 n$ grows asymptotically faster than $\log n$
+                      <li class="fragment roll-in"> All $\log$ functions of form $k_1 \log_{k_2}^{k_3} k_4n^{k_5}$ for constants $k_1$, $k_2$, $k_3$, $k_4$ and $k_5$ are $O(\log^{k_3} n)$
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>Exercise</h2>
+                    <ul style="list-style-type: none;">
+                      <li>
+                        <blockquote shade style="width:100%;">
+                          Simplify and give $O$ notation for the following functions. In the bog-$O$ notation, write all logs base 2:
+                        </blockquote>
+                      <li> $\log 10n^2$
+                      <li> $\log_5 (n/4)$
+                      <li> $\log^2 n^4$
+                      <li> $2^{\log_4 n}$
+                      <li> $\log\log\sqrt{n}$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Does big-$O$ really matter?</h2>
+                    <blockquote shade style="width:100%;">
+                      Let $n=100,000$ and $\Delta t = \mu s$
+                    </blockquote>
+                    <table style="font-size:30px">
+                      <tr>
+                        <td>
+                          $\log n$
+                        </td>
+                        <td>
+                          $1.2\times 10^{-5}$ seconds
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          $\sqrt{n}$
+                        </td>
+                        <td>
+                          $3.2\times 10^{-4}$ seconds
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          $n$
+                        </td>
+                        <td>
+                          $0.1$ seconds
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          $n\log n$
+                        </td>
+                        <td>
+                          $1.2$ seconds
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          $n\sqrt{n}$
+                        </td>
+                        <td>
+                          $31.6$ seconds
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          $n^2$
+                        </td>
+                        <td>
+                          $2.8$ hours
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          $n^3$
+                        </td>
+                        <td>
+                          $31.7$ years
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          $2^n$
+                        </td>
+                        <td>
+                          $> 1$ century
+                        </td>
+                      </tr>
+                    </table>
+                  </section>
+                </section>
+
+                <section>
+                  <section>
+                    <h1>Another Interview <i class="fa fa-question-circle" aria-hidden="true"></i> </h1>
+                  </section>
+
+                  <section>
+                    <h2><i class="fa fa-question-circle" aria-hidden="true"></i></h2>
+                    <blockquote style="background-color: #93a1a1; color: #fdf6e3; font-size: 38px; width: 100%;" class="fragment" data-fragment-index="0">
+                      Design an algorithm to return the largest sum of contiguous integers in an array of ints
+                    </blockquote>
+                    <blockquote shade style="width:100%;" class="fragment" data-fragment-index="1">
+                      Example: if the input is $(-10, 2,3,-2,0,5,-15)$, the largest sum is $8$, which we get from $(2,3,-2,0,5)$
+                    </blockquote>
+                  </section>
+                  <section>
+                    <h2>A Naive Algorithm</h2>
+                    <pre class="python"><code data-line-numbers data-trim data-noescape>
+def max_seq1(sequence):
+    n = len(sequence)
+    max_sum = -100000
+    for i in range(n):
+        for j in range(i, n):
+            sum = 0
+            for k in range(i, j + 1):
+                sum += sequence[k]
+                if sum > max_sum:
+                    max_sum = sum
+    return max_sum
+                    </code></pre>
+                  </section>
+                  <section>
+                    <h2>Analysis</h2>
+                    <ul style="font-size:32px;">
+                      <li class="fragment roll-in"> Need to count the total number of operations of <code>max_seq1</code>
+                      <li class="fragment roll-in"> Might as well assume time to do the inner loop is 1 (since it's a constant and therefore $O(1))$
+                      <li class="fragment roll-in"> Let $f(n)$ be the runtime of an array of size $n$
+                        <row>
+                          <col50>
+                        <div style="font-size:22px;">
+                        \begin{align}
+                        f(n) & \fragment{4}{ = \sum_{i=1}^n \sum_{j=i}^n \sum_{k=i}^j 1}\\
+                        & \fragment{5}{ = \sum_{i=1}^n \sum_{j=i}^n (j - i + 1)}\\
+                        & \fragment{6}{ = \sum_{i=1}^n \sum_{j=1}^{n-i+1} j }\\
+                        & \fragment{7}{ = \sum_{i=1}^n (n-i+1)(n-i+2)/2}\\
+                        \end{align}
+                        </div>
+                        </col50>
+                          <col50>
+                            <pre class="python"><code data-line-numbers data-trim data-noescape>
+def max_seq1(sequence):
+    n = len(sequence)
+    max_sum = -100000
+    for i in range(n):
+        for j in range(i, n):
+            sum = 0
+            for k in range(i, j + 1):
+                sum += sequence[k]
+                if sum > max_sum:
+                    max_sum = sum
+    return max_sum
+                    </code></pre>
+                        </col50>
+                        </row>
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Analysis cont.</h2>
+                    <row style="font-size:26px;">
+                      <col50>
+                        \begin{align}
+                        f(n) & = \sum_{i=1}^n \sum_{j=i}^n \sum_{k=i}^j 1\\
+                        & = \sum_{i=1}^n \sum_{j=i}^n (j - i + 1)\\
+                        & = \sum_{i=1}^n \sum_{j=1}^{n-i+1} j \\
+                        & = \sum_{i=1}^n (n-i+1)(n-i+2)/2\\
+                        \end{align}
+                      </col50>
+                      <col50>
+                        \begin{align}
+                        f(n) & \fragment{1}{ = \sum_{i=1}^n (i/2)(i+1)}\\
+                        &\fragment{2}{ = \frac{1}{2} \sum_{i=1}^n (i^2 + i)}\\
+                        &\fragment{3}{ = \frac{1}{2} (\sum_{i=1}^n i^2 + \sum_{i=1}^n i )}\\
+                        & \fragment{4}{ = \frac{1}{2} (O(n^3) + O(n^2))}\\
+                        &\fragment{4}{ = O(n^3)}\\
+                        \end{align}
+                      </col50>
+                    </row>
+                  </section>
+
+                  <section>
+                    <h2>Challenge</h2>
+                    <ul style="list-style-type: none;">
+                      <li class="fragment roll-in"> <code>max_seq1</code> is very slow
+                      <li class="fragment roll-in"> This kind of algorithm won't impress an interviewer
+                      <li class="fragment roll-in"> Can you do better?
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>Assigned reading</h2>
+                    <row>
+                      <col60>
+                        <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="80%"
+                             src="figures/cormen_algs.jpeg" alt="Cormen Algs">
+                      </col60>
+                      <col40>
+                        Read Chapter 3: Growth of Functions
+                      </col40>
+                    </row>
+                  </section>
+
+		</section>
+
+                  <section>
+                    <h2>See you</h2>
+                    Wednesday January 18th
+                  </section>
+
+              </div>
+
+            </div>
+
+            <script src="dist/reveal.js"></script>
+
+            <link rel="stylesheet" href="lib/css/monokai.css">
+            <script src="plugin/highlight/highlight.js"></script>
+            <script src="plugin/math/math.js"></script>
+            <script src="plugin/chalkboard/plugin.js"></script>
+            <script src="plugin/notes/notes.js"></script>
+            <script src="plugin/zoom/zoom.js"></script>
+
+            <script>
+              // Full list of configuration options available at:
+              // https://github.com/hakimel/reveal.js#configuration
+
+              Reveal.initialize({
+                  // history: true,
+                  hash: true,
+                  margin: 0.01,
+                  minScale: 0.01,
+                  maxScale: 1.23,
+
+                  chalkboard: {
+                      boardmarkerWidth: 1,
+                      chalkWidth: 2,
+                      chalkEffect: 1,
+                      slideWidth: Reveal.width,
+                      slideHeight: Reveal.height,
+                      toggleNotesButton: false,
+                      toggleChalkboardButton: false,
+                      //src: "chalkboards/chalkboard_em2.json",
+                      readOnly: false,
+                      theme: "blackboard",
+                      eraser: { src: "plugin/chalkboard/img/sponge.png", radius: 30},
+                  },
+
+                  math: {
+                      mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
+                      config: 'TeX-AMS_SVG-full',
+                      // pass other options into `MathJax.Hub.Config()`
+                      TeX: {
+                          Macros: {
+        	              RR: '\\mathbb{R}',
+        	              PP: '\\mathbb{P}',
+        	              EE: '\\mathbb{E}',
+        	              NN: '\\mathbb{N}',
+        	              vth: '\\vec{\\theta}',
+                              loss: '{\\cal l}',
+                              hclass: '{\\cal H}',
+                              CD: '{\\cal D}',
+                              def: '\\stackrel{\\text{def}}{=}',
+                              pag: ['\\text{pa}_{{\cal G}^{#1}}(#2)}', 2],
+                              vec: ['\\boldsymbol{\\mathbf #1}', 1],
+        	              set: [ '\\left\\{#1 \\; : \\; #2\\right\\}', 2 ],
+                              bm: ['\\boldsymbol{\\mathbf #1}', 1],
+                              argmin: ['\\operatorname\{arg\\,min\\,\}'],
+                              argmax: ['\\operatorname\{arg\\,max\\,\}'],
+                              prob: ["\\mbox{#1$\\left(#2\\right)$}", 2],
+                          },
+                          loader: {load: ['[tex]/color']},
+                          extensions: ["color.js"],
+                          tex: {packages: {'[+]': ['color']}},
+                          svg: {
+                              fontCache: 'global'
+                          }
+                      }
+                  },
+
+                  plugins: [ RevealMath, RevealChalkboard, RevealHighlight, RevealNotes, RevealZoom ],
+
+              });
+
+              Reveal.configure({ fragments: true }); // set false when developing to see everything at once
+              Reveal.configure({ slideNumber: true });
+              //Reveal.configure({ history: true });
+              Reveal.configure({ slideNumber: 'c / t' });
+              Reveal.addEventListener( 'darkside', function() {
+                  document.getElementById('theme').setAttribute('href','dist/theme/aml_dark.css');
+              }, false );
+              Reveal.addEventListener( 'brightside', function() {
+                  document.getElementById('theme').setAttribute('href','dist/theme/aml.css');
+              }, false );
+
+            </script>
+
+            <style type="text/css">
+              /* 1. Style header/footer <div> so they are positioned as desired. */
+              #header-left {
+                  position: absolute;
+                  top: 0%;
+                  left: 0%;
+              }
+              #header-right {
+                  position: absolute;
+                  top: 0%;
+                  right: 0%;
+              }
+              #footer-left {
+                  position: absolute;
+                  bottom: 0%;
+                  left: 0%;
+              }
+            </style>
+
+            <!-- // 2. Create hidden header/footer -->
+            <div id="hidden" style="display:none;">
+              <div id="header">
+                <div id="header-left"><h4>CS4520</h4></div>
+                <div id="header-right"><h4>Algorithms</h4></div>
+                <div id="footer-left">
+                  <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100"
+                       src="figures/flowchart.png" alt="robot learning">
+                </div>
+              </div>
+            </div>
+
+
+            <script type="text/javascript">
+              // 3. On Reveal.js ready event, copy header/footer <div> into each `.slide-background` <div>
+              var header = $('#header').html();
+              if ( window.location.search.match( /print-pdf/gi ) ) {
+                  Reveal.addEventListener( 'ready', function( event ) {
+                      $('.slide-background').append(header);
+                  });
+              }
+              else {
+                  $('div.reveal').append(header);
+              }
+            </script>
+
+  </body>
+</html>

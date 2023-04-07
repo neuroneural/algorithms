@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="css/fontawesome-free-5.15.4-web/css/all.css" rel="stylesheet">
+
+    <script src="lib/colorbrewer.v1.min.js" charset="utf-8"></script>
+    <script src="lib/colorStringStandalone.js" charset="utf-8"></script>
+    <script type="text/javascript" src="lib/jquery-2.2.4.min.js"></script>
+
+    <title>Design & Analysis: Algorithms</title>
+
+    <meta name="description" content="CS4851/6851 GSU class">
+    <meta name="author" content="Sergey M Plis">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+    <!-- <link rel="stylesheet" href="lib/css/zenburn.css"> -->
+    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="dist/theme/aml.css" id="theme">
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.scss';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+  </head>
+
+
+  <body>
+    <div class="reveal">
+      <!-- In between the <div="reveal"> and the <div class="slides">-->
+          <!-- <header style="position: absolute; top: 10px; left: 100px; z-index: 500; font-size:100px;background-color: rgba(0,0,0,0); text-align: center !important"></header>  -->
+          <!-- In between the <div="reveal"> and the <div class="slides">-->
+              <!-- Any section element inside of this container is displayed as a slide -->
+              <div class="slides">
+		<section>
+		  <section>
+		    <p>
+		      <h2>Design & Analysis: Algorithms</h2>
+                      <h3>01: Introduction</h3>
+		    <p>
+		  </section>
+	          <section>
+		    <h3>Outline of the lecture</h3>
+                    <ul>
+		      <li class="fragment roll-in">Introductions
+                      <li class="fragment roll-in">Why Study Design and Analysys of Algorithms
+                      <li class="fragment roll-in">Algorithms Analysis
+                      <li class="fragment roll-in">Course Overview                        
+		    </ul>
+                  </section>
+                </section>
+
+		<section>
+		  <section>
+                    <h1>Introductions</h1>
+		  </section>
+		  <section>
+                    <h2>Instructor</h2>
+                    <row>
+		      <col70>
+                        <h3>Sergey Plis, Ph.D.</h3>
+                        <ul  style="list-style-type: none; ">
+                        <li>Department of Computer Science,
+                        <li>Georgia State University
+                        <li>55 Park Place, office 1821
+                        <li>Office hours: MW 12:00-1:00 pm <br><em>in person or in class slack <i class="fa fa-slack" aria-hidden="true"></i></em>
+                        <li>Email: <a href="mailto:splis@gsu.edu">splis@gsu.edu</a>
+                        </ul>
+		      </col70>
+                      <col30>
+                          <img src="figures/SergeyPlis.jpg" alt="Sergey Plis" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100%">
+                      </col30>
+                    </row>
+		  </section>
+
+		  <section>
+		    <h2>Grader</h2>
+                    <row>
+		      <col70>
+                      <h3>Anuska Sinha</h3>
+                      <ul  style="list-style-type: none; ">
+                      <li>Department of Computer Science,
+                      <li>Georgia State University
+                      <li>55 Park Place
+                      <li>Comments: by appointment or <i class="fa fa-slack" aria-hidden="true"></i>
+                      <li>Email: <a href="mailto:asinha14@student.gsu.edu">asinha14@student.gsu.edu</a>
+                      </ul>
+                      </col70>
+                      <col30>
+                        <img src="figures/AnuskaSinha.jpeg" alt="Mrinal Mathur" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100%">
+                      </col30>
+</row>
+		  </section>
+		</section>
+
+                <section>
+                  <section>
+                    <h1>Algorithms</h1>
+                  </section>
+
+                  <section>
+ <blockquote shade style="margin-top: -20px; text-align: left; font-size: 28px; width: 100%">
+   "The possibility of a science in which all the world is thought of computationally casts the study of computers in an important new light. As its practitioners are fond of saying, <mark>computer science is not about computers, any more than astronomy is about telescopes, or biology about microscopes.</mark> These devices are tools for observing worlds otherwise inaccessible. <alert class="fragment roll-in" data-fragment-index="0">The computer is a tool for exploring the world of complex processes, whether they involve cells, stars, or the human mind.</alert>"
+   <p>
+     <div style="font-size: 18px;">
+       1986, Machinery of the Mind: Inside the New Science of Artificial Intelligence by George Johnson, Chapter 4: The Art of Programming, Quote Page 81 and 82, Times Books: A Division of Random House Inc., New York.
+       </div>
+ </blockquote>
+
+ <div class="fragment" data-fragment-index=1>
+ <img style="border:0; box-shadow: 0px 0px 0px
+             rgba(150, 150, 255, 0.8);" width="60%" src="figures/Dijksta_CS.jpeg" alt="Edsger Dijkstra">
+ </div>
+                  </section>
+
+                  <section>
+                    <h2>What's an algorithm?</h2>
+
+                    <blockquote shade style="margin-top: -20px; text-align: left; font-size: 38px; width: 100%">
+                       A finite sequence of rigorous instructions, typically used to solve <mark>a class of specific problems</mark> or to perform a computation.
+                    </blockquote>
+
+                    Problem example<br>
+                    <ul style="font-size: 32pt">
+                      <li> given a set of locations on a map
+                      <li> find the closest pair
+                    </ul>
+                  </section>
+
+                  <section data-background="figures/Groceries_dsa.png" data-background-size="contain">
+                  </section>
+
+                  <section>
+                    <h2>What's an algorithm?</h2>
+
+                    <blockquote shade style="margin-top: -20px; text-align: left; font-size: 38px; width: 100%">
+                      A finite sequence of rigorous instructions, typically used to solve <mark>a class of specific problems</mark> or to perform a computation.
+                    </blockquote>
+
+                    Example Problem:<br>
+                    <ul style="font-size: 32pt">
+                      <li> given a set of locations on a map
+                      <li> find the closest pair
+                    </ul>
+                    <p>
+                      A Possible Algorithm:<br>
+                      <ul style="font-size: 32pt">
+                        <li> find distances between <b>all</b> pairs
+                        <li> select the smallest
+                      </ul>
+
+                      <blockquote class="fragment" style="width: 100%; font-size: 32pt" data-fragment-index=0>
+                        Is it a good algorithm? Can we do better?
+                      </blockquote>
+                  </section>
+
+                  <section>
+                    <h2>Why study algorithms?</h2>
+
+                    <ul style="list-style-type: none;">
+                      <li class="fragment roll-in">
+                     Q: Can I get a programming job without knowing something
+                     about algorithms and data structures?
+                     <li class="fragment roll-in">
+                       A: Yes, but do you really want to be programming GUIs your entire life?
+</ul>
+                  </section>
+                  <section data-background="figures/popular_games_22.jpeg" data-background-size="cover">
+                    <h2 style="text-shadow: 4px 4px 4px #002b36; color: #e1e9e9">Want to program computer games?</h2>
+                  </section>
+
+                  <section data-vertical-align-top>
+                    <h2>Want to program computer games?</h2>
+                    <blockquote shade style="width:100%; text-align: left;">
+                      Q: I'M CURRENTLY IN A COMPUTER SCIENCE OR SOFTWARE/COMPUTER ENGINEERING PROGRAM. WHAT COURSES AT SCHOOL ARE MOST APPLICABLE FOR WORKING IN THE GAMES INDUSTRY?
+                    </blockquote>
+                    <row>
+                      <col50 style="text-align: left; font-size:22pt;">
+                        A: For a career in programming or engineering at EA, a Computer Science or Software/Computer Engineering degree is required for most positions, so you are on the right track already. When it comes to courses, the following subjects are very important:
+                      </col50>
+                      <col50>
+                        <ul style="font-size:22pt;">
+                        <li>Linear Algebra
+                        <li>Calculus
+                        <li>Mathematical Logic
+                        <li>Computer Graphics
+                        <li><mark>Abstract Data Types</mark>
+                        <li><mark>Algorithm Design and Analysis</mark>
+                        <li>Machine Learning
+                        <li>Artificial Intelligence
+                        </ul>
+                      </col50>
+                    </row>
+
+                    <div class="slide-footer">
+                      <a href="http://careers.ea.com/student-faq">http://careers.ea.com/student-faq</a>
+                    </div>
+                  </section>
+
+                  <section>
+                    <h2>Why study algorithms?</h2>
+                    <ul style="width:100%; font-size: 28pt;">
+                    <li  class="fragment  roll-in">   Almost  all  big
+companies want  programmers with  knowledge of  algorithms: Microsoft,
+Google, Amazon, Meta, Oracle, IBM, etc.
+<li class="fragment roll-in"> In most programming job interviews, they
+will ask you several questions about algorithms and/or data structures
+<li class="fragment roll-in"> Your knowledge of algorithms will set
+you apart from the large masses of interviewees who know only how to
+program
+<li class="fragment roll-in"> If you want to start your own company,
+you should know that many startups are successful because they’ve
+found better algorithms for solving a problem (e.g. Google, Akamai,
+  etc.)
+  </ul>
+                  </section>
+                  <section data-background="figures/Cracking_CodingInterview_dsa.png" data-background-size="contain">
+                  </section>
+
+                  <section data-vertical-align-top>
+                    <h3>A company and an algorithm</h3>
+                    <row>
+                      <col50>
+                        <img style="border:0; box-shadow: 0px 0px 0px
+                                    rgba(150, 150, 255, 0.8);" width="60%" src="figures/BillGates.jpeg" alt="Bill Gates">
+                      </col50>
+                      <col50>
+                        <img style="border:0; box-shadow: 0px 0px 0px
+                                    rgba(150, 150, 255, 0.8);" width="100%" src="figures/Microsoft_logo_(2012).svg" alt="M$">
+                      </col50>
+                    </row>
+                    <row>
+                      <col40>
+                        <img style="border:0; box-shadow: 0px 0px 0px
+                                    rgba(150, 150, 255, 0.8);" width="90%" src="figures/BillGatesMugShot.webp" alt="Bill Gates">
+                      </col40>
+                      <col10>
+                        +
+                      </col10>
+                      <col40>
+                        <img style="border:0; box-shadow: 0px 0px 0px
+                                    rgba(150, 150, 255, 0.8);" width="100%" src="figures/PapadimitriouBook.png" alt="M$">
+                      </col40>
+                      <col10>
+                        =
+                      </col10>
+                    </row>
+Gates W.H.; Papadimitriou, C.H. Bounds for sorting by prefix reversal. Discrete Math. 27 (1979), 47–57
+                  </section>
+
+                  <section data-vertical-align-top>
+                    <h3>A company and an algorithm</h3>
+                    <row>
+                      <col50>
+                        <img style="border:0; box-shadow: 0px 0px 0px
+                                    rgba(150, 150, 255, 0.8);" width="50%" src="figures/BrinPage.jpg" alt="Brin & Page">
+                        <img style="border:0; box-shadow: 0px 0px 0px
+                                    rgba(150, 150, 255, 0.8);" width="100%" src="figures/pagerank_abstract.png" alt="PageRank">
+                      </col50>
+                      <col50>
+                        <img style="border:0; box-shadow: 0px 0px 0px
+                                    rgba(150, 150, 255, 0.8);" width="100%" src="figures/Google.png" alt="Google">
+                      </col50>
+                    </row>
+                  </section>
+
+                  <section data-background="figures/machine-learning-bg.jpeg" data-vertical-align-top>
+                    <h3>Clustering, neural nets, classification, and more</h3>
+                  </section>
+
+                  <section>
+                    <h2>Why study algorithms?</h2>
+                    <ul>
+                      <li class="fragment roll-in"> You’ll write better, faster code
+                      <li class="fragment roll-in"> You’ll learn to think more abstractly and mathematically
+                      <li class="fragment roll-in"> It’s the most challenging and interesting area of CS!
+                    </ul>
+                  </section>
+
+                  <section data-background="figures/Cant_Solve_1.png" data-vertical-align-top data-background-size="contain">
+                    <h3>not understanding theory</h3>
+                  </section>
+
+                  <section data-background="figures/Cant_Solve_2.png" data-vertical-align-top data-background-size="contain">
+                    <h3>understanding theory</h3>
+                  </section>
+
+                  <section data-background="figures/Cant_Solve_3.png" data-vertical-align-top data-background-size="contain">
+                    <h3>understanding limits of theory</h3>
+                  </section>
+
+
+                </section>
+
+                <section>
+                  <section>
+                    <h1>Algorithm Analysis</h1>
+                  </section>
+
+                  <section>
+                    <h2>A Real Job Interview Question</h2>
+
+                    <blockquote style="background-color: #93a1a1; color: #fdf6e3; font-size: 38px; width: 100%;">
+                      <ul>
+                      <li> You are given an array with integers between $1$ and $1,000,000$.
+                      <li> All integers between $1$ and $1,000,000$ are in the array at least
+                        once, and one of those integers is in the array twice
+                      <li> Q: Can you determine which integer is in the array twice?
+                        Can you do it while iterating through the array only once?
+  </ul>
+                    </blockquote>
+                  </section>
+
+                  <section>
+                    <h2>Naive Algorithm</h2>
+                    <ul>
+                      <li> Create a new array of ints between $1$ and $1, 000, 000$, which
+we'll use to count the occurences of each number. Initialize
+all entries to 0
+<li> Go through the input array and each time a number is seen,
+update its count in the new array
+<li> Go through the count array and see which number occurs
+twice.
+<li> Return this number
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>Naive Algorithm Analysis</h2>
+                    <ul>
+                      <li class="fragment roll-in">  Q: How long will this algorithm take?
+<li class="fragment roll-in">  A: We iterate through the numbers $1$ to $1, 000, 000$ three
+times!
+<li class="fragment roll-in">  Note that we also use up a lot of space with the extra array
+<li class="fragment roll-in">  This is wasteful of time and space, particularly as the input
+array gets very large (e.g. it might be a huge data stream)
+<li class="fragment roll-in">  Q: Can we do better?
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>A better Algorithm</h2>
+                    <ul>
+                      <li class="fragment roll-in"> Iterate through the input array, summing up all the numbers,
+let $S$ be this sum
+<li class="fragment roll-in"> Let $x = S − (1, 000, 000 + 1)1, 000, 000/2$
+<li class="fragment roll-in"> Return $x$
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>Ideas for a better Algorithm</h2>
+                    <ul>
+                      <li class="fragment roll-in"> Note that $\sum_{i=1}^n i = \frac{(n + 1)n}{2}$
+<li class="fragment roll-in"> Let $S$ be the sum of the input array
+<li class="fragment roll-in"> Let $x$ be the value of the repeated number
+<li class="fragment roll-in"> Then $S = (1, 000, 000 + 1)1, 000, 000/2 + x$
+<li class="fragment roll-in"> Thus $x = S − (1, 000, 000 + 1)1, 000, 000/2$
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>Analysis</h2>
+                    <ul>
+                      <li class="fragment roll-in"> This algorithm takes iterates through the input array just
+once
+<li class="fragment roll-in">  It uses up essentially no extra space
+<li class="fragment roll-in">  It is at least three times faster than the naive algorithm
+<li class="fragment roll-in">  Further, if the input array is so large that it won’t fit in
+memory, this is the only algorithm which will work!
+<li class="fragment roll-in">  These time and space bounds are the best possible
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>Take Away</h2>
+                    <ul>
+                      <li>Designing good algorithms matters!
+<li> Not always this easy to improve an algorithm
+<li> However, with some thought and work, you can <em>almost always</em> get a better algorithm than the naive approach
+                    </ul>
+                  </section>
+                </section>
+
+                <section>
+                  <section>
+                    <h1>Course Overview</h1>
+                  </section>
+
+                  <section>
+                    <h3>Content</h3>
+                    <ul  style="width:100%; font-size: 28pt;">
+                      <li> Data structures, sorting, compression:
+sorting, hashing, priority queues, binary search trees, coding, compression
+<li> General algorithmic methods:
+divide and conquer, greedy algorithms, dynamic programming
+<li> Combinatorial problems:
+Eulerian cycle, MST, Shortest Path, PageRank, Matchings, Network Flows and Minimal Cuts
+<li> Computational Complexity:
+NP-completeness, reducibility
+<li>Heuristics and approximation algorithms:
+	Bin packing, TSP, branch-and-bound, local search, tabu search, Maxcut, coloring, IS, vertex covers
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>Grade Strategy</h2>
+                    <ul>
+                      <li> 45% - Homework
+                      <li> 20% - Midterm
+                      <li> 30% - Final
+                      <li> 5% - Attendance & Participation
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>Relative Ranking</h2>
+                    <row>
+                    <img style="border:0; box-shadow: 0px 0px 0px
+                                rgba(150, 150, 255, 0.8); width:60%;"
+                         class="reveal"  src="figures/competition_time.gif" alt="competition">
+                    <img style="border:0; box-shadow: 0px 0px 0px
+                                rgba(150, 150, 255, 0.8); width:18%;"
+                         class="reveal"  src="figures/course_score01.png" alt="competition">
+                    </row>
+                    Send me your private nicknames ASAP
+                  </section>
+
+                  <section>
+                    <h2>prerequisites</h2>
+                    <ul>
+                      <li class="fragment roll-in">Ability to program in python (preferred)
+                      <li class="fragment roll-in"> Fundamental principles of computer programming. Expressions, procedures, variable types, data, input/output
+                      <li class="fragment roll-in">Basic data structures: arrays, lists, trees, etc
+                      <li class="fragment roll-in"> Basics of combinatorics and discrete mathematics, including sets, relations and functions, familiarity with proofs, including proofs by induction and by contradiction
+
+                      <li class="fragment roll-in" style="color: #FA6900;">We will brush up on most of that but will not slow down for what you already expected to know
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h2>Reading Material</h2>
+                    <row style="margin-top: -30px;">
+                      <col50 style="text-align:left; font-size:18pt;">
+                        I will assign reading from this book<br>
+                        <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="80%"
+                             src="figures/cormen_algs.jpeg" alt="Cormen Algs">
+                        <div style="text-align:left; font-size:20pt;">
+                          Cormen, T.H., Leiserson, C.E., Rivest, R.L. and Stein, C., 2022. Introduction to algorithms. MIT press.
+                        </div>
+                      </col50>
+                      <col50 style="text-align:left; font-size:18pt;">
+                        Additional recommended reading is Jeff Erikson's "<a href="https://jeffe.cs.illinois.edu/teaching/algorithms/#book">Algorithms</a>" book (free pdf)<p>
+                        Other relevant material that I may consult:
+                        <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="48%"
+                             src="figures/bookAlgorithmsDesign.jpg" alt="Algorithms Design">
+                        <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="45%"
+                             src="figures/bookPythonAlgorithms.jpeg" alt="Cormen Algs">
+                        <ul>
+                          <li> Kleinberg, J. and Tardos, E., 2006. Algorithm design. Pearson Education India.
+                          <li> Hetland, M.L., 2014. Python Algorithms: mastering basic algorithms in the Python Language. Apress.
+                        </ul>
+
+                      </col50>
+                    </row>
+                  </section>
+                  
+                  <section>
+                    <h2>Background reading</h2>
+                    <row style="margin-top: -30px;">
+                      <col50>
+                        <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="80%"
+                             src="figures/bookConcreteMath.jpeg" alt="Concrete Math">
+                      </col50>
+                      <col50 style="text-align:left; font-size:18pt;">
+                        If you need to brush up on relevant mathematics this book is highly recommended<p>
+                        Graham, R.L., Knuth, D.E., Patashnik, O. and Liu, S., Concrete mathematics: a foundation for computer science
+                      </col50>
+                    </row>
+                  </section>
+
+                </section>
+
+                  <section>
+                    <h2>See you</h2>
+                    Wednesday January 11th for Algorithm Analysis
+                  </section>
+
+              </div>
+
+            </div>
+
+            <script src="dist/reveal.js"></script>
+
+            <link rel="stylesheet" href="lib/css/monokai.css">
+            <script src="plugin/highlight/highlight.js"></script>
+            <script src="plugin/math/math.js"></script>
+            <script src="plugin/chalkboard/plugin.js"></script>
+            <script src="plugin/notes/notes.js"></script>
+            <script src="plugin/zoom/zoom.js"></script>
+
+            <script>
+              // Full list of configuration options available at:
+              // https://github.com/hakimel/reveal.js#configuration
+
+              Reveal.initialize({
+                  // history: true,
+                  hash: true,
+                  margin: 0.01,
+                  minScale: 0.01,
+                  maxScale: 1.23,
+
+                  chalkboard: {
+                      boardmarkerWidth: 1,
+                      chalkWidth: 2,
+                      chalkEffect: 1,
+                      slideWidth: Reveal.width,
+                      slideHeight: Reveal.height,
+                      toggleNotesButton: false,
+                      toggleChalkboardButton: false,
+                      //src: "chalkboards/chalkboard_em2.json",
+                      readOnly: false,
+                      theme: "blackboard",
+                      eraser: { src: "plugin/chalkboard/img/sponge.png", radius: 30},
+                  },
+
+                  math: {
+                      mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
+                      config: 'TeX-AMS_SVG-full',
+                      // pass other options into `MathJax.Hub.Config()`
+                      TeX: {
+                          Macros: {
+        	              RR: '\\mathbb{R}',
+        	              PP: '\\mathbb{P}',
+        	              EE: '\\mathbb{E}',
+        	              NN: '\\mathbb{N}',
+        	              vth: '\\vec{\\theta}',
+                              loss: '{\\cal l}',
+                              hclass: '{\\cal H}',
+                              CD: '{\\cal D}',
+                              def: '\\stackrel{\\text{def}}{=}',
+                              pag: ['\\text{pa}_{{\cal G}^{#1}}(#2)}', 2],
+                              vec: ['\\boldsymbol{\\mathbf #1}', 1],
+        	              set: [ '\\left\\{#1 \\; : \\; #2\\right\\}', 2 ],
+                              bm: ['\\boldsymbol{\\mathbf #1}', 1],
+                              argmin: ['\\operatorname\{arg\\,min\\,\}'],
+                              argmax: ['\\operatorname\{arg\\,max\\,\}'],
+                              prob: ["\\mbox{#1$\\left(#2\\right)$}", 2],
+                          },
+                          loader: {load: ['[tex]/color']},
+                          extensions: ["color.js"],
+                          tex: {packages: {'[+]': ['color']}},
+                          svg: {
+                              fontCache: 'global'
+                          }
+                      }
+                  },
+
+                  plugins: [ RevealMath, RevealChalkboard, RevealHighlight, RevealNotes, RevealZoom ],
+
+              });
+
+              Reveal.configure({ fragments: true }); // set false when developing to see everything at once
+              Reveal.configure({ slideNumber: true });
+              //Reveal.configure({ history: true });
+              Reveal.configure({ slideNumber: 'c / t' });
+              Reveal.addEventListener( 'darkside', function() {
+                  document.getElementById('theme').setAttribute('href','dist/theme/aml_dark.css');
+              }, false );
+              Reveal.addEventListener( 'brightside', function() {
+                  document.getElementById('theme').setAttribute('href','dist/theme/aml.css');
+              }, false );
+
+            </script>
+
+            <style type="text/css">
+              /* 1. Style header/footer <div> so they are positioned as desired. */
+              #header-left {
+                  position: absolute;
+                  top: 0%;
+                  left: 0%;
+              }
+              #header-right {
+                  position: absolute;
+                  top: 0%;
+                  right: 0%;
+              }
+              #footer-left {
+                  position: absolute;
+                  bottom: 0%;
+                  left: 0%;
+              }
+            </style>
+
+            <!-- // 2. Create hidden header/footer -->
+            <div id="hidden" style="display:none;">
+              <div id="header">
+                <div id="header-left"><h4>CS4520</h4></div>
+                <div id="header-right"><h4>Algorithms</h4></div>
+                <div id="footer-left">
+                  <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100"
+                       src="figures/flowchart.png" alt="robot learning">
+                </div>
+              </div>
+            </div>
+
+
+            <script type="text/javascript">
+              // 3. On Reveal.js ready event, copy header/footer <div> into each `.slide-background` <div>
+              var header = $('#header').html();
+              if ( window.location.search.match( /print-pdf/gi ) ) {
+                  Reveal.addEventListener( 'ready', function( event ) {
+                      $('.slide-background').append(header);
+                  });
+              }
+              else {
+                  $('div.reveal').append(header);
+              }
+            </script>
+
+  </body>
+</html>
