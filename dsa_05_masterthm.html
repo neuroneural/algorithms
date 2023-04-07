@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="css/fontawesome-free-5.15.4-web/css/all.css" rel="stylesheet">
+
+    <script src="lib/colorbrewer.v1.min.js" charset="utf-8"></script>
+    <script src="lib/colorStringStandalone.js" charset="utf-8"></script>
+    <script type="text/javascript" src="lib/jquery-2.2.4.min.js"></script>
+
+    <title>Design & Analysis: Algorithms</title>
+
+    <meta name="description" content="CS4851/6851 GSU class">
+    <meta name="author" content="Sergey M Plis">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+    <!-- <link rel="stylesheet" href="lib/css/zenburn.css"> -->
+    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="dist/theme/aml.css" id="theme">
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.scss';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+
+    </script>
+  </head>
+
+
+  <body>
+    <div class="reveal">
+      <!-- In between the <div="reveal"> and the <div class="slides">-->
+          <!-- <header style="position: absolute; top: 10px; left: 100px; z-index: 500; font-size:100px;background-color: rgba(0,0,0,0); text-align: center !important"></header>  -->
+          <!-- In between the <div="reveal"> and the <div class="slides">-->
+              <!-- Any section element inside of this container is displayed as a slide -->
+              <div class="slides">
+		<section>
+		  <section>
+		    <p>
+		      <h2>Design & Analysis: Algorithms</h2>
+                      <h1>05: Recurrences (master theorem)</h1>
+		    <p>
+		  </section>
+	          <section>
+		    <h3>Outline of the lecture</h3>
+                    <ul>
+                      <li class="fragment roll-in"> Recursion Trees (recap)
+		      <li class="fragment roll-in"> The Master Theorem
+		      <li class="fragment roll-in"> Annihilators
+		    </ul>
+                  </section>
+                  <section>
+                    <h2>Relative Ranking</h2>
+                    <row>
+                    <img style="border:0; box-shadow: 0px 0px 0px
+                                rgba(150, 150, 255, 0.8); width:60%;"
+                         class="reveal"  src="figures/competition_time.gif" alt="competition">
+                    <img style="border:0; box-shadow: 0px 0px 0px
+                                rgba(150, 150, 255, 0.8); width:18%;"
+                         class="reveal"  src="figures/course_score01.png" alt="competition">
+                    </row>
+                    <div style="margin-top: -20px;">
+                      Send me your private nicknames ASAP
+                    </div>
+                  </section>
+
+                </section>
+		<section>
+		  <section>
+                    <h1>Recursion Trees</h1>
+		  </section>
+                  <section data-background="figures/strassen_tree.svg" data-background-size="contain">
+                    <div id="header-right" style="margin-right: -180px; margin-top: -200px">
+                      <h3 style="margin-left: -1000pt;">Example 2: $T(n) = 3T(n/4) + n^2$</h3>
+                    </div>
+                                          <blockquote style="background-color: #eee8d5; width: 100%; font-size: 36px; text-align:left; box-shadow: 5px 5px 10px rgb(51, 51, 51); padding: 10px;" class="left bordered fragment">
+                      <ul>
+                        <li class="fragment roll-in"> We can see that
+                        the i-th level of the tree sums to
+                        $(3/16)^in^2$.
+                        <li class="fragment roll-in"> Further the
+depth of the tree is $\log_4 n$ <br> $n/4^d = 1$ implies that $d = \log_4 n$
+<li class="fragment roll-in"> So we can see that $T(n) = \sum_{i=0}^{\log_4 n} (3/16)^in^2$
+                      </ul>
+                      </blockquote>
+                      <aside class="notes">
+                        What does each level sum to?
+                        The first (3/16)^1 n^2
+                        The second (3/16)^2 n^2
+                        The next (3/16)^3 n^2
+                        Only then press the button to show itemized list
+                      </aside>
+                  </section>
+                  <section>
+                    <h2>Solution</h2>
+                    \begin{align}
+                    T(n) & \fragment{1}{= \sum_{i=0}^{\log_4 n} (3/16)^in^2} \\
+                    & \fragment{2}{< n^2 \sum_{i=0}^{\infty} (3/16)^i}\\
+                        & \fragment{3}{= \frac{1}{1-{3\over 16}} n^2}\\
+                        & \fragment{4}{ = O(n^2)\\}
+                    \end{align}
+                                     </section>
+                  <section data-background="figures/master_theorem_oogway.gif">
+                  </section>
+</section>
+
+		<section>
+		  <section data-background="figures/master_fighting_a_tree.png" data-background-size="cover" data-vertical-align-top>
+                    <h1 style="text-shadow: 4px 4px 4px #002b36; color: #f1f1f1">Master Theorem</h1>
+
+                    <div class='slide-footer' style="text-align: left;">
+                    <a href="midjourney.com">midjourney.com</a>  Live predatory trees are fighting an old Kung-Fu master in a forest, many trees, light pixar aesthetics
+                    </div>
+		  </section>
+
+                  <section>
+                    <h1>Master Theorem</h1>
+                    <ul>
+                        <li class="fragment roll-in"> Divide and conquer algorithms often give us running-time recurrences of the form $T(n) = a T(n/b) + f (n)$
+<li class="fragment roll-in"> Where $a$ and $b$ are constants and $f(n)$ is some other function.
+<li class="fragment roll-in"> The so-called “Master Method” gives us a
+general method for solving such recurrences when $f(n)$ is a simple
+polynomial.
+                    </ul>
+                  </section>
+                  <section>
+                    <h1>Master Theorem</h1>
+                    <ul>
+                      <li class="fragment roll-in">Unfortunately, the Master Theorem doesn’t work for all functions $f(n)$
+<li class="fragment roll-in"> Further many useful recurrences don’t look like $T(n) = a T(n/b) + f (n)$
+<li class="fragment roll-in"> However, the theorem allows for very fast solution of recurrences when it applies
+                    </ul>
+                  </section>
+                  <section>
+                    <h1>Master Theorem</h1>
+                    <ul>
+                      <li class="fragment roll-in">Master Theorem is just a special case of the use of recursion
+trees
+                      <li class="fragment roll-in">Consider equation $T(n) = a T (n/b) + f (n)$
+                      <li class="fragment roll-in">We start by drawing a recursion tree
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Recursion Tree</h2>
+                    <ul style="font-size: 28pt;">
+                      <li class="fragment roll-in">The root contains the value $f(n)$
+<li class="fragment roll-in">It has a children, each of which contains the value $f(\frac{n}{b})$
+<li class="fragment roll-in">Each of these nodes has a children, containing the value
+$f(\frac{n}{b^2})$
+<li class="fragment roll-in">In general, level $i$ contains $a^i$ nodes with values $f(\frac{n}{b^i})$
+<li class="fragment roll-in">Hence the sum of the nodes at the $i^{\mathrm{th}}$ level is $a^i f(\frac{n}{b^i})$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Details</h2>
+                    <ul>
+                      <li class="fragment roll-in">The tree stops when we get to the base case for the recurrence
+                      <li class="fragment roll-in">We’ll assume $T(1) = f(1) = \Theta(1)$ is the base case
+                      <li class="fragment roll-in">Thus the depth of the tree is $\log_b n$ and there are $\log_b n + 1$ levels
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Recursion Tree</h2>
+                    <ul>
+                      <li class="fragment roll-in">Let $T(n)$ be the sum of all values stored in all levels of the
+                      tree:
+                      \begin{align}
+                        T (n) & = f (n)+a f (n/b)+a^2 f (n/b^2)+\\ & \dots+a^i f (n/b^i)+\dots+a^L f (n/b^L)
+                      \end{align}
+<li class="fragment roll-in">Where $L = \log_b n$ is the depth of the tree
+<li class="fragment roll-in">Since $f(1) = \Theta(1)$, the last term of this summation is $\Theta(a^L) = \Theta(a\log_b n) = \Theta(n\log_b a)$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>An aside: a "$\log$ fact"</h2>
+                    <ul>
+                      <li class="fragment roll-in">It’s not hard to see that $a^{\log_b n} = n^{\log_b a}$
+                        \begin{align}
+                        a^{\log_b n} & = n^{\log_b a} \mbox{ take }\log_b\\
+                        \log_b a^{\log_b n} & = \log_b n^{\log_b a}\\
+                        \log_b n \log_b a & = \log_b a \log_b n
+                        \end{align}
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Master Theorem</h2>
+                    <ul>
+<li class="fragment roll-in">We can now state the <em>Master Theorem</em>
+<li class="fragment roll-in">In a way slightly different from the book
+<li class="fragment roll-in">Note:
+  <blockquote shade style="width:100%;text-align:left; font-size: 34px;" class="fragment" data-fragment-index="1">
+    The Master Method is just a “short cut” for the recursion tree method. It is less powerful than recursion trees.
+  </blockquote>
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Master Method (the theorem)</h2>
+                    <div style="text-align: left;">
+                      The recurrence $T(n) = aT(n/b) + f(n)$ can be solved as follows:
+                      </div>
+                    <ul>
+                      <li class="fragment roll-in">If $a f (n/b) \leq Kf(n)$ for some constant $K < 1$, then <alert>$T(n) = \Theta(f (n))$</alert>.
+                                                                                                    <li class="fragment roll-in">If $a f (n/b) \geq K f(n)$ for some constant $K > 1$, then <alert>$T(n) = \Theta(n^{\log_b a})$</alert>.
+                        <li class="fragment roll-in">If $a f (n/b) = f (n)$, then <alert>$T(n) = \Theta(f(n) \log_b n)$</alert>.
+</ul>
+                  </section>
+                  <section style="text-align:left;">
+                    <div id="header-right" style="margin-right: -80px; margin-top: -50px; font-size: 22pt; color: #268bd2;">
+                      $T (n) = f (n)+a f (n/b)+a^2 f (n/b^2)+ \dots+a^i f (n/b^i)+\dots+a^L f (n/b^L)$
+                      </div>
+                    <h2>Proof (1/3)</h2>
+                    <blockquote style="background-color: #93a1a1; color: #fdf6e3; font-size: 36px; width:100%; text-align:left;" class="fragment roll-in">
+                      If $a f (n/b) \leq Kf(n)$ for some constant $K < 1$, then $T(n) = \Theta(f (n))$.
+                                                                       </blockquote>
+                    <ul>
+<li class="fragment roll-in">If $f(n)$ is a constant factor larger than $a f(n/b)$, then the sum is a descending geometric series. The sum of any geometric series is a constant times its largest term. In this case, the largest term is the first term $\Theta(f (n))$.
+                    </ul>
+                  </section>
+                  <section style="text-align:left;">
+                    <div id="header-right" style="margin-right: -80px; margin-top: -50px; font-size: 22pt; color: #268bd2;">
+                      $T (n) = f (n)+a f (n/b)+a^2 f (n/b^2)+ \dots+a^i f (n/b^i)+\dots+a^L f (n/b^L)$
+                      </div>
+                    <h2>Proof (2/3)</h2>
+                    <blockquote style="background-color: #93a1a1; color: #fdf6e3; font-size: 36px; width:100%; text-align:left;" class="fragment roll-in">
+                                          If $a f (n/b) \geq K f(n)$ for some constant $K > 1$, then $T(n) = \Theta(n^{\log_b a})$.
+                    </blockquote>
+                          <ul>
+<li class="fragment roll-in">If $f(n)$ is a constant factor smaller
+than $af(n/b)$, then the sum is an ascending geometric series. The sum
+of any geometric series is a constant times its largest term. In this
+case, this is the last term, which by our earlier argument is
+$\Theta(n^{\log_b a})$.
+                    </ul>
+                  </section>
+                  <section style="text-align:left;">
+                    <div id="header-right" style="margin-right: -80px; margin-top: -50px; font-size: 22pt; color: #268bd2;">
+                      $T (n) = f (n)+a f (n/b)+a^2 f (n/b^2)+ \dots+a^i f (n/b^i)+\dots+a^L f (n/b^L)$
+                      </div>
+                    <h2>Proof (3/3)</h2>
+                    <blockquote style="background-color: #93a1a1; color: #fdf6e3; font-size: 36px; width:100%; text-align:left;" class="fragment roll-in">
+                      If $a f (n/b) = f (n)$, then $T(n) = \Theta(f(n) \log_b n)$.
+</blockquote>
+<ul>
+<li class="fragment roll-in">Finally, if a $f(n/b) = f(n)$, then each of the $L + 1$ terms in
+the summation is equal to $f(n)$.
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Example 1</h2>
+                    <ul>
+                      <li class="fragment roll-in"> $T(n) = T (3n/4) + n$
+<li class="fragment roll-in">If we write this as $T (n) = aT (n/b) + f (n)$, then $a = 1$, $b =
+4/3$, $f(n) = n$
+<li class="fragment roll-in">Here a $f(n/b) = 3n/4$ is smaller than $f (n) = n$ by a factor of $4/3$, so $T(n) = \Theta(n)$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Example 2: multiplication</h2>
+                    <ul>
+                      <li class="fragment roll-in">Karatsuba’s multiplication algorithm: $T(n) = 3T (n/2) + n$
+<li class="fragment roll-in">If we write this as $T(n) = aT (n/b) + f (n)$, then $a = 3$, $b =
+2$, $f(n) = n$
+<li class="fragment roll-in">Here $af(n/b) = 3n/2$ is larger than $f (n) = n$ by a factor of
+$3/2$, so $T(n) = \Theta(n^{\log_2 3})$
+                    </ul>
+                    <div class="slide-footer">
+                      <a href="https://en.wikipedia.org/wiki/Karatsuba_algorithm">https://en.wikipedia.org/wiki/Karatsuba_algorithm</a>
+                    </div>
+                  </section>
+                  <section>
+                    <h2>Example 3: Mergesort</h2>
+<ul>
+                    <li class="fragment roll-in"> Mergesort: $T (n) = 2T (n/2) + n$
+<li class="fragment roll-in">If we write this as $T (n) = aT (n/b) + f (n)$, then $a = 2$, $b = 2$, $f (n) = n$
+<li class="fragment roll-in">Here a $f(n/b) = f (n)$, so $T (n) = \Theta(n \log n)$
+</ul>
+                  </section>
+                  <section>
+                    <h2>Example 4</h2>
+                    <ul>
+                      <li class="fragment roll-in"> $T (n) = T (n/2) + n \log n$
+<li class="fragment roll-in">If we write this as $T (n) = aT (n/b) + f (n)$, then $a = 1$, $b = 2$, $f(n) = n \log n$
+<li class="fragment roll-in">Here a $f (n/b) = n/2 \log n/2$ is smaller than $f (n) = n \log n$ by
+a constant factor, so $T (n) = \Theta(n \log n)$
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>In Class Exercise                         1 <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100"
+                             src="figures/dolphin_swim.webp" alt="Cormen Algs">
+</h2>
+                    <ul>
+                      <li class="fragment roll-in">Consider the recurrence: $T (n) = 4T (n/2) + n \log n$
+<li class="fragment roll-in">Q: What is $f (n)$ and $a f (n/b)$?
+<li class="fragment roll-in">Q: Which of the three cases does the recurrence fall under
+(when n is large)?
+<li class="fragment roll-in">Q: What is the solution to this recurrence?
+
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Solution</h2>
+                    \begin{align}
+                    4\frac{n}{2} \log \frac{n}{2} & \quad ? \quad n \log n\\
+                    2 n \log \frac{n}{2} & \quad ? \quad n \log n\\
+                    2n\log n - 2n\log 2  & \quad ? \quad n \log n\\
+                    2 - \frac{2}{\log n} & \quad ? \quad 1\\
+                    2 (1 - \frac{1}{\log n} ) & \geq 1 \text{ case 2 } \Theta(n^2)\\
+                    \end{align}
+                  </section>
+                  <section>
+                    <h2>In Class Exercise 2                         <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100"
+                             src="figures/dolphin_swim.webp" alt="Cormen Algs">
+</h2>
+                    <ul>
+<li class="fragment roll-in">Consider the recurrence: $T (n) = 2T (n/4) + n \log n$
+<li class="fragment roll-in">Q: What is $f (n)$ and $a f (n/b)$?
+<li class="fragment roll-in">Q: Which of the three cases does the recurrence fall under
+(when n is large)?
+<li class="fragment roll-in">Q: What is the solution to this recurrence?
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Solution</h2>
+                    \begin{align}
+                    \frac{n}{2} \log \frac{n}{4} & \quad ? \quad n \log n\\
+                    \frac{n}{2} \log n - \frac{n}{2} \log 4 & \quad ? \quad n \log n\\
+                    \frac{1}{2}\log n - \frac{1}{\log n}  & \quad ? \quad 1\\
+                    \frac{1}{2} (1 - \frac{2}{\log n} ) & \geq 1 \text{ case 1 } \Theta(n \log n)\\
+                    \end{align}
+                  </section>
+                  <section>
+                    <h2>Take Away</h2>
+                    <ul>
+                      <li class="fragment roll-in">Recursion tree and Master method are good tools for solving
+many recurrences
+<li class="fragment roll-in">However these methods are limited (they can’t help us get
+guesses for recurrences like $f (n) = f (n − 1) + f (n − 2))$
+<li class="fragment roll-in">For info on how to solve these other more difficult recurrences, review the notes on annihilators by Jeff Erikson <a href="https://jeffe.cs.illinois.edu/teaching/algorithms/notes/99-recurrences.pdf">in this appendix</a>.
+                    </ul>
+                  </section>
+                  <section>
+                    <h2>Assigned reading</h2>
+                    <row>
+                      <col60>
+                        <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="80%"
+                             src="figures/cormen_algs.jpeg" alt="Cormen Algs">
+                      </col60>
+                      <col40>
+                        Chapter 4: Divide and Conquer<p>
+                      </col40>
+                    </row>
+                  </section>
+                </section>
+
+                <section>
+                  <h2>See you</h2>
+                  Monday January 30th
+                </section>
+
+              </div>
+
+            </div>
+
+            <script src="dist/reveal.js"></script>
+
+            <!-- <link rel="stylesheet" href="lib/css/monokai.css"> -->
+            <script src="plugin/highlight/highlight.js"></script>
+            <script src="plugin/math/math.js"></script>
+            <script src="plugin/chalkboard/plugin.js"></script>
+            <script src="plugin/notes/notes.js"></script>
+            <script src="plugin/zoom/zoom.js"></script>
+            <!-- <script src="node_modules/reveal.js-menu/menu.js"></script> -->
+            <script>
+              // Full list of configuration options available at:
+              // https://github.com/hakimel/reveal.js#configuration
+              let notes = document.querySelectorAll('aside.notes');
+              notes.forEach(n => {
+	      let html = n.innerHTML;
+	      html = html.trim().replace(/\n/g, '<br/>');
+	      n.innerHTML = html;
+              });
+              Reveal.initialize({
+                  // history: true,
+                  hash: true,
+                  margin: 0.01,
+                  minScale: 0.01,
+                  maxScale: 1.23,
+                  menu: {
+                      themes: true,
+                      openSlideNumber: true,
+                      openButton: false,
+                  },
+                  customcontrols: {
+                      slideNumberCSS : 'position: fixed; display: block; right: 90px; top: auto; left: auto; width: 50px; bottom: 30px; z-index: 31; font-family: Helvetica, sans-serif; font-size:  12px; line-height: 1; padding: 5px; text-align: center; border-radius: 10px; background-color: rgba(128,128,128,.5)',
+                      controls: [
+                          { icon: '<i class="fa fa-caret-left"></i>',
+                            css: 'position: fixed; right: 60px; bottom: 30px; z-index: 30; font-size: 24px;',
+                            action: 'Reveal.prev(); return false;'
+                          },
+                          { icon: '<i class="fa fa-caret-right"></i>',
+                            css: 'position: fixed; right: 30px; bottom: 30px; z-index: 30; font-size: 24px;',
+                            action: 'Reveal.next(); return false;'
+                          }
+                      ]
+                  },
+                  chalkboard: {
+                      boardmarkerWidth: 1,
+                      chalkWidth: 2,
+                      chalkEffect: 1,
+                      slideWidth: Reveal.width,
+                      slideHeight: Reveal.height,
+                      toggleNotesButton: false,
+                      toggleChalkboardButton: false,
+                      //src: "chalkboards/chalkboard_em2.json",
+                      readOnly: false,
+                      theme: "blackboard",
+                      eraser: { src: "plugin/chalkboard/img/sponge.png", radius: 30},
+                  },
+
+                  math: {
+                      mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
+                      config: 'TeX-AMS_SVG-full',
+                      // pass other options into `MathJax.Hub.Config()`
+                      TeX: {
+                          Macros: {
+        	              RR: '\\mathbb{R}',
+        	              PP: '\\mathbb{P}',
+        	              EE: '\\mathbb{E}',
+        	              NN: '\\mathbb{N}',
+        	              vth: '\\vec{\\theta}',
+                              loss: '{\\cal l}',
+                              hclass: '{\\cal H}',
+                              CD: '{\\cal D}',
+                              def: '\\stackrel{\\text{def}}{=}',
+                              pag: ['\\text{pa}_{{\cal G}^{#1}}(#2)}', 2],
+                              vec: ['\\boldsymbol{\\mathbf #1}', 1],
+        	              set: [ '\\left\\{#1 \\; : \\; #2\\right\\}', 2 ],
+                              bm: ['\\boldsymbol{\\mathbf #1}', 1],
+                              argmin: ['\\operatorname\{arg\\,min\\,\}'],
+                              argmax: ['\\operatorname\{arg\\,max\\,\}'],
+                              prob: ["\\mbox{#1$\\left(#2\\right)$}", 2],
+                          },
+                          loader: {load: ['[tex]/color']},
+                          extensions: ["color.js"],
+                          tex: {packages: {'[+]': ['color']}},
+                          svg: {
+                              fontCache: 'global'
+                          }
+                      }
+                  },
+
+                  plugins: [ RevealMath, RevealChalkboard, RevealHighlight, RevealNotes, RevealZoom ],
+
+              });
+
+              Reveal.configure({ fragments: true }); // set false when developing to see everything at once
+              Reveal.configure({ slideNumber: true });
+              //Reveal.configure({ history: true });
+              Reveal.configure({ slideNumber: 'c / t' });
+              Reveal.addEventListener( 'darkside', function() {
+                  document.getElementById('theme').setAttribute('href','dist/theme/aml_dark.css');
+              }, false );
+              Reveal.addEventListener( 'brightside', function() {
+                  document.getElementById('theme').setAttribute('href','dist/theme/aml.css');
+              }, false );
+
+            </script>
+
+            <style type="text/css">
+              /* 1. Style header/footer <div> so they are positioned as desired. */
+              #header-left {
+                  position: absolute;
+                  top: 0%;
+                  left: 0%;
+              }
+              #header-right {
+                  position: absolute;
+                  top: 0%;
+                  right: 0%;
+              }
+              #footer-left {
+                  position: absolute;
+                  bottom: 0%;
+                  left: 0%;
+              }
+            </style>
+
+            <!-- // 2. Create hidden header/footer -->
+            <div id="hidden" style="background; display:none;">
+              <div id="header">
+                <div id="header-left"><h4>CS4520</h4></div>
+                <div id="header-right"><h4>Algorithms</h4></div>
+                <div id="footer-left">
+                  <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100"
+                       src="figures/flowchart.png" alt="robot learning">
+                </div>
+              </div>
+            </div>
+
+
+            <script type="text/javascript">
+              // 3. On Reveal.js ready event, copy header/footer <div> into each `.slide-background` <div>
+              var header = $('#header').html();
+              if ( window.location.search.match( /print-pdf/gi ) ) {
+                  Reveal.addEventListener( 'ready', function( event ) {
+                      $('.slide-background').append(header);
+                  });
+              }
+              else {
+                  $('div.reveal').append(header);
+              }
+            </script>
+
+  </body>
+</html>
