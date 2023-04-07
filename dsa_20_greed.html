@@ -1,0 +1,861 @@
+<!Doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="css/fontawesome-free-6.2.1-web/css/all.css" rel="stylesheet">
+
+    <script src="lib/colorbrewer.v1.min.js" charset="utf-8"></script>
+    <script src="lib/colorStringStandalone.js" charset="utf-8"></script>
+    <script type="text/javascript" src="lib/jquery-2.2.4.min.js"></script>
+
+    <title>Design & Analysis: Algorithms</title>
+
+    <meta name="description" content="CS4851/6851 GSU class">
+    <meta name="author" content="Sergey M Plis">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+    <!-- <link rel="stylesheet" href="lib/css/zenburn.css"> -->
+    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="dist/theme/aml.css" id="theme">
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.scss';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+                    <script type="module" src="js/wc_code/wc-code.js"></script>
+
+    <!--Popup Window CSS-->
+    <style media="screen">
+		*,*:before,*:after{
+		    padding: 0;
+		    margin: 0;
+		    box-sizing: border-box;
+		}
+
+		.popup{
+		    background-color: #fdf6e3;
+		    width: 80%;
+		    padding: 30px 40px;
+		    position: absolute;
+		    transform: translate(-50%,-50%);
+		    left: 50%;
+		    top: 50%;
+		    border-radius: 8px;
+		    font-family: "Poppins",sans-serif;
+		    display: none;
+		    z-index: 1000;
+		    text-align: left;
+		    max-height: 90%;
+            overflow: scroll;
+		}
+		.popup button{
+		    display: block;
+		    margin:  0 0 20px auto;
+		    background-color: transparent;
+		    font-size: 30px;
+		    color: #fdf6e3;
+		    background: #03549a;
+		    border-radius: 100%;
+		    width: 40px;
+		    height: 40px;
+		    border: none;
+		    outline: none;
+		    cursor: pointer;
+		}
+    </style>
+  </head>
+
+
+  <body>
+    <div class="reveal">
+      <!-- In between the <div="reveal"> and the <div class="slides">-->
+          <!-- <header style="position: absolute; top: 10px; left: 100px; z-index: 500; font-size:100px;background-color: rgba(0,0,0,0); text-align: center !important"></header>  -->
+          <!-- In between the <div="reveal"> and the <div class="slides">-->
+              <!-- Any section element inside of this container is displayed as a slide -->
+              <div class="slides">
+		<section>
+		  <section>
+		    <p>
+		      <h2>Design & Analysis: Algorithms</h2>
+                      <h2>20: Greedy Algorithms</h2>
+		    <p>
+                      <img src="figures/greed_quotes_JeffE.svg" alt="greed" width="100%"></img>
+		  </section>
+                  <section data-fullscreen>
+                    <h3>Schedule</h3>
+
+                    <row style="width: 100%">
+                      <col50>
+                        <table style="font-size:14px">
+                          <tr>
+                            <th>#</th>
+                            <th>date</th>
+                            <th>topic</th>
+                            <th>description</th>
+                          </tr>
+                          <tr><td>1</td>
+                            <td> 09-Jan-2023 </td>
+                            <td> Introduction and Introductions </td>
+                            <td> </td>
+                          </tr>
+                          <tr><td>2</td>
+                            <td> 11-Jan-2023 </td>
+                            <td> Basics of Algorithm Analysis </td>
+                            <td> </td>
+                          </tr>
+                          <tr style='background-color: #FBEEC2;'><td>    </td><td> 16-Jan-2023 </td><td> <em>Holiday</em>     </td><td>              </td></tr>
+                          <tr><td>  3 </td><td> 18-Jan-2023 </td><td> Asymptotic Analysis         </td><td> hw1        </td></tr>
+                          <tr><td>  4 </td><td> 23-Jan-2023 </td><td> Recurrence Relations: Substitution </td><td>      </td></tr>
+                          <tr><td>  5 </td><td> 25-Jan-2023 </td><td> Recursion Trees and the Master Theorem     </td><td>  </td></tr>
+                          <tr><td>  6 </td><td> 30-Jan-2023  </td><td> Recurrence Relations: Annihilators    </td></td></td><td> </td></tr>
+<tr><td>  7 </td><td> 1-Feb-2023  </td><td> Recurrence Relations: Transformations  </td><td> hw2, hw1 <i class="fa-solid fa-calendar-check"></i> </td></tr>
+<tr><td>  8 </td><td> 6-Feb-2023  </td><td> Heap & Invariants</td><td>        </td></tr>
+<tr><td>  9 </td><td> 8-Feb-2023 </td><td> Queue & Qsort                      </td><td>          </td></tr>
+<tr><td> 10 </td><td> 13-Feb-2023 </td><td> Analyzing RQsort </td><td>             </td></tr>
+<tr><td>  11 </td><td> 15-Feb-2023  </td><td>  Comparison-based Sorting Analysis  </td><td> hw3, hw2 <i class="fa-solid fa-calendar-check"></i> </td></tr>
+<tr><td> 12 </td><td> 20-Feb-2023 </td><td> Dictionary</td><td>             </td></tr>
+<tr><td> 13 </td><td> 22-Feb-2023 </td><td> Open Address Hashing & Refresher                </td><td>     </td></tr>
+<tr  style='background-color: #E5DDCB;'><td> 14 </td><td> 27-Feb-2023 </td><td> Midterm exam           </td><td>   <em>midpoint</em>         </td></tr>
+<tr><td> 15 </td><td> 1-Mar-2023  </td><td>   Binary Search Trees I   </td><td>    </td></tr>
+<tr><td> 16 </td><td> 6-Mar-2023  </td><td> Binary Search Trees II </td><td>hw4, hw3 <i class="fa-solid fa-calendar-check"></i> </td></tr>
+<tr><td> 17 </td><td> 8-Mar-2023  </td><td>     Balanced Binary Search Trees                </td><td>   </td></tr>
+</table>
+</col50>
+<col50>
+  <table style="font-size:16px; vertical-align: top;">
+    <tr>
+      <th>#</th>
+      <th>date</th>
+      <th>topic</th>
+      <th>description</th>
+    </tr>
+    <tr style='background-color: #FBEEC2;'><td>  </td><td> 13-Mar-2023 </td><td> <em>Spring Break<em>       </td><td> </td></tr>
+    <tr style='background-color: #FBEEC2;'><td>  </td><td> 15-Mar-2023 </td><td> <em>Spring Break<em>         </td><td>             </td></tr>
+    <tr><td>  18  </td><td> 20-Mar-2023 </td><td> Dynamic Programming  I </td><td>  </td></tr>
+    <tr><td>  19  </td><td> 22-Mar-2023 </td><td> Dynamic Programming II </td><td>  </td></tr>
+    <tr><td> 20 </td><td> 27-Mar-2023 </td><td> Dynamic Programming ||| </td><td> hw5, hw4 <i class="fa-solid fa-calendar-check"></i> </td></tr>
+    <tr style='background-color: #E0E4CC;'><td> 21 </td><td> 29-Mar-2023 </td><td> Greedy Algorithms  </td><td><i class='fa fa-map-marker' style='color: #FA6900;'></i></td></tr>
+    <tr><td> 22 </td><td> 3-Apr-2023 </td><td> Graphs and Traversals </td><td>          </td></tr>
+    <tr><td> 23 </td><td> 5-Apr-2023  </td><td>  </td><td>             </td></tr>
+    <tr><td> 24 </td><td> 10-Apr-2023  </td><td>  </td><td> hw6, hw5 <i class="fa-solid fa-calendar-check"></i>            </td></tr>
+    <tr><td> 25 </td><td> 12-Apr-2023 </td><td> </td><td>   </td></tr>
+    <tr><td> 26 </td><td> 17-Apr-2023 </td><td> </td><td>        </td></tr>
+    <tr><td> 27 </td><td> 19-Apr-2023 </td><td> </td><td>  </td></tr>
+    <tr><td> 28 </td><td> 24-Apr-2023 </td><td>  </td><td> hw6 <i class="fa-solid fa-calendar-check"></i>      </td></tr>
+    <tr  style='background-color: #E5DDCB;'><td> 29 </td><td> 26-Apr-2023 </td><td> Final exam </td><td>             </td></tr>
+    <tr style='color: #ccd5d8ff;'><td> 30 </td><td> 2-May-2022 </td><td> </td><td>         </td></tr>
+    <tr style='color: #ccd5d8ff;'><td> 31 </td><td> 4-May-2022  </td><td> </td><td>             </td></tr>
+  </table>
+</col50>
+</row>
+</section>
+
+	          <section>
+		    <h3>Outline of the lecture</h3>
+                    <ul>
+                      <li class="fragment roll-in"> Introduction: Tape <i class="fa-solid fa-tape"></i>
+                      <li class="fragment roll-in"> The scheduling problem
+                      <li class="fragment roll-in"> Huffman codes
+		    </ul>
+                  </section>
+
+                  <section data-vertical-align-top >
+                    <h2>Greed is good*</h2>
+                    <ul style="margin-top: -0px;">
+                      <li class="fragment roll-in">A greedy algorithm
+                        always makes the choice that looks best at the
+                        moment
+                      <li class="fragment roll-in">Greedy algorithms
+                        do not always lead to optimal solutions, but
+                        for many problems they do
+                      <li class="fragment roll-in">Today, we will see
+                        several problems for which greedy algorithms
+                        produce optimal solutions including: activity
+                        selection and Huffman codes.
+                      <li class="fragment roll-in">When we get to
+                        graph theory, we will also see that greedy
+                        algorithms can work well for computing
+                        shortest paths and finding minimum spanning
+                        trees.
+                    </ul>
+                    <div class="slide-footer">
+                      * <a href="https://en.wikipedia.org/wiki/Lazy_evaluation">Optimal laziness</a> is also a virtue in Computer Science - join us and rejoice!
+                    </div>
+                  </section>
+                </section>
+
+
+<section>
+  <section  data-vertical-align-top data-background="figures/tape_recorder_retro.gif">
+    <h1 style="text-shadow: 4px 4px 4px #002b36; color: #f1f1f1">Intro problem <i class="fa-solid fa-tape"></i></h1>
+  </section>
+
+  <section data-vertical-align-top data-background="figures/HP_tape_storage.png">
+  </section>
+
+  <section>
+    <h2>Reading files from tape <i class="fa-solid fa-tape"></i></h2>
+    <ul>
+      <li class="fragment roll-in"> As a backup, store $n$ files on magnetic tape storage.
+      <li class="fragment roll-in"> We want to eventually read the files.
+      <li class="fragment roll-in"> To read a file we have to fast-forward <i class="fa-solid fa-forward-fast"></i>
+      <li class="fragment roll-in">  <i class="fa-solid fa-forward-fast"></i> past all prior files, which could take a lot of time.
+      <li class="fragment roll-in">  $L[0\dots n-1]$ - an array listing the lengths of all files
+      <li class="fragment roll-in">  File $i$ has length $L[i]$
+      <li class="fragment roll-in">  What is the cost of accessing $i^{th}$ file?
+    </ul>
+  </section>
+
+  <section>
+    <h2>Cost of a file access</h2>
+    <ul>
+      <li class="fragment roll-in">  Let us store the files in the order from 0 to $n-1$
+      <li class="fragment roll-in">  What is the cost of accessing file $i$?
+      <li class="fragment roll-in" style="list-style: none;"> $\mbox{cost}\left(k\right) = \sum_{i=0}^{k} L[i]$
+      <li class="fragment roll-in"> The cost reflects the fact that we must scan past all files with $i < k$
+                                                                                                          <li class="fragment roll-in"> Assume each file is equally likely to be accessed. What is the <b>expected</b> cost of accessing a random file?
+    </ul>
+    <blockquote style="background-color: #93a1a1; color: #fdf6e3; font-size: 42px; width: 100%;"  class="fragment roll-in">$\prob{E}{\mbox{cost}} = \sum_{k=0}^{n-1} \frac{\mbox{cost}(k)}{n} = \frac{1}{n} \sum_{k=0}^{n-1} \sum_{i=0}^k L[i]$</blockquote>
+
+  </section>
+  <section>
+    <h2>The optimal order $\pi$</h2>
+    <ul>
+      <li class="fragment roll-in">   Change of file order on the tape changes the cost.
+      <li class="fragment roll-in">   Different orders result in different expected costs.
+      <li class="fragment roll-in">   Let us denote a specific order with a permutation function $\pi$. $\pi(i)$ is the order of $i^{th}$ file on the tape.
+    </ul>
+    <blockquote style="background-color: #93a1a1; color: #fdf6e3; font-size: 42px; width: 100%;"  class="fragment roll-in">$\prob{E}{\mbox{cost}(\pi)} = \frac{1}{n} \sum_{k=0}^{n-1} \sum_{i=0}^k L[\pi(i)]$</blockquote>
+        <ul>
+          <li class="fragment roll-in"> Which order to use to minimize the expected cost?
+        </ul>
+  </section>
+  <section>
+    <h2></h2>
+    <blockquote style="background-color: #93a1a1; color: #fdf6e3; font-size: 42px; width: 100%;"  class="fragment roll-in"><b>Lemma</b> $\prob{E}{\mbox{cost}(\pi)}$ is minimized when $L[\pi(i)] \leq L[\pi(i+1)] \forall i$ </blockquote>
+    <div class="fragment roll-in">
+      <blockquote style="text-align: left; background-color: #93a1a1; color: #fdf6e3; font-size: 38px; width: 100%; margin-bottom: -20px;"><i class="fa-regular fa-square"></i><b>Proof</b></blockquote>
+      <blockquote style="background-color: #eee8d5; width: 100%">
+        <ul>
+          <li class="fragment roll-in"> Suppose $L[\pi(i)] > L[\pi(i+1)]$ for some $i$
+          <li class="fragment roll-in"> Let us simplify notation $a = \pi(i)$ and $b=\pi(i+1)$
+          <li class="fragment roll-in"> Swap $a$ and $b$
+            <ul>
+              <li class="fragment roll-in"> Cost of accessing file $a$ increases by $L[b]$
+              <li class="fragment roll-in"> Cost of accessing file $b$ decreases by $L[a]$
+              <li class="fragment roll-in"> Expected cost changes by $(L[b] - L[a])/n$
+            </ul>
+          <li class="fragment roll-in"> $L[b] < L[a]$ Expected cost improves!!!
+          <li class="fragment roll-in"> Out of order files? Decrease $\prob{E}{\mbox{cost}(\pi)}$ by swapping
+        </ul>
+      </blockquote>
+    </div>
+  </section>
+  <section>
+    <h2>Our first correct greedy algorithm</h2>
+    <ul>
+      <li class="fragment roll-in"> To minimize the total expected cost of accessing files
+      <li class="fragment roll-in"> Put the file cheapest to access first
+      <li class="fragment roll-in"> Recursively write everything else
+      <li class="fragment roll-in"> No dynamic programming, no backtracking
+      <li class="fragment roll-in"> Make the best local choice and plow ahead
+      <li class="fragment roll-in"> $O(n\log n)$ for sorting + time to write the files
+    </ul>
+  </section>
+  <section>
+    <h2>Let us generalize the idea</h2>
+    <ul>
+      <li class="fragment roll-in"> Suppose we have <em>access frequencies</em> in $F[0\dots n-1]$
+      <li class="fragment roll-in"> File $i$ will be accessed exactly $F[i]$ times
+      <li class="fragment roll-in"> The total cost of accessing all files on the tape is
+    </ul>
+    <blockquote style="background-color: #93a1a1; color: #fdf6e3; font-size: 42px; width: 100%;"  class="fragment roll-in">
+      $\sum \mbox{cost}(\pi) = \sum_{k=0}^{n-1} \left( F[\pi(k)] \sum_{i=0}^k L[\pi(i)] \right)$
+    </blockquote>
+    <blockquote style="background-color: #93a1a1; color: #fdf6e3; font-size: 42px; width: 100%;"  class="fragment roll-in">
+      $\sum \mbox{cost}(\pi) = \sum_{k=0}^{n-1}\sum_{i=0}^k \left( F[\pi(k)]  L[\pi(i)] \right)$
+    </blockquote>
+    <ul>
+      <li class="fragment roll-in"> What shall we do now?
+      <li class="fragment roll-in"> Assume the same file. What shall we do then?
+    </ul>
+  </section>
+  <section>
+    <h3 style="font-size:44pt;">If the sizes and frequencies <alert>vary</alert> Sort the files by L/F</h3>
+    <blockquote style="background-color: #93a1a1; color: #fdf6e3; font-size: 42px; width: 100%;"  class="fragment roll-in"><b>Lemma</b> $\sum\mbox{cost}(\pi)$ is minimized when $\frac{L[\pi(i)]}{F[\pi(i)]} \leq \frac{L[\pi(i+1)]}{F[\pi(i+1)]} \forall i$ </blockquote>
+    <div class="fragment roll-in" style="font-size: 34px;">
+      <blockquote style="text-align: left; background-color: #93a1a1; color: #fdf6e3; width: 100%; margin-bottom: -20px;"><i class="fa-regular fa-square"></i> <b>Proof</b></blockquote>
+      <blockquote style="background-color: #eee8d5; width: 100%">
+        <ul>
+          <li class="fragment roll-in"> Suppose $\frac{L[\pi(i)]}{F[\pi(i)]} > \frac{L[\pi(i+1)]}{F[\pi(i+1)]}$ for some $i$
+          <li class="fragment roll-in"> Let us simplify notation $a = \pi(i)$ and $b=\pi(i+1)$
+          <li class="fragment roll-in"> Swap files $a$ and $b$ in the tape writing order
+            <ul>
+              <li class="fragment roll-in"> Cost of accessing file $a$ increases by $L[b]$
+              <li class="fragment roll-in"> Cost of accessing file $b$ decreases by $L[a]$
+              <li class="fragment roll-in"> Expected cost changes by $L[b]F[a] - L[a]F[b]$
+            </ul>
+          <li class="fragment roll-in"> $L[b]/F[a] > L[a]/F[b] \iff L[b]F[b] - L[a]F[b] <0$
+        </ul>
+      </blockquote>
+    </div>
+  </section>
+  <section>
+    <h2>Take Home</h2>
+    <ul>
+      <li> Prove correctness of a greedy algorithm by contradiction on a <em>local</em> operation
+    </ul>
+  </section>
+</section>
+
+<section>
+  <section data-vertical-align-top data-background="figures/scheduling_animated.gif">
+    <h1>Scheduling</h1>
+    <!-- gif is from giphy -->
+  </section>
+  <section>
+    <h2>Activity Selection</h2>
+    <ul>
+      <li class="fragment roll-in">You are given a list of programs to run on a single processor
+      <li class="fragment roll-in">Each program has a start time and a finish time
+      <li class="fragment roll-in">However the processor can only run one
+        program at any given time, and there is no preemption (i.e. once a
+        program is running, it must be completed)
+    </ul>
+  </section>
+  <section>
+    <h2>Movie watching/theme park rides</h2>
+    <ul>
+      <li class="fragment roll-in">Suppose you are at a film fest, all movies look equally good,
+      and you want to see as many complete movies as possible
+      <li class="fragment roll-in">This problem is also exactly the same as the activity selection
+      problem.
+    </ul>
+  </section>
+  <section>
+    <h2>Example</h2>
+    <div style="text-align: left;">
+    Imagine you are given the following set of start
+    and stop times for activities
+    </div>
+    <img src="figures/classes_schedule_Algorithms-JeffE.svg" alt="greed" width="100%"></img>
+  </section>
+    <section>
+      <h2>Ideas</h2>
+      <ul>
+        <li class="fragment roll-in">There are many ways to optimally schedule these activities
+        <li class="fragment roll-in"><b>Brute Force</b>: examine every
+          possible subset of the activites and find the largest subset of
+          non-overlapping activities
+        <li class="fragment roll-in">Q: If there are $n$ activities, how many subsets are there?
+        <li class="fragment roll-in">There is also a DP solution to the problem (check Cormen et al. book)
+      </ul>
+  </section>
+  <section>
+    <h2>Greedy Activity Selector</h2>
+    <ol>
+      <li class="fragment roll-in"> Sort the activities by their finish times
+      <li class="fragment roll-in"> Schedule the first activity in this list
+      <li class="fragment roll-in"> Now go through the rest of the sorted list in order, scheduling
+      activities whose start time is after (or the same as) the last
+      scheduled activity
+    </ol>
+  </section>
+  <section>
+    <h3>sort activities by the finish time</h3>
+    <img src="figures/sorted_schedule_Algorithms-JeffE.svg" alt="greed" width="65%"></img>
+  </section>
+  <section  data-vertical-align-top data-background="figures/greedy_schedule_alg_Algorithms-JeffE.svg" data-background-size="contain">
+    <h2></h2>
+  </section>
+  <section>
+    <h2>Analysis</h2>
+    <ul>
+      <li class="fragment roll-in">Let $n$ be the total number of activities
+      <li class="fragment roll-in">The algorithm first sorts the activities by finish time taking
+        $O(n \log n)$
+      <li class="fragment roll-in">Then the algorithm visits each activity exactly once, doing a
+        constant amount of work each time. This takes $O(n)$
+      <li class="fragment roll-in">Thus total time is $O(n \log n)$
+    </ul>
+  </section>
+  <section>
+    <blockquote style="background-color: #93a1a1; color: #fdf6e3; font-size: 42px; width: 100%; text-align: left;"  class="fragment roll-in"><b>Lemma</b> At least one maximal conflict-free schedule includes the activity that finishes first</blockquote>
+    <div class="fragment roll-in" style="font-size: 34px;">
+      <blockquote style="text-align: left; background-color: #93a1a1; color: #fdf6e3; width: 100%; margin-bottom: -20px;"><i class="fa-regular fa-square"></i> <b>Proof</b></blockquote>
+      <blockquote style="background-color: #eee8d5; width: 100%">
+        <ul>
+          <li class="fragment roll-in"> Let $f$ be the activity that finishes first
+          <li class="fragment roll-in"> Suppose $X$ is the maximal conflict-free schedule excluding $f$
+          <li class="fragment roll-in"> Let $g$ be the first activity in $X$ to finish
+          <li class="fragment roll-in"> $f$ finishes before $g$ it does not conflict with an activity in $X\setminus\{g\}$
+          <li class="fragment roll-in"> The schedule $X^\prime = X \cup \{f\}\setminus\{g\}$ is conflict-free
+          <li class="fragment roll-in"> $X^\prime$ is the same size as $X$ so is also maximal
+        </ul>
+      </blockquote>
+    </div>
+  </section>
+  <section>
+    <blockquote style="background-color: #93a1a1; color: #fdf6e3; font-size: 42px; width: 100%; text-align: left;"  class="fragment roll-in"><b>Theorem</b> The greedy schedule is an optimal schedule</blockquote>
+    <div class="fragment roll-in" style="font-size: 34px;">
+      <blockquote style="text-align: left; background-color: #93a1a1; color: #fdf6e3; width: 100%; margin-bottom: -20px;"><i class="fa-regular fa-square"></i> <b>Proof</b></blockquote>
+      <blockquote style="background-color: #eee8d5; width: 100%">
+        <ul>
+          <li class="fragment roll-in"> Let $f$ be the activity that finishes first
+          <li class="fragment roll-in"> Let $A$ be the subset of activities that finish after $f$
+          <li class="fragment roll-in"> The lemma showed that there is an optimal schedule containing $f$
+          <li class="fragment roll-in"> The optimal schedule containing $f$ must also be optimal for $A$
+          <li class="fragment roll-in"> Now, we start with the first finishing job in $A$ and use induction
+        </ul>
+      </blockquote>
+    </div>
+  </section>
+  <section>
+    <blockquote style="background-color: #93a1a1; color: #fdf6e3; font-size: 42px; width: 100%; text-align: left;"  class="fragment roll-in"><b>Theorem</b> The greedy schedule is an optimal schedule</blockquote>
+    <div class="fragment roll-in" style="font-size: 34px;">
+      <blockquote style="text-align: left; background-color: #93a1a1; color: #fdf6e3; width: 100%; margin-bottom: -20px;"><i class="fa-regular fa-square"></i> <b>Proof</b></blockquote>
+      <blockquote style="background-color: #eee8d5; width: 100%">
+        <ul>
+          <li class="fragment roll-in"> Let $\langle g_1, g_2, \dots, g_k\rangle$ be the sequence chosen by the greedy alg.
+          <li class="fragment roll-in"> The sequence is sorted by starting time.
+          <li class="fragment roll-in"> Suppose there is a maximal conflict-free schedule $\langle g_1, g_2, \dots, g_{j-1}, c_j, c_{j+1}, \dots, c_m\rangle$
+          <li class="fragment roll-in"> $g_j$ finishes after all $g_1, g_2, \dots, g_{j-1}$ and not conflicting with any
+          <li class="fragment roll-in"> $g_j$ has the earliest finish time among activities that do not conflict with activities in $g_1, g_2, \dots, g_{j-1}$
+          <li class="fragment roll-in"> $g_j$ finishes earlier than $c_j$
+          <li class="fragment roll-in"> Follows $g_j$ does not conflict with any of  $c_{j+1}, \dots, c_m$, thus
+          <li class="fragment roll-in"> $\langle g_1, g_2, \dots, g_{j-1}, \mathbf{g_j}, c_{j+1}, \dots, c_m\rangle$ is also conflict free
+          <li class="fragment roll-in"> By induction $\exists$ an optimal with every activity chosen by greedily
+        </ul>
+      </blockquote>
+    </div>
+  </section>
+  <section>
+    <h2>Correctness proof structure</h2>
+    <ul>
+      <li class="fragment roll-in"> Assume that there is an optimal solution different from the greedy solution.
+      <li class="fragment roll-in"> Find the "first" difference between the two solutions
+      <li class="fragment roll-in"> Argue that we can exchange the optimal choice for the greedy choice without making the solution worse (does not have to make it better though)
+    </ul>
+  </section>
+  <section>
+    <h2>Greedy Pattern</h2>
+    <ul style="margin-top: -30px;">
+      <li class="fragment roll-in"><b>The problem has a solution that can be given some
+        numerical value.</b> The “best” (optimal) solution has the
+        highest/lowest value.
+      <li class="fragment roll-in"><b>The solutions can be broken down into steps.</b> The steps
+        have some order and at each step there is a choice that makes up the solution.
+      <li class="fragment roll-in"><b>The choice is based on what’s best at a given moment.</b>
+        Need a criterion that will distinguish one choice from another.
+      <li class="fragment roll-in">Finally, need to <b>prove</b> that the solution that you get by
+        making these local choices is indeed optimal
+
+    </ul>
+  </section>
+
+</section>
+
+<section>
+  <section>
+    <h1>Huffman codes</h1>
+  </section>
+
+  <section>
+    <div id="header-right" style="margin-right: -150px; margin-top: -50px">
+      <img src="figures/prefix_code_example.png" alt="binary tree" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1); margin-bottom: -5%" width="150px" >
+    </div>
+    <h2>Prefix-free codes</h2>
+    <ul style="font-size: 26pt;">
+      <li class="fragment roll-in"> A <span class="fragment highlight-red"><em>binary code</em></span> assigns a string of $0$s and $1$s to each character in the alphabet.
+      <li class="fragment roll-in"> A binary code is <span class="fragment highlight-red"><em>prefix-free</em></span> if no code is a prefix of any other.
+      <li class="fragment roll-in"> Prefix-free codes are also commonly called <span class="fragment highlight-red">prefix codes</span>.
+      <li class="fragment roll-in"> Any prefix-free binary code can be visualized as a binary tree
+      <li class="fragment roll-in"> The encoded characters stored at the leaves
+      <li class="fragment roll-in"> The code word for any symbol is given by the path from the root to the corresponding leaf; $0$ for left, $1$ for right.
+      <li class="fragment roll-in"> Binary code trees are not binary search trees; we don’t care at all about the order of symbols at the leaves.
+    </ul>
+  </section>
+  <section>
+    <h2>Encoding</h2>
+    <ul style="font-size: 26pt;">
+      <li class="fragment roll-in"> Encode a message written in an $n$-character alphabet
+      <li class="fragment roll-in"> Make the message as short as possible!
+      <li class="fragment roll-in"> Specifically, given an array $f[1..n]$ of frequency counts
+      <li class="fragment roll-in"> Compute a code that minimizes the total encoded message length $\sum_{i=1}^n f[i]\cdot \mbox{depth}(i)$
+      <li class="fragment roll-in"> But how?
+    </ul>
+  </section>
+  <section  data-vertical-align-top data-background="figures/huffman_code_recipe.svg" data-background-size="contain">
+  </section>
+
+  <section>
+    <img  class="fragment roll-in" src="figures/self_descriptive_sentence_Lee_Sallows.svg" style="width:100%;" alt="self descriptive sentence"></img>
+    <img  class="fragment roll-in" src="figures/self_descriptive_sans_spaces.svg" style="width:100%;" alt="self descriptive sentence"></img>
+    <img  class="fragment roll-in" src="figures/self_descriptive_table1.svg" style="width:100%;" alt="self descriptive sentence"></img>
+    <img  class="fragment roll-in" src="figures/self_descriptive_merged_table.svg" style="width:100%;" alt="self descriptive sentence"></img>
+  </section>
+
+  <section>
+    <img  class="fragment roll-in" src="figures/huffman_binary_tree.svg" style="width:100%;" alt="self descriptive sentence"></img>
+    <img  class="fragment roll-in" src="figures/huffman_coding_self_referential.svg" style="width:100%;" alt="self descriptive sentence"></img>
+  </section>
+
+  <section>
+    <img  src="figures/huffman_binary_tree.svg" style="width:80%;" alt="self descriptive sentence"></img>
+    <img  class="fragment roll-in" src="figures/huffman_stats_table.svg" style="width:100%;" alt="self descriptive sentence"></img>
+  </section>
+
+    <section>
+    <blockquote style="background-color: #93a1a1; color: #fdf6e3; font-size: 42px; width: 100%; text-align: left;"  class="fragment roll-in"><b>Lemma</b> Let $x$ and $y$ be the two least frequent characters (breaking ties between equally frequent characters arbitrarily). There is an optimal code tree in which $x$ and $y$ are siblings.</blockquote>
+    <div class="fragment roll-in" style="font-size: 34px;">
+      <blockquote style="text-align: left; background-color: #93a1a1; color: #fdf6e3; width: 100%; margin-bottom: -20px;"><i class="fa-regular fa-square"></i> <b>Proof</b></blockquote>
+      <blockquote style="background-color: #eee8d5; width: 100%">
+        <ul>
+          <li class="fragment roll-in"> 
+        </ul>
+      </blockquote>
+    </div>
+  </section>
+
+        <section>
+    <blockquote style="background-color: #93a1a1; color: #fdf6e3; font-size: 42px; width: 100%; text-align: left;"  class="fragment roll-in"><b>Lemma</b> Every Huffman code is an optimal prefix-free binary code. </blockquote>
+    <div class="fragment roll-in" style="font-size: 34px;">
+      <blockquote style="text-align: left; background-color: #93a1a1; color: #fdf6e3; width: 100%; margin-bottom: -20px;"><i class="fa-regular fa-square"></i> <b>Proof</b></blockquote>
+      <blockquote style="background-color: #eee8d5; width: 100%">
+        <ul>
+          <li class="fragment roll-in"> 
+        </ul>
+      </blockquote>
+    </div>
+  </section>
+
+        <section  data-vertical-align-top data-background="figures/build_huffman_alg.svg" data-background-size="contain">
+  </section>
+<section  data-vertical-align-top data-background="figures/huffman_encoder_decoder_alg.svg" data-background-size="contain">
+  </section>
+
+</section>
+
+<section>
+  <section>
+    <h1>Knapsack problem</h1>
+  </section>
+  <section>
+    <ul>
+<li class="fragment roll-in">Those problems for which greedy algorithms can be used are
+a subset of those problems for which dynamic programming 
+can be used
+<li class="fragment roll-in">So, it’s easy to mistakenly generate a dynamic program for
+a problem for which a greedy algorithm suffices
+<li class="fragment roll-in">Or to try to use a greedy algorithm when, in fact, dynamic
+programming is required
+<li class="fragment roll-in">The knapsack problem illustrates this difference
+<li class="fragment roll-in">The 0-1 knapsack problem requires dynamic programming,
+whereas for the fractional knapsack problem, a greedy algorithm suffices
+    </ul>
+  </section>
+
+  <section>
+    <h2>0-1 Knapsack problem <i class="fa-solid fa-people-robbery"></i> </h2>
+    <ul>
+      <li class="fragment roll-in">A thief robbing a store finds $n$ items, the $i^{th}$ item is worth
+        $v_i$ dollars and weighs $w_i$ pounds, where $w_i$ and $v_i$ are integers
+      <li class="fragment roll-in">The thief has a knapsack which can only hold $W$ pounds for
+        some integer $W$
+      <li class="fragment roll-in">The thief’s goal is to take as valuable a load as possible
+      <li class="fragment roll-in">Which values should the thief take?
+    </ul>
+    <div class="slide-footer">
+      This is called the 0-1 knapsack problem because each item is either taken or not taken, the thief can not take a fractional amount
+    </div>
+  </section>
+  <section>
+    <h2>Fractional Knapsack</h2>
+    <ul>
+      <li class="fragment roll-in">In this variant of the problem, the thief can take fractions of
+        items rather than the whole item
+      <li class="fragment roll-in">An item in the 0-1 knapsack is like a gold ingot whereas an
+        item in the fractional knapsack is like gold dust
+    </ul>
+  </section>
+  <section>
+    <h2>Greedy</h2>
+    <ul>
+      <li class="fragment roll-in" style="list-style: none;">We can solve the fractional knapsack problem with a greedy
+        algorithm:
+        <ol>
+          <li class="fragment roll-in"> Compute the value per pound ($\frac{v_i}{w_i}$) for each item
+          <li class="fragment roll-in"> Sort the items by value per pound
+          <li class="fragment roll-in"> The thief then follows the greedy strategy of always taking
+            as much as possible of the item remaining which has highest
+            value per pound.
+      </ol>
+    </ul>
+  </section>
+  <section>
+    <h2>Analysis</h2>
+    <ul>
+      <li class="fragment roll-in">If there are $n$ items, this greedy algorithm takes $O(n \log n)$
+      time
+      <li class="fragment roll-in">We’ll show in the in-class exercise that it returns the correct
+      solution
+      <li class="fragment roll-in">Note however that the greedy algorithm does not work on the 0−1 knapsack
+    </ul>
+  </section>
+  <section>
+    <h2>Failure on 0-1 Knapsack <i class="fa-solid fa-person-falling-burst"></i></h2>
+    <ul>
+      <li class="fragment roll-in">Say the knapsack holds weight 5, and there are three items
+      <li class="fragment roll-in">Let item 1 have weight 1 and value 3, let item 2 have weight
+        2 and value 5, let item 3 have weight 3 and value 6
+      <li class="fragment roll-in">Then the value per pound of the items are: 3, 5/2, 2 respectively
+      <li class="fragment roll-in">The greedy algorithm will then choose item 1 and item 2,
+        for a total value of 8
+      <li class="fragment roll-in">However the optimal solution is to choose items 2 and 3, for
+        a total value of 11
+    </ul>
+  </section>
+    <section>
+    <blockquote style="background-color: #93a1a1; color: #fdf6e3; font-size: 42px; width: 100%; text-align: left;"  class="fragment roll-in"><b>Theorem</b> Greedy is not optimal on 0-1 knapsack, but it is optimal on
+fractional knapsack</blockquote>
+    <div class="fragment roll-in" style="font-size: 34px;">
+      <blockquote style="text-align: left; background-color: #93a1a1; color: #fdf6e3; width: 100%; margin-bottom: -20px;"><i class="fa-regular fa-square"></i> <b>Proof</b></blockquote>
+      <blockquote style="background-color: #eee8d5; width: 100%">
+        <ul>
+          <li class="fragment roll-in">  Assume the objects are sorted in order of cost per pound.
+            Let $v_i$ be the value for item $i$ and let $w_i$ be its weight.
+          <li class="fragment roll-in">Let $x_i$ be the fraction of object $i$ selected by greedy and let
+            $V$ be the total value obtained by greedy
+          <li class="fragment roll-in">Consider some arbitrary solution, $B$, and let $x_i^\prime$ be the fraction
+            of object $i$ taken in $B$ and let $V^\prime$ be the total value obtained by $B$
+          <li class="fragment roll-in">We want to show that $V^\prime \leq V$ or that $V − V^\prime \geq 0$
+          <li class="fragment roll-in">Let $k$ be the smallest index with $x_k < 1$
+          <li class="fragment roll-in">Note that for $i < k$, $x_i = 1$ and for $i > k$, $x_i = 0$
+          <li class="fragment roll-in">You will show that for all $i$, $(x_i - x_i^\prime)\frac{v_i}{w_i} \geq (x_i - x_i^\prime)\frac{v_k}{w_k}$
+        </ul>
+      </blockquote>
+    </div>
+  </section>
+
+    <section>
+      <blockquote style="text-align: left; background-color: #93a1a1; color: #fdf6e3; width: 100%; margin-bottom: -20px;"><i class="fa-regular fa-square"></i> <b>Proof</b> (continues)</blockquote>
+      <blockquote style="background-color: #eee8d5; width: 100%; font-size: 22pt;">
+        \begin{align}
+        V - V^\prime & \fragment{1}{= \sum_{i=1}^{n}x_iv_i - \sum_{i=1}^n x^\prime_iv_i}\\
+        & \fragment{2}{ = \sum_{i=1}^n (x_i - x_i^\prime)v_i}\\
+        & \fragment{3}{= \sum_{i=1}^n (x_i - x_i^\prime)w_i\frac{v_i}{w_i}}\\
+        & \fragment{4}{ \geq \sum_{i=1}^n (x_i - x_i^\prime)w_i\frac{v_k}{w_k}}\\
+        & \fragment{5}{ \geq \frac{v_k}{w_k}\sum_{i=1}^n (x_i - x_i^\prime)w_i}\\
+        & \fragment{6}{\geq 0}
+        \end{align}
+      </blockquote>
+  </section>
+    <section>
+      <blockquote style="text-align: left; background-color: #93a1a1; color: #fdf6e3; width: 100%; margin-bottom: -20px;"><i class="fa-regular fa-square"></i> <b>Proof</b> (note)</blockquote>
+      <blockquote style="background-color: #eee8d5; width: 100%; font-size: 22pt;">
+        <ul>
+          <li class="fragment roll-in"> The last step follows because $\frac{v_k}{w_k}$ is positive and because:
+            \begin{align}
+            \sum_{i=1}^n (x_i - x_i^\prime)w_i & = \sum_{i=1}^n w_ix_i - \sum_{i=1}^n w_ix_i^\prime\\
+            &= W- W^\prime\\
+            &\geq 0
+            \end{align}
+          <li class="fragment roll-in"> Where $W$ is the total weight taken by greedy and $W^\prime$ is the total weight for the strategy $B$
+          <li class="fragment roll-in"> We know that $W \geq W^\prime$
+        </ul>
+      </blockquote>
+  </section>
+
+    <section>
+       <h2>In Class Exercise <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100" src="figures/dolphin_swim.webp" alt="dolphin"></h2>
+       Consider $(x_i - x_i^\prime)\frac{v_i}{w_i} \geq (x_i - x_i^\prime)\frac{v_k}{w_k}$
+       <ul>
+         <li class="fragment roll-in" style="list-style: none;"><span class="fa-li"><i class="fa-regular fa-circle-question"></i></span> Show this inequality is true for $i < k$
+         <li class="fragment roll-in" style="list-style: none;"><span class="fa-li"><i class="fa-regular fa-circle-question"></i></span> Show it’s true for $i = k$
+         <li class="fragment roll-in" style="list-style: none;"><span class="fa-li"><i class="fa-regular fa-circle-question"></i></span> Show it’s true for $i > k$
+       </ul>
+  </section>
+
+</section>
+
+
+
+                <section>
+                  <h2>See you</h2>
+                  Monday April $3^{nd}$
+                </section>
+
+              </div>
+
+            </div>
+
+            <script src="dist/reveal.js"></script>
+
+            <!-- <link rel="stylesheet" href="lib/css/monokai.css"> -->
+            <script src="plugin/highlight/highlight.js"></script>
+            <script src="plugin/math/math.js"></script>
+            <script src="plugin/chalkboard/plugin.js"></script>
+            <script src="plugin/notes/notes.js"></script>
+            <script src="plugin/zoom/zoom.js"></script>
+            <script src="node_modules/reveal.js-menu/menu.js"></script>
+
+                <script type="text/javascript">
+
+
+    </script>
+
+            <script>
+              // Full list of configuration options available at:
+              // https://github.com/hakimel/reveal.js#configuration
+              let notes = document.querySelectorAll('aside.notes');
+              notes.forEach(n => {
+	      let html = n.innerHTML;
+	      html = html.trim().replace(/\n/g, '<br/>');
+	      n.innerHTML = html;
+              });
+              Reveal.initialize({
+                  // history: true,
+                  hash: true,
+                  margin: 0.01,
+                  minScale: 0.01,
+                  maxScale: 1.23,
+                  menu: {
+                      themes: true,
+                      openSlideNumber: true,
+                      openButton: false,
+                  },
+                  customcontrols: {
+                      slideNumberCSS : 'position: fixed; display: block; right: 90px; top: auto; left: auto; width: 50px; bottom: 30px; z-index: 31; font-family: Helvetica, sans-serif; font-size:  12px; line-height: 1; padding: 5px; text-align: center; border-radius: 10px; background-color: rgba(128,128,128,.5)',
+                      controls: [
+                          { icon: '<i class="fa fa-caret-left"></i>',
+                            css: 'position: fixed; right: 60px; bottom: 30px; z-index: 30; font-size: 24px;',
+                            action: 'Reveal.prev(); return false;'
+                          },
+                          { icon: '<i class="fa fa-caret-right"></i>',
+                            css: 'position: fixed; right: 30px; bottom: 30px; z-index: 30; font-size: 24px;',
+                            action: 'Reveal.next(); return false;'
+                          }
+                      ]
+                  },
+                  chalkboard: {
+                      boardmarkerWidth: 1,
+                      chalkWidth: 2,
+                      chalkEffect: 1,
+                      slideWidth: Reveal.width,
+                      slideHeight: Reveal.height,
+                      toggleNotesButton: false,
+                      toggleChalkboardButton: false,
+                      //src: "chalkboards/chalkboard_em2.json",
+                      readOnly: false,
+                      theme: "blackboard",
+                      eraser: { src: "plugin/chalkboard/img/sponge.png", radius: 30},
+                  },
+
+                  math: {
+                      mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
+                      config: 'TeX-AMS_SVG-full',
+                      // pass other options into `MathJax.Hub.Config()`
+                      TeX: {
+                          Macros: {
+        	              RR: '\\mathbb{R}',
+        	              PP: '\\mathbb{P}',
+        	              EE: '\\mathbb{E}',
+        	              NN: '\\mathbb{N}',
+        	              vth: '\\vec{\\theta}',
+                              loss: '{\\cal l}',
+                              hclass: '{\\cal H}',
+                              CD: '{\\cal D}',
+                              def: '\\stackrel{\\text{def}}{=}',
+                              pag: ['\\text{pa}_{{\cal G}^{#1}}(#2)}', 2],
+                              vec: ['\\boldsymbol{\\mathbf #1}', 1],
+        	              set: [ '\\left\\{#1 \\; : \\; #2\\right\\}', 2 ],
+                              bm: ['\\boldsymbol{\\mathbf #1}', 1],
+                              argmin: ['\\operatorname\{arg\\,min\\,\}'],
+                              argmax: ['\\operatorname\{arg\\,max\\,\}'],
+                              prob: ["\\mbox{#1$\\left(#2\\right)$}", 2],
+                              floor: ["\\lfloor #1 \\rfloor",1]
+                          },
+                          loader: {load: ['[tex]/color']},
+                          extensions: ["color.js"],
+                          tex: {packages: {'[+]': ['color']}},
+                          svg: {
+                              fontCache: 'global'
+                          }
+                      }
+                  },
+
+                  plugins: [ RevealMath, RevealChalkboard, RevealHighlight, RevealNotes, RevealZoom, RevealMenu ],
+
+              });
+
+              Reveal.configure({ fragments: false }); // set false when developing to see everything at once
+              Reveal.configure({ slideNumber: true });
+              //Reveal.configure({ history: true });
+              Reveal.configure({ slideNumber: 'c / t' });
+              Reveal.addEventListener( 'darkside', function() {
+                  document.getElementById('theme').setAttribute('href','dist/theme/aml_dark.css');
+              }, false );
+              Reveal.addEventListener( 'brightside', function() {
+                  document.getElementById('theme').setAttribute('href','dist/theme/aml.css');
+              }, false );
+            </script>
+            <style type="text/css">
+              /* 1. Style header/footer <div> so they are positioned as desired. */
+              #header-left {
+                  position: absolute;
+                  top: 0%;
+                  left: 0%;
+              }
+              #header-right {
+                  position: absolute;
+                  top: 0%;
+                  right: 0%;
+              }
+              #footer-left {
+                  position: absolute;
+                  bottom: 0%;
+                  left: 0%;
+              }
+            </style>
+
+            <!-- // 2. Create hidden header/footer -->
+            <div id="hidden" style="background; display:none;">
+              <div id="header">
+                <div id="header-left"><h4>CS4520</h4></div>
+                <div id="header-right"><h4>Algorithms</h4></div>
+                <div id="footer-left">
+                  <!-- <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100" -->
+                  <!--      src="figures/flowchart.png" alt="robot learning"> -->
+                </div>
+              </div>
+            </div>
+
+
+            <script type="text/javascript">
+              // 3. On Reveal.js ready event, copy header/footer <div> into each `.slide-background` <div>
+              var header = $('#header').html();
+              if ( window.location.search.match( /print-pdf/gi ) ) {
+                  Reveal.addEventListener( 'ready', function( event ) {
+                      $('.slide-background').append(header);
+                  });
+              }
+              else {
+                  $('div.reveal').append(header);
+              }
+            </script>
+
+  </body>
+</html>
