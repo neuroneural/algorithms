@@ -797,7 +797,7 @@ def max_seq1(sequence):
             <script src="plugin/chalkboard/plugin.js"></script>
             <script src="plugin/notes/notes.js"></script>
             <script src="plugin/zoom/zoom.js"></script>
-
+            <script src="plugin/menu/menu.js"></script>
             <script>
               // Full list of configuration options available at:
               // https://github.com/hakimel/reveal.js#configuration
@@ -854,9 +854,7 @@ def max_seq1(sequence):
                           }
                       }
                   },
-
-                  plugins: [ RevealMath, RevealChalkboard, RevealHighlight, RevealNotes, RevealZoom ],
-
+                  plugins: [ RevealMath, RevealChalkboard, RevealHighlight, RevealNotes, RevealZoom, RevealMenu ],
               });
 
               Reveal.configure({ fragments: true }); // set false when developing to see everything at once
