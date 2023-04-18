@@ -182,18 +182,22 @@ def tree_delete(tree, node):
         y.lft = node.lft
         y.lft.parent = y
 
-def print2DUtil(node, space, COUNT=10):
-    if node is None:
-        return
+def __print_helper(node, indent, last):
+    if node is not None:
+        mystr = indent
+        if last:
+            mystr += "R----"
+            indent += "......."
+        else:
+            mystr += "L----"
+            indent += "|....."
 
-    space += COUNT
-    print2DUtil(node.rgt, space, COUNT=COUNT)
-    prefix = ''.join(['.']*(space-COUNT))
-    print(prefix + str(node.key))
-    print2DUtil(node.lft, space, COUNT=COUNT)
+        print(mystr + str(node.val) + "(" + str(node.key) + ")")
+        __print_helper(node.lft, indent, False)
+        __print_helper(node.rgt, indent, True)
 
-def print2D(node, COUNT=10):
-    print2DUtil(node, 0, COUNT=COUNT)
+def print_tree(root):
+        __print_helper(root, "", True)
 
 t = Tree()
 t[8] = 8
@@ -211,7 +215,7 @@ t[9] = 9
 t[11] = 11
 t[13] = 13
 t[15] = 15
-print2D(t.root)
+print_tree(t.root)
 	       </script>
 		    </wc-code>
 		    </wc-code-zone>
