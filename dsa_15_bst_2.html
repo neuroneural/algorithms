@@ -594,7 +594,7 @@ def tree_min(node):
           </code></pre>
         <li class="fragment roll-in"><code>tree_max(x)</code>: Return the rightmost child in the tree rooted at $x$
           <pre class="python fragment roll-in" style="width: 99%; font-size: 15pt;"><code data-trim data-noescape data-line-numbers>
-def tree_min(node):
+def tree_max(node):
     while node.rgt is not None:
         node = node.rgt
     return node
