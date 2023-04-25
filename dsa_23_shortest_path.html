@@ -1,0 +1,521 @@
+<!Doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="css/fontawesome-free-6.2.1-web/css/all.css" rel="stylesheet">
+
+    <script src="lib/colorbrewer.v1.min.js" charset="utf-8"></script>
+    <script src="lib/colorStringStandalone.js" charset="utf-8"></script>
+    <script type="text/javascript" src="lib/jquery-2.2.4.min.js"></script>
+
+    <title>Design & Analysis: Algorithms</title>
+
+    <meta name="description" content="CS4851/6851 GSU class">
+    <meta name="author" content="Sergey M Plis">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+    <!-- <link rel="stylesheet" href="lib/css/zenburn.css"> -->
+    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="dist/theme/aml.css" id="theme">
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.scss';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+                    <script type="module" src="js/wc_code/wc-code.js"></script>
+
+    <!--Popup Window CSS-->
+    <style media="screen">
+		*,*:before,*:after{
+		    padding: 0;
+		    margin: 0;
+		    box-sizing: border-box;
+		}
+
+		.popup{
+		    background-color: #fdf6e3;
+		    width: 80%;
+		    padding: 30px 40px;
+		    position: absolute;
+		    transform: translate(-50%,-50%);
+		    left: 50%;
+		    top: 50%;
+		    border-radius: 8px;
+		    font-family: "Poppins",sans-serif;
+		    display: none;
+		    z-index: 1000;
+		    text-align: left;
+		    max-height: 90%;
+            overflow: scroll;
+		}
+		.popup button{
+		    display: block;
+		    margin:  0 0 20px auto;
+		    background-color: transparent;
+		    font-size: 30px;
+		    color: #fdf6e3;
+		    background: #03549a;
+		    border-radius: 100%;
+		    width: 40px;
+		    height: 40px;
+		    border: none;
+		    outline: none;
+		    cursor: pointer;
+		}
+    </style>
+  </head>
+
+
+  <body>
+
+    <div class="reveal">
+      <!-- In between the <div="reveal"> and the <div class="slides">-->
+          <!-- <header style="position: absolute; top: 10px; left: 100px; z-index: 500; font-size:100px;background-color: rgba(0,0,0,0); text-align: center !important"></header>  -->
+          <!-- In between the <div="reveal"> and the <div class="slides">-->
+              <!-- Any section element inside of this container is displayed as a slide -->
+              <div class="slides">
+		<section>
+		  <section data-vertical-align-top data-background="figures/shortest_path.gif" data-background-size="cover">
+		      <h2>Design & Analysis: Algorithms</h2>
+                      <h2 style="text-shadow: 10px 10px 10px #002b36; color: #fdf6e3;">23: Shortest Path Problems</h2>
+		    <p>
+		  </section>
+                  <section data-fullscreen>
+                    <h3>Schedule</h3>
+                    <row style="width: 100%">
+                      <col50>
+                        <table style="font-size:14px">
+                          <tr>
+                            <th>#</th>
+                            <th>date</th>
+                            <th>topic</th>
+                            <th>description</th>
+                          </tr>
+                          <tr><td>1</td>
+                            <td> 09-Jan-2023 </td>
+                            <td> Introduction and Introductions </td>
+                            <td> </td>
+                          </tr>
+                          <tr><td>2</td>
+                            <td> 11-Jan-2023 </td>
+                            <td> Basics of Algorithm Analysis </td>
+                            <td> </td>
+                          </tr>
+                          <tr style='background-color: #FBEEC2;'><td>    </td><td> 16-Jan-2023 </td><td> <em>Holiday</em>     </td><td>              </td></tr>
+                          <tr><td>  3 </td><td> 18-Jan-2023 </td><td> Asymptotic Analysis         </td><td> hw1        </td></tr>
+                          <tr><td>  4 </td><td> 23-Jan-2023 </td><td> Recurrence Relations: Substitution </td><td>      </td></tr>
+                          <tr><td>  5 </td><td> 25-Jan-2023 </td><td> Recursion Trees and the Master Theorem     </td><td>  </td></tr>
+                          <tr><td>  6 </td><td> 30-Jan-2023  </td><td> Recurrence Relations: Annihilators    </td></td></td><td> </td></tr>
+<tr><td>  7 </td><td> 1-Feb-2023  </td><td> Recurrence Relations: Transformations  </td><td> hw2, hw1 <i class="fa-solid fa-calendar-check"></i> </td></tr>
+<tr><td>  8 </td><td> 6-Feb-2023  </td><td> Heap & Invariants</td><td>        </td></tr>
+<tr><td>  9 </td><td> 8-Feb-2023 </td><td> Queue & Qsort                      </td><td>          </td></tr>
+<tr><td> 10 </td><td> 13-Feb-2023 </td><td> Analyzing RQsort </td><td>             </td></tr>
+<tr><td>  11 </td><td> 15-Feb-2023  </td><td>  Comparison-based Sorting Analysis  </td><td> hw3, hw2 <i class="fa-solid fa-calendar-check"></i> </td></tr>
+<tr><td> 12 </td><td> 20-Feb-2023 </td><td> Dictionary</td><td>             </td></tr>
+<tr><td> 13 </td><td> 22-Feb-2023 </td><td> Open Address Hashing & Refresher                </td><td>     </td></tr>
+<tr  style='background-color: #E5DDCB;'><td> 14 </td><td> 27-Feb-2023 </td><td> Midterm exam           </td><td>   <em>midpoint</em>         </td></tr>
+<tr><td> 15 </td><td> 1-Mar-2023  </td><td>   Binary Search Trees I   </td><td>    </td></tr>
+<tr><td> 16 </td><td> 6-Mar-2023  </td><td> Binary Search Trees II </td><td>hw4, hw3 <i class="fa-solid fa-calendar-check"></i> </td></tr>
+<tr><td> 17 </td><td> 8-Mar-2023  </td><td>     Balanced Binary Search Trees                </td><td>   </td></tr>
+</table>
+</col50>
+<col50>
+  <table style="font-size:16px; vertical-align: top;">
+    <tr>
+      <th>#</th>
+      <th>date</th>
+      <th>topic</th>
+      <th>description</th>
+    </tr>
+    <tr style='background-color: #FBEEC2;'><td>  </td><td> 13-Mar-2023 </td><td> <em>Spring Break<em>       </td><td> </td></tr>
+    <tr style='background-color: #FBEEC2;'><td>  </td><td> 15-Mar-2023 </td><td> <em>Spring Break<em>         </td><td>             </td></tr>
+    <tr><td>  18  </td><td> 20-Mar-2023 </td><td> Dynamic Programming  I </td><td>  </td></tr>
+    <tr><td>  19  </td><td> 22-Mar-2023 </td><td> Dynamic Programming II </td><td>  </td></tr>
+    <tr><td> 20 </td><td> 27-Mar-2023 </td><td> Dynamic Programming III  </td><td> hw5, hw4 <i class="fa-solid fa-calendar-check"></i> </td></tr>
+    <tr><td> 21 </td><td> 29-Mar-2023 </td><td> Greedy Algorithms   </td><td></td></tr>
+    <tr><td> 22 </td><td> 3-Apr-2023 </td><td> Graphs and Traversals </td><td>    </td></tr>
+    <tr><td> 23 </td><td> 5-Apr-2023  </td><td> Graphs: spanning trees </td><td>             </td></tr>
+    <tr><td> 24 </td><td> 10-Apr-2023  </td><td> NP-Hardness  I</td><td>            </td></tr>
+    <tr><td> 25 </td><td> 12-Apr-2023 </td><td> NP-Hardness  II </td><td> hw5 <i class="fa-solid fa-calendar-check"></i> </td></tr>
+    <tr><td> 26 </td><td> 17-Apr-2023 </td><td> Graphs: spanning trees </td><td> hw6 (tiny)       </td></tr>
+    <tr style='background-color: #E0E4CC;'><td> 27 </td><td> 19-Apr-2023 </td><td> Graphs: shortest paths</td><td> <i class='fa fa-map-marker' style='color: #FA6900;'></i>  </td></tr>
+    <tr><td> 28 </td><td> 24-Apr-2023 </td><td>  Refresher (& remainder) </td><td> hw6 <i class="fa-solid fa-calendar-check"></i>      </td></tr>
+    <tr  style='background-color: #E5DDCB;'><td> 29 </td><td> 26-Apr-2023 </td><td> Final exam </td><td>             </td></tr>
+    <tr style='color: #ccd5d8ff;'><td> 30 </td><td> 2-May-2022 </td><td> </td><td>         </td></tr>
+    <tr style='color: #ccd5d8ff;'><td> 31 </td><td> 4-May-2022  </td><td> </td><td>             </td></tr>
+  </table>
+</col50>
+</row>
+</section>
+	          <section>
+		    <h3>Outline of the lecture</h3>
+                    <ul>
+                      <li class="fragment roll-in"> Single Source Shortest Paths
+		    </ul>
+                  </section>
+                </section>
+
+    <section>
+      <section data-background="figures/shortest_paths2.gif" data-background-size="contain">
+        <h1 style="text-shadow: 10px 10px 10px #002b36; color: #fdf6e3;">Single Source Shortest Paths</h1>
+      </section>
+
+      <section data-vertical-align-top>
+        <h2>Shortest Paths Problem</h2>
+        <ul>
+<li class="fragment roll-in">Another interesting problem for graphs is that of finding shortest paths
+<li class="fragment roll-in">Assume we are given a weighted directed
+graph $G = (V, E)$ with two special vertices, a source $s$ and a
+target $t$
+<li class="fragment roll-in">Goal: find the shortest directed path from $s$ to $t$
+<li class="fragment roll-in">In other words, we want to find the path $P$ starting at $s$ and ending at $t$ minimizing the function
+  $$
+  w(P) = \sum_{u\rightarrow v \in P} w(u\rightarrow v)
+  $$
+        </ul>
+      </section>
+      <section>
+        <h2>Negative Weights</h2>
+        <ul style="font-size:26pt;">
+<li class="fragment roll-in">We’ll actually allow negative weights on edges
+<li class="fragment roll-in">The presence of a negative cycle might mean that there is no shortest path
+<li class="fragment roll-in"> A shortest path from $s$ to $t$ exists if and only if there is <it>at least</it> one path from $s$ to $t$ but no path from $s$ to $t$ that touches a negative cycle
+<li class="fragment roll-in"> In the following example, there is no shortest path from $s$ to $t$ <br>
+              <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1); width: 60%;" class="stretch" width="120%" src="figures/negative_cycle.svg" alt="negative cycle">
+        </ul>
+      </section>
+
+      <section>
+        <h2>Single Source Shortest Paths</h2>
+        <ul style="font-size:26pt;">
+<li class="fragment roll-in">Singles Source Shortest Paths (SSSP) is a more general problem
+<li class="fragment roll-in">SSSP is the following problem: find the shortest path from
+the source vertex $s$ to every other vertex in the graph
+<li class="fragment roll-in">The problem is solved by finding a shortest path tree rooted
+at the vertex $s$ that contains all the desired shortest paths
+<li class="fragment roll-in">A shortest path tree is not a MST<br>                       <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1); width: 60%;" class="stretch" width="120%" src="figures/path_tree_not_MST.svg" alt="path_tree not MST">
+        </ul>
+      </section>
+      <section>
+        <h2>SSSP Algorithms 1</h2>
+        <ul>
+<li class="fragment roll-in">We’ll now go over some algorithms for SSSP on directed
+graphs.
+<li class="fragment roll-in">These algorithms will work for undirected graphs with slight
+modification
+<li class="fragment roll-in">In particular, we must specifically prohibit alternating back
+and forth across the same undirected negative-weight edge
+<li class="fragment roll-in">Like for graph traversal, all the SSSP algorithms will be special cases of a single generic algorithm
+        </ul>
+      </section>
+      <section>
+        <h2>SSSP Algorithms 2</h2>
+        <ul>
+          <li class="fragment roll-in"> Each vertex $v$ in the graph
+will store two values which describe a tentative shortest path from
+$s$ to $v$
+<li class="fragment roll-in">$dist(v)$ is the length of the tentative shortest path between $s$ and $v$
+<li class="fragment roll-in">$pred(v)$ is the predecessor of $v$ in this tentative shortest path
+<li class="fragment roll-in">The predecessor pointers automatically define a tentative
+shortest path tree
+        </ul>
+      </section>
+      <section>
+        <h2>Initially we set:</h2>
+        <ul>
+          <li class="fragment roll-in"><code>dist(s) = 0, pred(s) = None</code>
+          <li class="fragment roll-in">For every vertex $v \ne s$, <code>dist(v)</code> $= \infty$ and <code>pred(v) = None</code><br>
+                              <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1); width: 50%;" class="stretch" width="120%" src="figures/initSSSP_code.svg" alt="init SSSP">
+
+        </ul>
+      </section>
+      <section>
+        <h2>Relaxation</h2>
+        <ul>
+<li class="fragment roll-in">We call an edge $(u, v)$ <b>tense</b> if $dist(u) + w(u, v) < dist(v)$
+<li class="fragment roll-in">If $(u, v)$ is tense, then the tentative
+shortest path from $s$ to $v$ is incorrect since the path $s$ to $u$
+and then $(u, v)$ is shorter
+<li class="fragment roll-in">Our generic algorithm repeatedly finds a
+tense edge in the graph and relaxes it
+<li class="fragment roll-in">If there are no tense edges, our
+algorithm is finished and we have our desired shortest path tree
+        </ul>
+      </section>
+      <section data-background="figures/relaxation.svg" data-background-size="contain">
+        </section>
+
+      <section>
+        <h2>Correctness</h2>
+        <ul>
+          <li class="fragment roll-in">The correctness of the
+relaxation algorithm follows directly from three simple claims
+          <li class="fragment roll-in">The run time of the algorithm
+          will depend on the way that we make choices about which
+          edges to relax
+        </ul>
+      </section>
+      <section>
+        <h2>Claim 1</h2>
+        <ul>
+          <li class="fragment roll-in">If $dist(v) \ne \infty$, then $dist(v)$ is the total weight of the predecessor chain ending at $v$:
+            $$
+            s \rightarrow \dots \rightarrow pred(pred(v)) \rightarrow pred(v) \rightarrow v.
+            $$
+<li class="fragment roll-in">This is easy to prove by induction on the
+number of edges in the path from $s$ to $v$. (left as an exercise)
+        </ul>
+      </section>
+      <section>
+        <h2>Claim 2</h2>
+        <ul>
+<li class="fragment roll-in">If the algorithm halts, then $dist(v) \leq w(s \leadsto v)$ for any path
+$s \leadsto v$.
+<li class="fragment roll-in">This is easy to prove by induction on the
+number of edges in the path $s \leadsto v$.
+        </ul>
+      </section>
+
+      <section>
+        <h2>Claim 3</h2>
+        <ul>
+<li class="fragment roll-in">The algorithm halts if and only if there is no negative cycle
+reachable from $s$.
+<li class="fragment roll-in">The ‘only if’ direction is easy -- if there is a reachable negative cycle, then after the first edge in the cycle is relaxed, the cycle always has at least one tense edge.
+<li class="fragment roll-in">The ‘if’ direction follows from the fact
+that every relaxation step reduces either the number of vertices with
+$dist(v) = \infty$ by 1 or reduces the sum of the finite shortest path
+lengths by some positive amount.
+        </ul>
+      </section>
+      <section>
+        <h2>Generic SSSP</h2>
+        <ul>
+<li class="fragment roll-in">We haven’t yet said how to detect which edges can be relaxed or what order to relax them in
+<li class="fragment roll-in">The following Generic SSSP algorithm answers these questions
+<li class="fragment roll-in">We will maintain a “bag” of vertices initially containing just
+the source vertex $s$
+<li class="fragment roll-in">Whenever we take a vertex $u$ out of the bag, we scan all of its outgoing edges, looking for something to relax
+<li class="fragment roll-in">Whenever we successfully relax an edge $(u, v)$, we put $v$ in
+the bag
+        </ul>
+      </section>
+
+      <section data-background="figures/initSSSP_code.svg" data-background-size="contain">
+      </section>
+
+      <section data-vertical-align-top  data-background="figures/genericSSSP_vague.svg" data-background-size="contain">
+        <blockquote style="text-align: center; background-color: #93a1a1; color: #fdf6e3; font-size: 42px; width: 100%;">Repeatedly relax tense edges, until there are no more tense edges.</blockquote>
+      </section>
+
+      <section  data-background="figures/genericSSSP.png" data-background-size="contain">
+      </section>
+      
+      <section>
+        <h2>Generic SSSP</h2>
+        <ul>
+          <li class="fragment roll-in">Just as with graph traversal,
+using different data structures for the bag gives us different
+algorithms
+<li class="fragment roll-in">Some obvious choices are: a stack, a
+queue and a heap
+<li class="fragment roll-in">Unfortunately if we use a stack, we need
+to perform $\Theta(2|E|)$ relaxation steps in the worst case (an
+exercise for the diligent student)
+<li class="fragment roll-in">The other possibilities are more efficient
+        </ul>
+      </section>
+    </section>
+
+    <section>
+      <h2>See you</h2>
+      Monday April $24^{th}$
+    </section>
+
+              </div>
+
+            </div>
+
+            <script src="dist/reveal.js"></script>
+
+            <!-- <link rel="stylesheet" href="lib/css/monokai.css"> -->
+            <script src="plugin/highlight/highlight.js"></script>
+            <script src="plugin/math/math.js"></script>
+            <script src="plugin/chalkboard/plugin.js"></script>
+            <script src="plugin/notes/notes.js"></script>
+            <script src="plugin/zoom/zoom.js"></script>
+            <script src="plugin/menu/menu.js"></script>
+
+                <script type="text/javascript">
+
+	// Event start load section on slide
+	Reveal.addEventListener('slidechanged', function(event) {
+		//-- check if current slide with code
+	    var sectionID = Reveal.getCurrentSlide().id;
+
+	    if(sectionID === "code.1") {
+	       document.getElementById("div4code.1").style.display = "block";
+	    } else {
+	       document.getElementById("div4code.1").style.display = "none"
+	    }
+
+	});
+
+
+    </script>
+
+            <script>
+              // Full list of configuration options available at:
+              // https://github.com/hakimel/reveal.js#configuration
+              let notes = document.querySelectorAll('aside.notes');
+              notes.forEach(n => {
+	      let html = n.innerHTML;
+	      html = html.trim().replace(/\n/g, '<br/>');
+	      n.innerHTML = html;
+              });
+              Reveal.initialize({
+                  // history: true,
+                  hash: true,
+                  margin: 0.01,
+                  minScale: 0.01,
+                  maxScale: 1.23,
+                  menu: {
+                      themes: true,
+                      openSlideNumber: true,
+                      openButton: false,
+                  },
+                  customcontrols: {
+                      slideNumberCSS : 'position: fixed; display: block; right: 90px; top: auto; left: auto; width: 50px; bottom: 30px; z-index: 31; font-family: Helvetica, sans-serif; font-size:  12px; line-height: 1; padding: 5px; text-align: center; border-radius: 10px; background-color: rgba(128,128,128,.5)',
+                      controls: [
+                          { icon: '<i class="fa fa-caret-left"></i>',
+                            css: 'position: fixed; right: 60px; bottom: 30px; z-index: 30; font-size: 24px;',
+                            action: 'Reveal.prev(); return false;'
+                          },
+                          { icon: '<i class="fa fa-caret-right"></i>',
+                            css: 'position: fixed; right: 30px; bottom: 30px; z-index: 30; font-size: 24px;',
+                            action: 'Reveal.next(); return false;'
+                          }
+                      ]
+                  },
+                  chalkboard: {
+                      boardmarkerWidth: 1,
+                      chalkWidth: 2,
+                      chalkEffect: 1,
+                      slideWidth: Reveal.width,
+                      slideHeight: Reveal.height,
+                      toggleNotesButton: false,
+                      toggleChalkboardButton: false,
+                      //src: "chalkboards/chalkboard_em2.json",
+                      readOnly: false,
+                      theme: "blackboard",
+                      eraser: { src: "plugin/chalkboard/img/sponge.png", radius: 30},
+                  },
+
+                  math: {
+                      mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
+                      config: 'TeX-AMS_SVG-full',
+                      // pass other options into `MathJax.Hub.Config()`
+                      TeX: {
+                          Macros: {
+        	              RR: '\\mathbb{R}',
+        	              PP: '\\mathbb{P}',
+        	              EE: '\\mathbb{E}',
+        	              NN: '\\mathbb{N}',
+        	              vth: '\\vec{\\theta}',
+                              loss: '{\\cal l}',
+                              hclass: '{\\cal H}',
+                              CD: '{\\cal D}',
+                              def: '\\stackrel{\\text{def}}{=}',
+                              pag: ['\\text{pa}_{{\cal G}^{#1}}(#2)}', 2],
+                              vec: ['\\boldsymbol{\\mathbf #1}', 1],
+        	              set: [ '\\left\\{#1 \\; : \\; #2\\right\\}', 2 ],
+                              bm: ['\\boldsymbol{\\mathbf #1}', 1],
+                              argmin: ['\\operatorname\{arg\\,min\\,\}'],
+                              argmax: ['\\operatorname\{arg\\,max\\,\}'],
+                              prob: ["\\mbox{#1$\\left(#2\\right)$}", 2],
+                              floor: ["\\lfloor #1 \\rfloor",1]
+                          },
+                          loader: {load: ['[tex]/color']},
+                          extensions: ["color.js"],
+                          tex: {packages: {'[+]': ['color']}},
+                          svg: {
+                              fontCache: 'global'
+                          }
+                      }
+                  },
+
+                  plugins: [ RevealMath, RevealChalkboard, RevealHighlight, RevealNotes, RevealZoom, RevealMenu ],
+
+              });
+
+              Reveal.configure({ fragments: true}); // set false when developing to see everything at once
+              Reveal.configure({ slideNumber: true });
+              //Reveal.configure({ history: true });
+              Reveal.configure({ slideNumber: 'c / t' });
+              Reveal.addEventListener( 'darkside', function() {
+                  document.getElementById('theme').setAttribute('href','dist/theme/aml_dark.css');
+              }, false );
+              Reveal.addEventListener( 'brightside', function() {
+                  document.getElementById('theme').setAttribute('href','dist/theme/aml.css');
+              }, false );
+            </script>
+            <style type="text/css">
+              /* 1. Style header/footer <div> so they are positioned as desired. */
+              #header-left {
+                  position: absolute;
+                  top: 0%;
+                  left: 0%;
+              }
+              #header-right {
+                  position: absolute;
+                  top: 0%;
+                  right: 0%;
+              }
+              #footer-left {
+                  position: absolute;
+                  bottom: 0%;
+                  left: 0%;
+              }
+            </style>
+
+            <!-- // 2. Create hidden header/footer -->
+            <div id="hidden" style="background; display:none;">
+              <div id="header">
+                <div id="header-left"><h4>CS4520</h4></div>
+                <div id="header-right"><h4>Algorithms</h4></div>
+                <div id="footer-left">
+                  <!-- <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="100" -->
+                  <!--      src="figures/flowchart.png" alt="robot learning"> -->
+                </div>
+              </div>
+            </div>
+
+
+            <script type="text/javascript">
+              // 3. On Reveal.js ready event, copy header/footer <div> into each `.slide-background` <div>
+              var header = $('#header').html();
+              if ( window.location.search.match( /print-pdf/gi ) ) {
+                  Reveal.addEventListener( 'ready', function( event ) {
+                      $('.slide-background').append(header);
+                  });
+              }
+              else {
+                  $('div.reveal').append(header);
+              }
+            </script>
+
+  </body>
+</html>
