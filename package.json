@@ -102,6 +102,7 @@
     }
   },
   "dependencies": {
-    "reveal.js-menu": "^2.1.0"
+    "reveal.js-menu": "^2.1.0",
+    "reveal.js-verticator": "^1.2.3"
   }
 }
