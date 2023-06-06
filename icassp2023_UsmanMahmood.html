@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link href="css/fontawesome-free-5.15.4-web/css/all.css" rel="stylesheet">
+
+    <script src="lib/colorbrewer.v1.min.js" charset="utf-8"></script>
+    <script src="lib/colorStringStandalone.js" charset="utf-8"></script>
+    <script type="text/javascript" src="lib/jquery-2.2.4.min.js"></script>
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v7.js"></script>
+        <script src="js/datacube.img.slicer.min.js" type="text/javascript"
+                charset="utf-8"></script>
+        <script src="js/vis_src/szhc/szpath.js" charset="utf-8"></script>
+        <script src="js/vis_src/hdp/hdp.js" charset="utf-8"></script>
+
+    <title>ICASSP 2023</title>
+
+    <meta name="description" content="CS GSU Seminar">
+    <meta name="author" content="Sergey M Plis">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+    <!-- <link rel="stylesheet" href="lib/css/zenburn.css"> -->
+    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="dist/theme/aml.css" id="theme">
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.scss';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+
+            <script type="text/javascript">
+            "use strict";
+            var mri, sz, hdp, logo;
+
+            function dataCubeComplete () {
+                jQuery("#slicer_loading").fadeOut(150, function fadeMRIslicerIn(){
+                    var jqC = jQuery("canvas");
+                    jqC.toggle(150);
+                });
+            }
+
+            function szComplete () {
+                jQuery('#mdots_loading').fadeOut(1000, function fadeSZIn(){
+                    var jqC = jQuery("#mdots_view");
+                    jqC.toggle(150);
+                    sz.useColor.click();
+                });
+            }
+
+            function hdpComplete () {
+                jQuery('#hdp_loading').fadeOut(1000, function fadeSZIn(){
+                    var jqC = jQuery("#hdp_view");
+                    jqC.toggle(150);
+                    hdp.chkCogDecline.click();
+                });
+            }
+
+            jQuery(document).ready(function() {
+                var offset = 50;
+                var duration = 500;
+
+                // datacube
+                var mriConfig = {
+                    data: "js/vis_src/slicer/sample_data/TT1.json",
+                    target: ".slicer_view",
+                    drawColor: "black",
+                    cb: dataCubeComplete,
+                    gap: 0,
+                    gauge: false,
+                    invertTransparency: true,
+                    idleAnimation: 0.1,
+                    idleAnimationPercentage: g0.9,
+                    mouseout: "slide-to-center",
+                    mouseoutDelay: 250,
+                    mouseoutAnimationDur: 500,
+                    transparentExtremes: true
+                };
+                mri = new datacubeSlicer(mriConfig);
+
+                sz = new SZ({
+                    cb: szComplete,
+                    gui_id: "data_gui_sz",
+                    target: "#mdots_view"
+                });
+
+                hdp = new HDP({
+                    cb: hdpComplete,
+                    id: "hdp",
+                    guiBefore: false,
+                    gui_id: "data_gui_hdp",
+                    target: "#hdp_view"
+                });
+            });
+          </script>
+
+  </head>
+
+
+  <body>
+    <div class="reveal">
+      <!-- In between the <div="reveal"> and the <div class="slides">-->
+          <!-- <header style="position: absolute; top: 10px; left: 100px; z-index: 500; font-size:100px;background-color: rgba(0,0,0,0); text-align: center !important"></header>  -->
+          <!-- In between the <div="reveal"> and the <div class="slides">-->
+              <!-- Any section element inside of this container is displayed as a slide -->
+              <div class="slides">
+
+        <section>
+          <section>
+	    <p>
+              <h2>GLACIER: glass-box transformer</h2>
+<h3>for interpretable dynamic neuroimaging</h3>
+              <h4><h4>
+                  <p> <alert>Usman Mahmood</alert>, Zening Fu, Vince Calhoun, Sergey Plis
+
+                    <div>
+                    <img style="bottom=0; width=100%; box-shadow: 0px 0px 0px
+                                rgba(150, 150, 255,0.8);
+                                border:0;"
+                         src="figures/IJCNN2022talk_team.svg"
+                         alt="IJCNN team">
+                    </div>
+		  <p>
+                    <img style="border:0; box-shadow: 0px 0px 0px
+											  rgba(150, 150, 255,
+					   0.8);" width="150"
+					   src="figures/ICASSP2023.png"
+					   alt="IJCNN">
+		    <img style="border:0;
+                                box-shadow: 0px
+                                0px 0px;"
+			 width="300"
+                         src="figures/TReNDS_logo_light.png"
+			 alt="logo">
+	            <img style="border:0; box-shadow: 0px 0px 0px
+											  rgba(150, 150, 255,
+					   0.8);" height="100"
+					   src="figures/neuroneural_logo.png"
+					   alt="Neuroneural">
+	  </section>
+
+          <section>
+            <h3>Multivariate Time Series</h3>
+            <row>
+              <col50>
+                <ul>
+                  <li class="fragment roll-in" data-fragment-index="0"> Electrophysiological
+                  <li class="fragment roll-in" data-fragment-index="1"> Geospatial
+                  <li class="fragment roll-in" data-fragment-index="2"> Microphone arrays
+                  <li class="fragment roll-in" data-fragment-index="3"> Internet of things
+                  <li class="fragment roll-in" data-fragment-index="4"> Distributed sensing
+                  <li class="fragment roll-in" data-fragment-index="5"> Health monitoring
+                </ul>
+              </col50>
+              <col>
+                      <div style="position:relative; width:480px; height:480px; margin:auto;">
+                        <img class="fragment current-visible" data-transition="slide fade-out" data-fragment-index="0" width="640" height="480" src="figures/EEG_sleep_t.png" style="position:absolute;top:0;left:0;border:0; box-shadow: 0px 0px 0px rgba(255, 255, 255, 255);" />
+                        <img class="fragment current-visible" data-transition="slide fade-out" data-fragment-index="1" width="640" height="480" src="figures/Seismic_comparison.png" style="position:absolute;top:0;left:0;border:0; box-shadow: 0px 0px 0px rgba(255, 255, 255, 255);" />
+                        <img class="fragment current-visible" data-transition="slide fade-out" data-fragment-index="2" width="640" height="480" src="figures/Matrix_microphones.png" style="position:absolute;top:0;left:0;border:0; box-shadow: 0px 0px 0px rgba(255, 255, 255, 255);" />
+                        <img class="fragment current-visible" data-transition="slide fade-out" data-fragment-index="3" width="640" height="480" src="figures/smart_city_sq.png" style="position:absolute;top:0;left:0;border:0; box-shadow: 0px 0px 0px rgba(255, 255, 255, 255);" />
+                        <img class="fragment current-visible" data-transition="slide fade-out" data-fragment-index="4" width="640" height="480" src="figures/distributed_sensing.png" style="position:absolute;top:0;left:0;border:0; box-shadow: 0px 0px 0px rgba(255, 255, 255, 255);" />
+                        <img class="fragment current-visible" data-transition="slide fade-out" data-fragment-index="5" width="640" height="480" src="figures/health_monitoring.jpeg" style="position:absolute;top:0;left:0;border:0; box-shadow: 0px 0px 0px rgba(255, 255, 255, 255);" />
+
+                      </div>
+                      </col>
+            </row>
+          </section>
+
+          <section>
+            <h3>To Understand, Learn to Predict<h3>
+                <img class="stretch" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 0.8);"
+                     width="100%" src="figures/learning_from_models.svg"
+                     alt="Learning to predict">
+          </section>
+
+          <section data-background="figures/RobotLearningAboutBrain.png">
+            <!-- <div class="slide-footer" style="font-size:9pt;"> -->
+            <!--   Graphic created by Farfalla Hu <img src="figures/Farfalla.png" style="border:0; box-shadow: 0px 0px 0px -->
+	    <!--     	    rgba(150, 150, 255, 0.8); justify-content: center;" -->
+            <!--          width="60pt"/> -->
+            <!-- </div> -->
+          </section>
+
+          <section data-state="brightside">
+            <h3>Graphs as Interpretable Representations</h3>
+            <row style="margin-top: -30px;">
+              <col30 class="fragment roll-in" data-fragment-index="1">
+                <div style="font-size:14pt;">genetic network</div>
+                <img class="stretch" style="border:0; box-shadow: 0px 0px 0px
+			    rgba(150, 150, 255, 0.8); justify-content: center;"
+                     width="80%"
+		     src="figures/covid_genes.png"
+		     alt="COVID SNPs">
+              </col30>
+              <col30 class="fragment roll-in" data-fragment-index="2">
+                <div style="font-size:14pt;">networks of chess games</div>
+                <img class="stretch" style="border:0; box-shadow: 0px 0px 0px
+			    rgba(150, 150, 255, 0.8); justify-content: center;"
+                     width="80%"
+		     src="figures/chess_masters_001.png"
+		     alt="chess masters">
+              </col30>
+              <col30 class="fragment roll-in" data-fragment-index="3">
+                <div style="font-size:14pt;">philosophy network</div>
+                <img class="stretch" style="border:0; box-shadow: 0px 0px 0px
+			    rgba(150, 150, 255, 0.8); justify-content: center;"
+                     width="80%"
+		     src="figures/Philosophy_graph.png"
+		     alt="history of philosophy">
+              </col30>
+            </row>
+            <row style="margin-top: -30px;">
+              <col30 class="fragment roll-in" data-fragment-index="4">
+                <div style="font-size:14pt;">W3C specs</div>
+                <img class="stretch" style="border:0; box-shadow: 0px 0px 0px
+			    rgba(150, 150, 255, 0.8); justify-content: center;"
+                     width="100%"
+		     src="figures/wsa_concepts_www.png"
+		     alt="W3C specs">
+              </col30>
+              <col30 class="fragment roll-in" data-fragment-index="5">
+                <div style="font-size:14pt;">Titanic survival DT</div>
+                <img class="stretch" style="border:0; box-shadow: 0px 0px 0px
+			    rgba(150, 150, 255, 0.8); justify-content: center;"
+                     width="100%"
+		     src="figures/TitanicDecisionTree.png"
+		     alt="Decision Tree">
+              </col30>
+              <col30 class="fragment roll-in" data-fragment-index="6">
+                <div style="font-size:14pt;">Neural Net</div>
+                <img class="stretch" style="border:0; box-shadow: 0px 0px 0px
+			    rgba(150, 150, 255, 0.8); justify-content: center;"
+                     width="100%"
+		     src="figures/neural-network-architecture_graph.png"
+		     alt="Neural Net">
+              </col30>
+            </row>
+            <!-- <div class="slide-footer" style="font-size:9pt;"> -->
+            <!--     1. Taylor K, Das S, Pearson M, Kozubek J, Pawlowski M, Jensen CE, Skowron Z, Møller GL, Strivens M, Gardner S. Analysis of genetic host response risk factors in severe COVID-19 patients. medRxiv. 2020 Jan 1.<br> -->
+            <!--     2. <a href="https://networkx.org/documentation/stable/auto_examples/drawing/plot_chess_masters.html#sphx-glr-auto-examples-drawing-plot-chess-masters-py">Chess Masters in NetworkX</a> -->
+            <!--     3. <a href="https://igarciniacambogia.blogspot.com/2020/06/pre-socratic-graph.html">History of Philosophy</a> -->
+            <!--     4. <a href="https://www.w3.org/2003/Talks/0818-msm-ws/slide19-0.html">W3C slides</a> -->
+            <!--     5. <a hred="https://medium.com/analytics-vidhya/variable-importance-with-tree-models-random-forest-with-python-cb775d019977">DT source</a> -->
+            <!--     6. <a href="https://www.syncfusion.com/succinctly-free-ebooks/neuralnetworks/feed-forward">NN source</a> -->
+            <!-- </div> -->
+            <aside class="notes">
+              1. COVID-associated SNPs (circles) and co-association in patients (edges), colours = distinct patient sub-populations.<br>
+            </aside>
+          </section>
+
+          <section data-state="darkside">
+            <h3>Neuroimaging data</h3>
+            <row>
+              <col50>
+                <iframe data-autoplay data-preload width="100%" height="250" src="https://www.youtube.com/embed/cQs1g5hsW6Y?autoplay=1&controls=0&rel=0&modestbranding=1&showinfo=0&loop=1&iv_load_policy=3&playlist=cQs1g5hsW6Y" title="Volumetric 3D T1 SPACE on wide bore 3T MRI" frameborder="0" allow="autoplay; clipboard-write; encrypted-media;"></iframe>
+            <img class="stretch" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 0.8);"
+                 width="40%" src="figures/voxel_brain.png"
+                 alt="Voxels">
+              </col50>
+              <col50>
+                <iframe data-autoplay data-preload width="100%" height="250" src="https://www.youtube.com/embed/Mk11oo8CQCQ?autoplay=1&controls=0&rel=0&modestbranding=1&showinfo=0&loop=1&iv_load_policy=3&playlist=Mk11oo8CQCQ" title="Original fMRI movie" frameborder="0" allow="autoplay;encrypted-media;" ></iframe>
+                <video loop data-autoplay src="figures_ccd/rsfmri.mp4"></video>
+              </col50>
+            </row>
+          </section>
+
+          <section data-state="brightside">
+            <h3>Brain as a network</h3>
+            <row>
+              <col60>
+                <ul style="list-style-type: none; font-size: 19pt">
+                  <li class="fragment roll-in" data-fragment-index="1"> Voxels working together form networks
+            <img class="stretch" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 0.8);"
+                 width="100%" src="figures_ccd/ica_components.png"
+                 alt="ICA components">
+            <li class="fragment roll-in" data-fragment-index="2"> dynamically change activity
+                        <img class="stretch" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 0.8);"
+                 width="100%" src="figures/time_courses.svg"
+                 alt="ICA TC">
+
+                </ul>
+              </col60>
+              <col50>
+                <ul style="list-style-type: none; font-size: 19pt">
+                  <li class="fragment roll-in" data-fragment-index="3"> These networks interact and form ...
+                    <div class="fragment roll-in" data-fragment-index="4">
+            <img class="stretch" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 0.8);"
+                 width="100%" src="figures/brain_connectivity_graph.svg"
+                 alt="ICA components">
+            more networks
+                    </div>
+                </ul>
+
+              </col50>
+            </row>
+          </section>
+
+          <section data-state="brightside">
+            <h3>capturing dynamics of the brain network</h3>
+            <img class="stretch" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 0.8);"
+                 width="100%" src="figures/Allen_dFNC.png"
+                 alt="Allen">
+            <!-- <div class="slide-footer"> -->
+            <!--   Allen EA, Damaraju E, Plis SM, Erhardt EB, Eichele T, Calhoun VD. Tracking whole-brain connectivity dynamics in the resting state. Cerebral cortex. 2014 Mar 1;24(3):663-76. -->
+            <!-- </div> -->
+          </section>
+
+          <section>
+            <h3>Problems with windowing</h3>
+            <ul>
+              <li class="fragment roll-in"> Limiting data for estimation <i class="fas fa-arrow-alt-circle-right"></i> noisier estimates
+                <img class="stretch" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 0.8);"
+                 width="50%" src="figures/windowed_time_courses.svg"
+                 alt="windowed">
+              <li class="fragment roll-in"> Fixed-shape soft windows: unclear what is important
+                <img class="stretch" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 0.8);"
+                 width="50%" src="figures/windowed_time_courses_N.svg"
+                 alt="windowed too">
+              <li class="fragment roll-in"> The same window shape for each time point
+              <li class="fragment roll-in"> The same window regardless the downstream task
+              <li class="fragment roll-in"> <alert>Our solution: learn an adaptive window function</alert>
+            </ul>
+          </section>
+
+          <section>
+            <h3>Two types of eXplainable AI</h3>
+            <row>
+              <col50>
+                <h4>Explain the data</h4>
+                <img class="stretch" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 0.8);"
+                     width="100%"
+                     src="figures/explanation_examples.svg"
+                     alt="task">                
+              </col50>
+              <col50>
+                <h4>Interpret the model</h4>
+                <img class="stretch" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 0.8);"
+                     width="100%"
+                     src="figures/PCA_spring.gif"
+                     alt="task">                                
+              </col50>
+            </row>
+          </section>
+
+          <section>
+            <h3>Graph as a glass-box layer</h3>
+            <ul style="list-style-type: none; font-size: 19pt">
+              <li class="fragment roll-in"> To see through a black box model we need a window
+                <div align="center">
+                  <img class="stretch" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 0.8);position: relative; margin:0 auto;"
+                       width="50%" src="figures/glass_box_into_mouse.png"
+                       alt="windowed">
+                </div>
+              <li class="fragment roll-in"> Our window is a graph, but we want the model to use it too
+                <div align="center">
+                  <img class="stretch" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 0.8);"
+                       width="50%" src="figures/glass_box_layer.svg"
+                       alt="windowed">
+                </div>
+              <li class="fragment roll-in"> For that, the graph needs to be differentiable
+                \[
+                \softmax(\bm{H}\bm{W}_Q\bm{W}_K\bm{H}^T), \bm{H}\mbox{ is (brain regions)} \times d
+                \]
+              <li class="fragment roll-in">
+                <blockquote style="background-color: #eee8d5; width: 100%; font-size: 32px; text-align: left;">
+                  The now familiar <alert>alignment matrix</alert> from the self-attention module
+                </blockquote>
+            </ul>
+          </section>
+
+          <section>
+            <h3>assembling a transparent model</h3>
+            <row style="margin-top: -30px;" >
+              <col40>
+                <ul style="list-style-type: none; font-size: 19pt">
+                  <li class="fragment roll-in">
+                    <img class="stretch"  style="border:0; box-shadow: 0px 0px 0px
+                                                 rgba(150, 150, 255,
+                                                 0.8);" width="80%" src="figures/attention_distill.png"
+                         alt="DECENNT">
+                </ul>
+              </col40>
+              <col60>
+                <img class="stretch"  style="border:0; box-shadow: 0px 0px 0px
+                                            rgba(150, 150, 255,
+                                            0.8);" width="80%" src="figures/glacier_model.svg"
+                     alt="DECENNT">
+              </col60>
+            </row>
+          </section>
+
+          <section>
+            <h3>Results: Interpretable glass-box layer <alert>for brains</alert></h3>
+            <row style="margin-top: -30px;">
+              <div align="center">
+              <img class="stretch" style="border:0; box-shadow: 0px 0px 0px                                          rgba(150, 150, 255,
+                                          0.8);"
+                   width="80%"
+                   src="figures/taskENC.svg"
+                   alt="task">
+              </div>
+            </row>
+            <row style="margin-top: -30px;">
+              <div align="center">
+              <img class="stretch" style="border:0; box-shadow: 0px 0px 0px
+                                          rgba(150, 150, 255,
+                                          0.8);"
+                   width="70%"
+                   src="figures/FBIRNConnect.svg"
+                   alt="task">
+              </div>
+            </row>
+            <row>
+              <col50>
+              </col50>
+              <col50>
+              </col50>
+            </row>
+          </section>
+
+          <section>
+            <h3>Results: transparency improves model accuracy</h3>
+            <img class="stretch" style="border:0; box-shadow: 0px 0px 0px
+                                        rgba(150, 150, 255,
+                                        0.8);" width="80%" src="figures/Glassier_AUC_Comparison.svg"
+                 alt="Glacier">
+                <div align="center">
+                  <img class="stretch" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 0.8);"
+                       width="50%" src="figures/glass_box_layer.svg"
+                       alt="windowed">
+                </div>
+
+          </section>
+
+          <section>
+            <h3>Take home points</h3>
+            <ol>
+              <li class="fragment roll-in"> Glass-box differentiable layer captures instantaneous dynamic connectivity
+              <li class="fragment roll-in"> Learning a graph across variables and importance of each time point simplifies model interpretation
+              <li class="fragment roll-in"> A model almost entirely made of self-attention is a highest accuracy model that is also fully interpretable
+            </ol>
+          </section>
+
+          <section>
+            <h1>Questions?</h1>
+            <img style="border:0; box-shadow: 0px 0px 0px
+			rgba(150, 150, 255,
+			0.8);" width="400"
+		 src="figures/QR_Code_GlacierICASSP2023.svg"
+		 alt="Neuroneural">
+          </section>
+
+        </section>
+
+
+              </div>
+
+            </div>
+
+            <script src="dist/reveal.js"></script>
+
+            <link rel="stylesheet" href="plugin/highlight/monokai.css">
+            <script src="plugin/highlight/highlight.js"></script>
+            <script src="plugin/math/math.js"></script>
+            <script src="plugin/chalkboard/plugin.js"></script>
+            <script src="plugin/notes/notes.js"></script>
+            <script src="plugin/zoom/zoom.js"></script>
+            <script src="plugin/fullscreen/fullscreen.js"></script>
+            <script src="node_modules/reveal.js-menu/menu.js"></script>
+            <script src="node_modules/reveal.js-verticator/plugin/verticator/verticator.js"></script>
+            <link rel="stylesheet" href="node_modules/reveal.js-verticator/plugin/verticator/verticator.css">
+            <script>
+              // Full list of configuration options available at:
+              // https://github.com/hakimel/reveal.js#configuration
+
+              Reveal.initialize({
+                  // history: true,
+                  hash: true,
+                  margin: 0.01,
+                  minScale: 0.01,
+                  maxScale: 1.23,
+                  center: true,
+
+                  controls: false,
+                  keyboard: true,
+
+                  overview: true,
+                  transition: 'slide', // Transition style: none/fade/slide/convex/concave/zoom
+                  transitionSpeed: 'slow', // Transition speed: default/fast/slow
+                  menu: {
+                      themes: false,
+                      openSlideNumber: true,
+                      openButton: false,
+                  },
+
+                  chalkboard: {
+                      boardmarkerWidth: 1,
+                      chalkWidth: 2,
+                      chalkEffect: 1,
+                      toggleNotesButton: false,
+                      toggleChalkboardButton: false,
+                      slideWidth: Reveal.width,
+                      slideHeight: Reveal.height,
+                      // src: "chalkboards/chalkboard_em2.json",
+                      readOnly: false,
+                      theme: "blackboard",
+                      eraser: { src: "plugin/chalkboard/img/sponge.png", radius: 30},
+                  },
+
+                  math: {
+                      mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
+                      config: 'TeX-AMS_SVG-full',
+                      // pass other options into `MathJax.Hub.Config()`
+                      TeX: {
+                          Macros: {
+        	              RR: '\\mathbb{R}',
+        	              PP: '\\mathbb{P}',
+        	              EE: '\\mathbb{E}',
+        	              NN: '\\mathbb{N}',
+        	              vth: '\\vec{\\theta}',
+                              loss: '{\\cal l}',
+                              hclass: '{\\cal H}',
+                              CD: '{\\cal D}',
+                              def: '\\stackrel{\\text{def}}{=}',
+                              pag: ['\\text{pa}_{{\cal G}^{#1}}(#2)}', 2],
+                              vec: ['\\boldsymbol{\\mathbf #1}', 1],
+        	              set: [ '\\left\\{#1 \\; : \\; #2\\right\\}', 2 ],
+                              bm: ['\\boldsymbol{\\mathbf #1}', 1],
+                              argmin: ['\\operatorname\{arg\\,min\\,\}'],
+                              argmax: ['\\operatorname\{arg\\,max\\,\}'],
+                              softmax: ['\\operatorname\{soft\\,max\\,\}'],
+                              prob: ["\\mbox{#1$\\left(#2\\right)$}", 2],
+                          },
+                          loader: {load: ['[tex]/color']},
+                          extensions: ["color.js"],
+                          tex: {packages: {'[+]': ['color']}},
+                          svg: {
+                              fontCache: 'global'
+                          }
+                      }
+                  },
+
+                  plugins: [ Verticator, RevealMath, RevealChalkboard, RevealHighlight, RevealNotes, RevealZoom, RevealMenu ],
+
+              });
+
+              Reveal.configure({ fragments: true }); // set false when developing to see everything at once
+              Reveal.configure({ slideNumber: true });
+              //Reveal.configure({ history: true });
+              Reveal.configure({ slideNumber: 'c / t' });
+              Reveal.addEventListener( 'darkside', function() {
+                  document.getElementById('theme').setAttribute('href','dist/theme/aml_dark.css');
+              }, false );
+
+              Reveal.addEventListener( 'brightside', function() {
+                  document.getElementById('theme').setAttribute('href','dist/theme/aml.css');
+              }, false );
+
+            </script>
+
+            <style type="text/css">
+              /* 1. Style header/footer <div> so they are positioned as desired. */
+              #header-left {
+                  position: absolute;
+                  top: 0%;
+                  left: 0%;
+              }
+              #header-right {
+                  position: absolute;
+                  top: 0%;
+                  right: 0%;
+              }
+              #footer-left {
+                  position: absolute;
+                  bottom: 0%;
+                  left: 0%;
+              }
+            </style>
+
+            <!-- // 2. Create hidden header/footer -->
+            <div id="hidden" style="display:none;">
+              <div id="header">
+                <div id="header-left"></div>
+                <div id="header-right">	<img style="border:0; box-shadow: 0px 0px 0px
+											  rgba(150, 150, 255,
+					   0.8);" width="100"
+					   src="figures/neuroneural_logo.png"
+					   alt="Neuroneural"></div>
+                <div id="footer-left">
+                  <img style="border:0; box-shadow: 0px 0px 0px
+			      rgba(150, 150, 255,0.8);"
+                       width="150"
+		       src="figures/ICASSP2023.png"
+		       alt="IJCNN">
+                </div>
+              </div>
+            </div>
+
+
+            <script type="text/javascript">
+              // 3. On Reveal.js ready event, copy header/footer <div> into each `.slide-background` <div>
+              var header = $('#header').html();
+              if ( window.location.search.match( /print-pdf/gi ) ) {
+                  Reveal.addEventListener( 'ready', function( event ) {
+                      $('.slide-background').append(header);
+                  });
+              }
+              else {
+                  $('div.reveal').append(header);
+              }
+            </script>
+
+  </body>
+</html>
