@@ -1,0 +1,1290 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <!-- <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/> -->
+
+    <script src="lib/colorbrewer.v1.min.js" charset="utf-8"></script>
+    <script src="lib/colorStringStandalone.js" charset="utf-8"></script>
+    <script type="text/javascript" src="lib/jquery-2.2.4.min.js"></script>
+
+    <title>CS Seminar</title>
+
+    <meta name="description" content="CS GSU Seminar">
+    <meta name="author" content="Sergey M Plis">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+    <!-- <link rel="stylesheet" href="lib/css/zenburn.css"> -->
+    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="dist/theme/aml.css" id="theme">
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.scss';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+  </head>
+
+
+  <body>
+    <div class="reveal">
+      <!-- In between the <div="reveal"> and the <div class="slides">-->
+          <!-- <header style="position: absolute; top: 10px; left: 100px; z-index: 500; font-size:100px;background-color: rgba(0,0,0,0); text-align: center !important"></header>  -->
+          <!-- In between the <div="reveal"> and the <div class="slides">-->
+              <!-- Any section element inside of this container is displayed as a slide -->
+              <div class="slides">
+
+        <section>
+          <section>
+	    <p>
+              <h2>Machine Learning & Brain Imaging</h2>
+              <h4><h4>
+		  <p>
+		    Sergey Plis, PhD
+		  <p><small>
+                      Associate Professor, CS GSU
+                    </small>
+		  <p>
+		  <p>
+		  <p>
+		  <p>
+		    <img class="stretch" style="border:0;
+                                                box-shadow: 0px
+                                                0px 0px;
+						" width="300" src="figures/TReNDS_logo_light.png"
+			 alt="logo">
+		  <p>
+                    <div class='footer'>
+                      <img style="position:fixed; bottom=0; width=100%; box-shadow: 0px 0px 0px
+                                  rgba(150, 150, 255,0.8);
+                                  border:0;"
+                           src="figures_ccd/collaborators.png"
+                           alt="loop">
+
+                    </div>
+	  </section>
+          <section>
+            <h3>Outline</h3>
+            <ul>
+              <li class="fragment roll-in"> Administration
+              <li class="fragment roll-in"> Model Interpretability
+              <li class="fragment roll-in"> Semantic segmentation
+              <li class="fragment roll-in"> Causal learning
+              <li class="fragment roll-in"> Decentralized learning
+            </ul>
+          </section>
+        </section>
+
+
+        <section>
+          <section>
+            <h2>Administration</h2>
+          </section>
+
+          <section data-vertical-align-top data-background-iframe="figures/syllabus_seminar.pdf">
+            <h2>Syllabus (example)</h2>
+          </section>
+          <section data-background="figures/citi_certificate.png" data-background-size="contain">
+          </section>
+        </section>
+
+
+
+        <section>
+          <section>
+            <h2>What motivates our work</h2>
+          </section>
+
+                    <section data-state="brightside">
+
+            <blockquote style="background-color: #eee8d5; width: 100%; font-size: 32px; text-align: left;" class="fragment" data-fragment-index="0">
+              <alert>Premise:</alert> Brain dynamics are highly complex and yet hold the key to understanding brain function and dysfunction.
+            </blockquote>
+
+            <blockquote style="background-color: #eee8d5; width: 100%; font-size: 32px; text-align: left;"  class="fragment" data-fragment-index="1">
+              <alert>Goal:</alert> Develop models that can learn from high-dimensional dynamical data while maintaining stable, ecologically valid interpretations.
+            </blockquote>
+
+            <div class="slide-footer fragment" style="font-size:9pt;" data-fragment-index="0">
+              <ul>
+                <li> Goldberg, D. P. & Huxley, P. Common mental disorders: a bio-social model. (Tavistock/Routledge, 1992).
+                <li> Hutchison, R. M. et al. Dynamic functional connectivity: promise, issues, and interpretations. Neuroimage 80, 360–378  (2013).
+                <li> Calhoun, V. D., Miller, R., Pearlson, G. & Adali, T. The chronnectome: time-varying connectivity networks as the next frontier in fMRI data discovery. Neuron 84, 262–274 (2014).
+                <li> Sui, J., Jiang, R., Bustillo, J. & Calhoun, V. Neuroimaging-based individualized prediction of cognition and behavior for mental disorders and health: methods and promises. Biol. psychiatry (2020).
+              </ul>
+            </div>
+          </section>
+
+          <section data-vertical-align-top data-state="darkside" data-background-iframe="https://www.youtube.com/embed/Mk11oo8CQCQ?autoplay=1&controls=0&rel=0&modestbranding=1&showinfo=0&loop=1&iv_load_policy=3&playlist=Mk11oo8CQCQ">
+            <h4 style="text-shadow: 4px 4px 4px #002b36; color: #93a1a1">Learn from data how the brain works and breaks</h4>
+          </section>
+
+          <section data-state="darkside" data-vertical-align-top data-background-size="cover" data-background="figures/brains_tiled.png">
+            <h4 style="text-shadow: 4px 4px 4px #002b36; color: #93a1a1">The field's solution is to collect more data</h4>
+            <div class="fragment zoom-in" data-fragment-index="1">
+              <img class="stretch" style="border:0; box-shadow: 0px 0px 0px
+                                          rgba(150, 150, 255,
+                                          0.8);"
+                   width="60%"
+                   src="figures/overload.jpg"
+                   alt="loop">
+            <h4 style="text-shadow: 4px 4px 4px #002b36; color: #f1d5c8"><alert style="color: #ec5b73;">Problem:</alert> large high dimensional data is not easy to understand</h4>
+            </div>
+          </section>
+
+          <section  data-state="brightside">
+            <h3>Desired Solution</h3>
+            <img class="stretch" style="border:0; box-shadow: 0px 0px 0px
+                                        rgba(150, 150, 255, 0.8); margin-top:-20pt; width:100%;"
+                 width="80%"
+                 src="figures/curious_robot_knowledge_extractor3.png"
+                 alt="loop"><br>
+            <h3>
+            automatically extract meaning from data
+            </h3>
+            <div class="slide-footer" style="font-size:9pt;">
+              The image is generated by midjourney
+            </div>
+          </section>
+	</section>          
+         <section>
+  	  <section data-state="brightside">
+	    <h2>Model Interpretability</h2>
+	  </section>
+
+	  <section  data-state="darkside">
+            <h3>brain is highly dynamic</h3>
+	    <img style="border:0; box-shadow: 0px 0px 0px
+			rgba(150, 150, 255, 0.8);" width="250" class="stretch"
+		 src="figures/dynamic_brain.gif" alt="latent">
+	  </section>
+
+          <section data-vertical-align-top data-state="brightside">
+            <h3>To Understand, Learn to Predict</h3>
+                <img class="stretch" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 0.8);"
+                     width="100%" src="figures/learning_from_models.svg"
+                     alt="Learning to predict">
+                <row class="fragment roll-in" data-fragment-index="0" style="margin-top:-30pt;">
+                  <col50>
+                    <img class="stretch" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 0.8);"
+                     width="100%" src="figures/ica-components-subset.png"
+                     alt="Learning to predict">
+                  </col50>
+                  <col50>
+                    <img class="stretch" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 0.8);"
+                         width="100%" src="figures/ICA_TC_example.svg"
+                         alt="Learning to predict">
+                  </col50>
+                </row>
+                <div class="slide-footer" style="font-size:9pt; margin-bottom:-20pt;">
+                  <ol>
+                    <li> Vellido, A. The importance of interpretability and visualization in machine learning for applications in medicine and health care. Neural computing applications 1–15 (2019).
+                    <li> Singh, A., Sengupta, S. & Lakshminarayanan, V. Explainable deep learning models in medical image analysis. J. Imaging 6, 52 (2020).
+                      <li> Samek, W., Montavon, G., Lapuschkin, S., Anders, C. J. & Müller, K.-R. Toward interpretable machine learning: Transparent deep neural networks and beyond. arXiv preprint arXiv:2003.07631 (2020).
+                  </ol>
+                </div>
+          </section>
+
+          <section data-vertical-align-top>
+            <div id="header-left" style="margin-left: -100px; margin-top: -20px">
+              <img src="figures/Mahfuz.svg" alt="Mahfuz Rahman" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1); margin-bottom: -5%" width="160px" >
+              <div style="font-size:10pt;">Mahfuz Rahman</div>
+            </div>
+            <div id="header-right" style="margin-right: -100px; margin-top: -20px">
+              <img src="figures/Usman_shaved.jpeg" alt="Usman Mahmood" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1); margin-bottom: -5%" width="160px" >
+              <div style="font-size:10pt;">Usman Mahmood</div>
+            </div>
+
+            <h4>How to train predictive models</h4>
+            <h3 style="margin-top: -20pt;">when there isn't enough data</h3>
+                <img class="stretch" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 0.8); margin-top: -15pt;"
+                     width="100%" src="figures/wholeMILC_pretraining_results.svg"
+                     alt="wholeMiLC contrastive pretraining">
+                <div class="slide-footer" style="font-size:8pt;">
+                  <ol>
+                    <li> Mahmood, U., Rahman, M.M., Fedorov, A., Lewis, N., Fu, Z., Calhoun, V.D. and Plis, S.M., 2020, October. Whole MILC: generalizing learned dynamics across tasks, datasets, and populations. In International Conference on Medical Image Computing and Computer-Assisted Intervention (pp. 407-417). Springer, Cham.
+                    <li> Rahman, M.M., Mahmood, U., Lewis, N. et al. Interpreting models interpreting brain dynamics. Sci Rep 12, 12023 (2022). https://doi.org/10.1038/s41598-022-15539-2
+                  </ol>
+                </div>
+          </section>
+
+
+          <section data-vertical-align-top>
+            <div id="header-right" style="margin-right: -10px; margin-top: -20px">
+              <img src="figures/Zafar_mug.svg" alt="Zafar Iqbal" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1); margin-bottom: -5%" width="160px" />
+              <div style="font-size:10pt;">Zafar Iqbal</div>
+            </div>
+            <div id="header-left" style="margin-right: -250px; margin-top: 10px">
+              <a href="https://youtu.be/r3q2XXeasAA" target="_blank">
+                <video loop data-autoplay src="figures/reverse_splash_loop.mp4" width="200"></video>
+              </a>
+            </div>
+            <h4>when there isn't enough data</h4>
+            <h3 style="margin-top: -20pt;">Train <small>via</small> fMRI time reversal</h3>
+
+            <div class="fragment zoom-in" data-fragment-index="1">
+              <img class="stretch" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 0.8); margin-top: -10pt;"
+                   width="78%" src="figures/fmri_time_reversal_pre_training.svg"
+                   alt="Time reversal">
+              </div>
+                <div class="slide-footer" style="font-size:8pt;">
+                  <ol>
+                    <li> Zafar Iqbal et al. "Self-supervised pre-training of mental disorder classifiers via time reversal" WIP
+                  </ol>
+                </div>
+          </section>
+
+          <section>
+            <h3>Two types of eXplainable AI</h3>
+            <row>
+              <col50>
+                <h4>Explain the data</h4>
+                <img class="stretch" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 0.8);"
+                     width="100%"
+                     src="figures/explanation_examples.svg"
+                     alt="task">
+              </col50>
+              <col50>
+                <h4>Interpret the model</h4>
+                <img class="stretch" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 0.8);"
+                     width="100%"
+                     src="figures/PCA_spring.gif"
+                     alt="task">
+              </col50>
+            </row>
+            <div class="slide-footer" style="font-size:8pt;">
+              "Geometrically Guided Saliency Maps" Md Mahfuzur Rahman, Noah Lewis, Sergey Plis ICLR 2022 Workshop PAIR2Struct
+            </div>
+          </section>
+
+
+          <section data-state="brightside">
+            <div id="header-right" style="margin-right: -100px; margin-top: -30px">
+              <img src="figures/Mahfuz.svg" alt="Mahfuz Rahman" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1); margin-bottom: -5%" width="160px" >
+              <div style="font-size:10pt;">Mahfuz Rahman</div>
+            </div>
+            <h3>explaining the data across lifespan</h3>
+            <img class="stretch" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 0.8);"
+                 width="100%" src="figures/across_lifespan.svg"
+                 alt="cross-lifespan explanations">
+            <div class="slide-footer" style="font-size:8pt;">
+              Rahman, M.M., Mahmood, U., Lewis, N. et al. Interpreting models interpreting brain dynamics. Sci Rep 12, 12023 (2022). https://doi.org/10.1038/s41598-022-15539-2
+            </div>
+          </section>
+
+          <section data-state="brightside">
+            <h3>explaining the data across lifespan</h3>
+            <img class="stretch" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 0.8);"
+                 width="100%" src="figures/EMD_explained.svg"
+                 alt="group behavior of explanations">
+            <div class="slide-footer" style="font-size:8pt;">
+              Rahman, M.M., Mahmood, U., Lewis, N. et al. Interpreting models interpreting brain dynamics. Sci Rep 12, 12023 (2022). https://doi.org/10.1038/s41598-022-15539-2
+            </div>
+          </section>
+
+          <section>
+            <h2>Creating an interpretable model</h2>
+          </section>
+
+          <section data-state="brightside">
+            <h3>capturing dynamics of the brain network</h3>
+            <img class="stretch" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 0.8);"
+                 width="100%" src="figures/Allen_dFNC.png"
+                 alt="Allen">
+            <div class="slide-footer" style="font-size:8pt;">
+              Allen EA, Damaraju E, Plis SM, Erhardt EB, Eichele T, Calhoun VD. Tracking whole-brain connectivity dynamics in the resting state. Cerebral cortex. 2014 Mar 1;24(3):663-76.
+            </div>
+          </section>
+
+          <section>
+            <h3>Problems with windowing</h3>
+            <ul>
+              <li class="fragment roll-in"> Limiting data for estimation <i class="fas fa-arrow-alt-circle-right"></i> noisier estimates<br>
+                <img class="stretch" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 0.8);"
+                 width="50%" src="figures/windowed_time_courses.svg"
+                 alt="windowed">
+              <li class="fragment roll-in"> Fixed-shape soft windows: unclear what is important<br>
+                <img class="stretch" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 0.8);"
+                 width="50%" src="figures/windowed_time_courses_N.svg"
+                 alt="windowed too">
+              <li class="fragment roll-in"> The same window shape for each time point
+              <li class="fragment roll-in"> The same window regardless the downstream task
+              <li class="fragment roll-in"> <alert>Our solution: learn an adaptive window function</alert>
+            </ul>
+          </section>
+
+
+          <section>
+            <div id="header-right" style="margin-right: -100px; margin-top: -20px">
+              <img src="figures/Usman_shaved.jpeg" alt="Usman Mahmood" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1); margin-bottom: -5%" width="160px" >
+              <div style="font-size:10pt;">Usman Mahmood</div>
+            </div>
+
+            <h3>Graph as a glass-box layer</h3>
+            <ul style="list-style-type: none; font-size: 19pt">
+              <li class="fragment roll-in"> To see through a black box model we need a window
+                <div align="center">
+                  <img class="stretch" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 0.8);position: relative; margin:0 auto;"
+                       width="50%" src="figures/glass_box_into_mouse.png"
+                       alt="windowed">
+                </div>
+              <li class="fragment roll-in"> Our window is a graph, but we want the model to use it too
+                <div align="center">
+                  <img class="stretch" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 0.8);"
+                       width="50%" src="figures/glass_box_layer.svg"
+                       alt="windowed">
+                </div>
+              <li class="fragment roll-in"> For that, the graph needs to be differentiable
+                \[
+                \softmax(\bm{H}\bm{W}_Q\bm{W}_K\bm{H}^T), \bm{H}\mbox{ is (brain regions)} \times d
+                \]
+              <li class="fragment roll-in">
+                <blockquote style="background-color: #eee8d5; width: 100%; font-size: 32px; text-align: left;">
+                  The now familiar <alert>alignment matrix</alert> from the self-attention module
+                </blockquote>
+            </ul>
+          </section>
+
+          <section>
+            <h3>Interpretable glass-box layer: OASIS-3</h3>
+            <row style="margin-top: -30px;">
+              <div align="center">
+              <img class="stretch" style="border:0; box-shadow: 0px 0px 0px                                          rgba(150, 150, 255,
+                                          0.8);"
+                   width="80%"
+                   src="figures/taskENC.svg"
+                   alt="task">
+              </div>
+            </row>
+            <row style="margin-top: -30px;">
+              <div align="center">
+              <img class="stretch" style="border:0; box-shadow: 0px 0px 0px
+                                          rgba(150, 150, 255,
+                                          0.8);"
+                   width="70%"
+                   src="figures/FBIRNConnect.svg"
+                   alt="task">
+              </div>
+            </row>
+          </section>
+
+          <section>
+            <h3>glass-box layer boosts predictive power</h3>
+            <img class="stretch" style="border:0; box-shadow: 0px 0px 0px
+                                        rgba(150, 150, 255,
+                                        0.8);" width="80%" src="figures/DECENNTAUCComparision.svg"
+                 alt="DECENNT">
+                <div align="center">
+                  <img class="stretch" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 0.8);"
+                       width="50%" src="figures/glass_box_layer.svg"
+                       alt="windowed">
+                </div>
+
+          </section>
+
+          <section>
+            <div id="header-right" style="margin-right: -100px; margin-top: 50px">
+              <img src="figures/DebSaha.svg" alt="Usman Mahmood" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1); margin-bottom: -5%" width="160px" >
+              <div style="font-size:10pt;">Debbratha Saha</div>
+            </div>
+            <h3>Gaining insight about populations (w/ privacy)</h3>
+              <img class="stretch" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 0.8);"
+                   width="50%" src="figures/dSNE_outliers.svg"
+                   alt="windowed">
+            <div class="slide-footer" style="font-size:8pt;">
+              "Privacy-preserving quality control of neuroimaging datasets in federated environments" Debbrata K. Saha,Vince D. Calhoun,Yuhui Du,Zening Fu,Soo Min Kwon,Anand D. Sarwate,Sandeep R. Panta, Sergey M. Plis,  Human Brain Mapping Journal 2022
+            </div>
+
+          </section>
+        </section>
+
+
+	<section>
+	  <section>
+	    <h2>Semantic segmentation</h2>
+	  </section>
+
+	  <section>
+	    <h2>the task</h2>
+            <img class="stretch" style="border:0; box-shadow: 0px 0px 0px
+                                        rgba(150, 150, 255, 0.8);" width="250"
+                 src="figures_ccd/tasks.png" alt="david">
+	  </section>
+
+	  <section>
+	    <h2>state of the art: freesurfer</h2>
+            <img class="stretch" style="border:0; box-shadow: 0px 0px 0px
+                                        rgba(150, 150, 255, 0.8);" width="250"
+                 src="figures_ccd/freesurfer.png" alt="david">
+	    <br>
+
+            <div class='slide-footer' style="text-align: left;">
+	      Dale et al. Cortical surface-based analysis. I. Segmentation and
+	      surface reconstruction. Neuroimage 1999
+	    </div>
+	  </section>
+
+
+	  <section>
+	    <h2>deep learning standard: U-net</h2>
+            <img class="stretch" style="border:0; box-shadow: 0px 0px 0px
+                                        rgba(150, 150, 255, 0.8);" width="250"
+                 src="figures_ccd/unet_arc.png" alt="david">
+	    <p>
+
+            <div class='slide-footer' style="text-align: left;">
+		Ronneberger et al. U-net: Convolutional networks
+		for biomedical image segmentation. MICCAI 2015<br>
+		Çiçek et al. 3D U-Net: learning dense volumetric
+		segmentation from sparse annotation. MICCAI 2016
+	      </div>
+	  </section>
+
+	  <section>
+	    <h2>deep learning standard: U-net</h2>
+            <img class="stretch" style="border:0; box-shadow: 0px 0px 0px
+                                        rgba(150, 150, 255, 0.8);" width="250"
+                 src="figures_ccd/unet_table.png" alt="david">
+	    <p>
+
+            <div class='slide-footer' style="text-align: left;">
+		Ronneberger et al. U-net: Convolutional networks for
+		biomedical image segmentation. MICCAI 2015<br>
+		Çiçek et al. 3D U-Net: learning dense volumetric
+		segmentation from sparse annotation. MICCAI 2016
+	      </div>
+	  </section>
+
+	  <section>
+            <div id="header-right" style="right: -21%; z-index: 1500;">
+                    <img width="200px" style="margin-bottom: -5%;"
+                         src="figures/AlexFedorov.jpg" alt="Alex"><br>
+                    <small>Alex Fedorov</small>
+            </div>
+	    <h2>our model: Meshnet</h2>
+	    <img src="figures_ccd/dilation.png" style="border:0; box-shadow: 0px
+						       0px 0px rgba(150, 150, 255, 0.8);float: left;"
+		 alt="dilated" width="40%">
+	    <img src="figures_ccd/mn1.png" style="border:0; box-shadow: 0px
+						  0px 0px rgba(150, 150, 255, 0.8);float: right;"
+		 alt="Websocket" width="35%"
+		 >
+
+	    <div class="ulist">
+	      <ul style="width: 55%; float: left; font-size:30px;">
+		<li>Gray and White matter</li>
+		<li>FreeSurfer for ground truth</li>
+		<li>T1 MRIs from HCP</li>
+		<li>GitHub <br>
+		  <small>
+		    <a href="https://github.com/Entodi/MeshNet">
+		      https://github.com/Entodi/MeshNet</a>
+		  </small>
+		</li>
+	      </ul>
+	    </div>
+
+	    <br>
+            <div class='slide-footer' style="text-align: left;">
+	      Fedorov et al. End-to-end learning of brain tissue segmentation
+	      from imperfect labeling. IJCNN 2017
+	    </div>
+	  </section>
+
+
+	  <section>
+	    <h2>Meshnet</h2>
+
+	    <img src="figures_ccd/mntable.png" style="border:0; box-shadow: 0px
+						      0px
+					              0px   rgba(150,   150,   255,
+					              0.8);float:           right;"
+		 alt="Websocket" width="60%" >
+
+	    <div>
+	      <ul style="width: 30%; float: left;
+			 font-size:30px;">
+		<li>72516 vs. 23523355</li>
+		<li>600kb vs. 2Gb</li>
+	      </ul>
+	    </div>
+
+	    <p>
+	      <br>
+
+              <div class='slide-footer' style="text-align: left;">
+		Fedorov et al. End-to-end learning of brain tissue segmentation
+		from imperfect labeling. IJCNN 2017
+	      </div>
+	  </section>
+
+	  <section>
+            <h3>an easy segmentation model</h3>
+	    <div class="ulist">
+	      <ul style="width: 60%; float:
+                         center;">
+		<li>compact and portable</li>
+		<li>universal and adaptable</li>
+		<li>code:
+		  <a href="https://github.com/Entodi/MeshNet">
+		    https://github.com/Entodi/MeshNet</a>
+		</li>
+                <li>It runs in browser!!!:
+		  <a href="https://neuroneural.github.io/brainchop/FullVolumeInference/">
+		    brainchop.org</a>
+		</li>
+
+	      </ul>
+	    </div>
+          </section>
+          
+	  <section data-background-iframe="figures/brainchop_1.3.mp4">
+            <div id="header-left" style="margin-left: -200px; margin-top: -400px">
+              <img src="figures/MohamedMasoud.png" alt="Mohamed Masoud" style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1); margin-bottom: -5%" width="160px" >
+              <div style="font-size:10pt;">Mahfuz Rahman</div>
+            </div>            
+            <div id="header-right" style="right: -21%; margin-top: -40%; z-index: 1500;">
+              <img width="200px" style="margin-bottom: -5%;"
+                   src="figures/Farfalla.png" alt="Farfalla"><br>
+              <small>Farfalla Hu</small>
+            </div>            
+	  </section>
+
+
+          <section>
+            <div id="header-right" style="right: -21%; z-index: 1500;">
+                    <img width="200px" style="margin-bottom: -5%;"
+                         src="figures/WilliamAshbee.png" alt="Will"><br>
+                    <small>Will Ashbee</small>
+            </div>
+            <h3>Surface generation (WIP)</h3>
+            <img class="stretch" style="border:0; box-shadow: 0px 0px 0px
+                                        rgba(150, 150, 255, 0.8);" width="700"
+                 src="figures/FS_triangulation.png" alt="loop">
+          </section>
+
+	</section>
+
+
+        <section>
+          <section>
+            <h2>Causal learning</h2>
+            <div class='footer'>
+              <img style="position:fixed; bottom=0; width=100%; box-shadow: 0px 0px 0px
+                          rgba(150, 150, 255,0.8);
+                          border:0;"
+                   src="figures_ccd/undersampling_coauthors.jpg"
+                   alt="coauthors">
+
+            </div>
+          </section>
+
+	  <section>
+	    <h3>Multimodal Causal Learning?</h3>
+	    <img width="260" class="stretch"
+		 src="figures_ccd/jointgraph.png" alt="latent">
+	    <p><br>
+              <div class='slide-footer' style="text-align: left;">
+		Danks D, Glymour C, Tillman RE. Integrating locally
+		learned causal structures with overlapping
+		variables. NIPS 2009
+	      </div>
+	  </section>
+
+	  <section>
+	    <h3>are they even compatible!?</h3>
+	    <img style="border:0; box-shadow: 0px 0px 0px
+			rgba(150, 150, 255, 0.8);"
+		 width="250" class="stretch"
+		 src="figures_ccd/M87174327.png" alt="latent">
+	    <p><br>
+              <div class='slide-footer' style="text-align: left;">
+		Plis et  al. Effective connectivity  analysis of
+		fMRI  and  MEG  data collected  under  identical
+		paradigms.    Computers     in    biology    and
+		medicine. 2011
+	      </div>
+	  </section>
+
+	  <section>
+	    <h3>the situation</h3>
+	    Causal timescale $\ne$ Measurement timescale
+	    <br>
+	    <div style="width:800px;margin-left:auto;margin-right:auto;">
+	      <div style="float:left; width:200 px"></div>
+	      <div style="float:left; width:250 px">
+		<img style="border:0; box-shadow: 0px 0px 0px
+			    rgba(150, 150, 255, 0.8);" width="250"
+		     src="figures_ccd/neuron.png" alt="neuron">
+		<br>
+		$\approx100ms$
+	      </div>
+	      <div style="float:left; width:250 px">
+		<img style="border:0; box-shadow: 0px 0px 0px
+			    rgba(150, 150, 255, 0.8);" width="250"
+		     src="figures_ccd/brainnet.png" alt="brain">
+		<br>
+		$???$
+	      </div>
+	      <div style="float:left; width:250 px">
+		<img style="border:0; box-shadow: 0px 0px 0px
+			    rgba(150, 150, 255, 0.8);" width="250"
+		     src="figures_ccd/fmri.png" alt="fmri">
+		<br>
+		$\approx2s$
+	      </div>
+
+	      <div style="clear:both"></div>
+	    </div>
+	    <br>
+	    What causal inferences can be made in this situation?
+	  </section>
+
+	  <section>
+	    <h3>two challenges</h3>
+	    <ol>
+	      <li            style="text-align:left"><b>Forwards
+		  inference</b>: Given a  causal structure at causal
+		timescale,  what  is   the  implied  structure  at
+		(undersampled) measurement timescale?  </li>
+	      <li           style="text-align:left"><b>Backwards
+		  inference</b>: Given inferred  causal structure at
+		measurement      timescale      (with      unknown
+		undersampling),   what    structures   at   causal
+		timescale are possible?</li>
+	    </ol>
+	  </section>
+	  <section>
+	    <h1>Forward problem</h1>
+	    <p><br>
+              <div class='slide-footer' style="text-align: left;">
+		Danks, D. and Plis, S. Learning causal structure
+		from undersampled time series. NIPS workshop 2013
+	      </div>
+	  </section>
+
+	  <section>
+	    <h3>representation</h3>
+	    <ul>
+	      <li>Dynamic Bayesian Network (DBN)
+		<ul>
+		  <li> causally sufficient
+		  <li> first order Markov
+		  <li> no isochronal edges</li>
+		</ul>
+	      </li>
+	    </ul>
+            <img class="stretch" style="border:0; box-shadow: 0px 0px 0px
+					rgba(150, 150, 255, 0.8);" width="800"
+		 src="figures_ccd/dbn_example.png" alt="loop">
+	  </section>
+	  <section>
+	    <h3>undersampling effect</h3>
+            <img class="stretch" style="border:0; box-shadow: 0px 0px 0px
+					rgba(150, 150, 255,
+					0.8);"
+		 width="800"
+		 src="figures_ccd/undersamplingDBN.png" alt="loop">
+	  </section>
+	  <section>
+	    <h3>(better) representation</h3>
+	    <div style="width:800
+			px;margin-left:auto;margin-right:auto;">
+	      <div style="float:left; width:350 px">
+		<img style="border:0; box-shadow: 0px 0px 0px
+			    rgba(150, 150, 255, 0.8);" width="350"
+		     src="figures_ccd/cg.png" alt="david">
+	      </div>
+	      <div style="float:left; width:100 px">
+		<p><p><p><p>
+		  undersample
+	      </div>
+	      <div style="float:left; width:350 px">
+		<img style="border:0; box-shadow: 0px 0px 0px
+			    rgba(150, 150, 255, 0.8);" width="350"
+		     src="figures_ccd/cgu.png" alt="justin">
+	      </div>
+
+					<div style="clear:both"></div>
+				  </div>
+				</section>
+				<section>
+				  <h3>simple loops</h3>
+				  <img class="reveal" style="border:0; box-shadow: 0px 0px 0px
+							  rgba(150,            150,           255,
+					   0.8);margin-left:auto;margin-right:auto;"
+					   width="800"        src="figures_ccd/simple_loops.png"
+					   alt="loop">
+				</section>
+				<section>
+				  <h3>specific behavior: DAG</h3>
+				  <img class="reveal" style="border:0; box-shadow: 0px 0px 0px
+							  rgba(150,            150,           255,
+					   0.8);margin-left:auto;margin-right:auto;"
+					   width="800"        src="figures_ccd/dissolving.png"
+					   alt="loop">
+				  <br>
+				  <img class="reveal" style="border:0; box-shadow: 0px 0px 0px
+							  rgba(150,            150,           255,
+					   0.8);margin-left:auto;margin-right:auto;"
+					   width="800"        src="figures_ccd/bidissolve.png"
+					   alt="loop">
+				</section>
+				<section>
+				  <h3>Specific behavior: Superclique SCC</h3>
+					  <img class="stretch" style="border:0; box-shadow: 0px 0px 0px
+								  rgba(150, 150, 255,
+						   0.8);margin-left:auto;margin-right:auto;"
+						   width="800" src="figures_ccd/convergence.png"
+						   alt="loop">
+				</section>
+				<section>
+				  <h3>Specific behavior: Oscillating SCC</h3>
+					  <img class="stretch" style="border:0; box-shadow: 0px 0px 0px
+								  rgba(150,          150,         255,
+						   0.8);margin-left:auto;margin-right:auto;"
+						   width="800"     src="figures_ccd/oscillate.png"
+						   alt="loop">
+				</section>
+				<section>
+				  <h2>known undersampling rate</h2>
+				  <p><br>
+				  <div class="footer">
+					Plis S, Danks D, Yang J. Mesochronal structure
+					learning. UAI 2015
+				  </div>
+				</section>
+
+				<section data-background-transition="zoom">
+				<h3>Virtual nodes</h3>
+                <img class="stretch" style="border:0; box-shadow: 0px 0px 0px
+							rgba(150, 150, 255, 0.8);" width="800"
+					 src="figures_ccd/edge_merging_table.png" alt="loop">
+				</section>
+
+				<section>
+				  <h4>Conflict persistence</h4>
+				  <div class="lemma"
+					   style="font-style:italic;text-align:justify">
+					conflicts persist
+				  </div>
+				  <div class="corollary">
+					${\cal{G}}^1 \text{ conflicts  with } {\cal{H}}^u
+					\implies \forall {\cal G} \supseteq {\cal G}^1
+					\: {\cal{G}} \text{ conflicts
+				  with } {\cal{H}}^u$
+				  </div>
+				</section>
+
+				<section>
+				<h3>Search Tree</h3>
+                <img class="stretch" style="border:0; box-shadow: 0px 0px 0px
+							rgba(150, 150, 255, 0.8);" width="800"
+					 src="figures_ccd/edge_merging_tree.png" alt="loop">
+
+				</section>
+				<section>
+
+				    The MSL  algorithm is correct and  complete
+
+				  <p><p><p>
+					 <div class="fragment" data-fragment-index="1"
+					style="text-align: center;color: #990000;">
+					 Unfortunately it is slow </div>
+				</section>
+				<section>
+					<img class="stretch"  style="border:0; box-shadow:
+							0px  0px 0px  rgba(150,  150, 255,  0.8);"
+							src="figures_ccd/edge_merging.png"  border="0"
+							width="800" alt="Brain MRIs" />
+				</section>
+				<section>
+				  <h3>computational complexity</h3>
+				  <ul>
+					  <li> $\{ m_1  ,  \dots ,  m_l \}$  -  the sets  of
+					  virtual  node identifications  for  each of  the
+					  edges or edge-pairs	<!-- .element: class="fragment" data-fragment-index="1" -->
+					  <li>  $\prod_i^{l}  \text{len}(m_i)$ - computational
+					  complexity of using edge-pairs <!-- .element: class="fragment" data-fragment-index="2" -->
+					  <li> $\text{len}$ -  the number
+					  of possible identifications for that particular edge
+					  or  edge-pair
+					  <li>  Computational   advantage,  expressed   as  a
+					  log-ratio:     $$    \log{r}     =    \sum_i^{l}
+					  \log{\text{len}(m_i)} - e\log{n}.  $$
+					  </ul>
+				</section>
+
+			  <section>
+                <img class="stretch" style="border:0; box-shadow: 0px 0px 0px
+							rgba(150, 150, 255, 0.8);" width="800"
+					 src="figures_ccd/nods.png" alt="loop">
+			  </section>
+
+			  <section>
+				<h3>still not fast enough</h3>
+				<ul>
+				  <li> pre-computed $O(n^2)$  pruning data-structure
+				  <li> employed additional constraints and observations
+				</ul>
+			  </section>
+
+
+			  <section>
+                <img class="stretch" style="border:0; box-shadow: 0px
+											0px 0px
+							rgba(150,  150,  255,  0.8);"  width="800"
+					 src="figures_ccd/runtime_demo.png" alt="loop">
+			  </section>
+
+				<section>
+				  <h3>6-node graphs</h3>
+				  <img class="stretch" style="border:0; box-shadow:
+											  0px 0px 0px
+											  rgba(150,    150,   255,
+					   0.8);"  width="800"  src="figures_ccd/6nodes_eq.png"
+					   alt="loop">
+				</section>
+
+				<section>
+				  <h2>unknown undersampling rate</h2>
+				  <p><br>
+				  <div class="footer">
+				  Plis S, Danks D, Freeman C, Calhoun V. Rate-agnostic
+				  (causal) structure learning. NIPS 2015
+				  </div>
+				</section>
+
+				<section>
+				  <div class="theorem"
+					   style="font-style:italic;text-align:justify">
+					If ${\cal G}^{1} \subseteq {\cal{J}}^1$, then $\forall
+					u [ {\cal G}^{u} \subseteq {\cal{J}}^u]$.
+				  </div>
+				  <div class="corollary"
+					   style="font-style:italic;text-align:justify">
+					  If ${\cal G}^{u} \nsubseteq {\cal H}$, then $\forall
+					  {\bf E} [ ( {\cal G}^{1}_{\bf E} )^u \nsubseteq {\cal
+					  H} ]$
+				  </div>
+				  <div class="corollary"
+					   style="font-style:italic;text-align:justify"> If
+					   $\forall u [ {\cal G}^{u} \nsubseteq {\cal H} ]$,
+					   then $\forall {\bf E}, u [ ( {\cal G}^{1}_{\bf E}
+					   )^u \nsubseteq {\cal H} ]$
+				  </div>
+				</section>
+
+				<section data-background="figures_ccd/rasl1.png"
+						 data-background-transition="zoom"
+						 data-background-size="contain">
+				</section>
+
+				<section data-background="figures_ccd/rasl_timing.png"
+						 data-background-transition="zoom"
+						 data-background-size="contain">
+				</section>
+
+				<section data-background="figures/6nodes_dens_u.svg"
+						 data-background-transition="zoom"
+						 data-background-size="contain">
+				</section>
+
+				<section>
+				  <h3>Answer Set Programming</h3>
+				  https://gitlab.com/undersampling/gunfolds
+				  <img class="stretch" style="border:0; box-shadow:
+											  0px 0px 0px
+											  rgba(150,    150,   255,
+					   0.8);"  width="900"  src="figures_ccd/clingo.png"
+					   alt="loop">
+				</section>
+				<section data-background="figures_ccd/ASP.png"
+						 data-background-transition="zoom"
+						 data-background-size="contain">
+				  <p>
+				  <p>
+				  <p>
+				  <p>
+				  <p>
+				  <p>
+				  <span class="footer" style="position:fixed;font-size:13px">
+					Hyttinen et al. A constraint optimization approach
+					to  causal discovery  from subsampled  time series
+					data.   International   Journal   of   Approximate
+					Reasoning. 2017
+				  </span>
+				</section>
+
+                                <section data-background="figures/6nodes_last_V4.svg"
+						 data-background-transition="zoom"
+						 data-background-size="contain">
+				</section>
+
+                                <section data-background="figures/figure5_V5.png"
+						 data-background-transition="zoom"
+						 data-background-size="contain">
+				</section>
+
+                          </section>
+
+
+			  <section>
+				<section>
+				  <h1>collaborate</h1>
+				  <h3>eat the cake and have it too</h3>
+				  <h4>with (statistical) guarantees</h4>
+				</section>
+
+				<!-- {{{ pros -->
+
+				<section>
+				  <h2>Data sharing</h2>
+				  <h3>what does it improve</h3>
+				  <ul>
+				  <li class="fragment roll-in"> <em>effective sample size</em> </li>
+				  <li class="fragment roll-in"> <em>diversity</em> </li>
+				  <li class="fragment roll-in"> <em>generalization</em></li>
+				  </ul>
+				</section>
+
+				<!-- }}} -->
+				<!-- {{{ cons -->
+
+				<section>
+				  <h2>Data sharing</h2>
+				  <h3>what does it not</h3>
+				  <ul>
+				  <li class="fragment roll-in"> problems of motivation
+				  </li>
+				  <li class="fragment roll-in"> ethical and legal  issues</li>
+				  <li class="fragment roll-in"> protecting the  trust</li>
+				  <li class="fragment roll-in"> technical or administrative issues</li>
+				  </ul>
+				</section>
+
+				<!-- }}} -->
+				<!-- {{{ ENIGMA -->
+
+				<!-- }}} -->
+				<!-- {{{ diff privacy -->
+
+				<section>
+				  <h2>$\epsilon$-differential privacy</h2>
+				  <ul>
+					<li> property of an algorithm
+					<li> applied to functions of the data
+					<li> quantifies risk
+					<li> bounds likelihood of re-inference
+					<li> adds noise
+				  </ul>
+				</section>
+
+				<!-- }}} -->
+				<!-- {{{ mean age-->
+
+				<section>
+				  <h1>an example</h1>
+				</section>
+
+				<!-- }}} -->
+				<!-- {{{ -->
+
+				<section>
+				  <h2>Distributed private classifier</h2>
+				  <img class="stretch" style="border:0; box-shadow: 0px 0px 0px
+											  rgba(150, 150, 255,
+					   0.8);" width="700"
+					   src="figures_ccd/classifier.png"
+					   alt="dpSVM">
+
+                                  <div class="footer" style="position:fixed;">
+
+					Sarwate,  A.,  Plis,  S.    et  al.  Frontiers  in
+					neuroinformatics, 2014
+                                        <br>Xie, L., Plis, S. and
+                                        Sarwate, A.D., ICASSP 2016
+				  </div>
+				</section>
+
+                                                                <section>
+                                  <h3>Decentralized algorithm
+                                    development</h3>
+                                  <dl style="list-style-type: square;
+						   list-style-position: inside;
+						   font-size:18px;">
+                                    <dd>A. D. Sarwate et al., "Sharing privacy-sensitive access to neuroimaging and genetics data: a review and preliminary validation," Front Neuroinform, vol. 8, p. 35, 2014.</dd>
+                                    <dd>Xie L, Plis S, Sarwate AD. Data-weighted ensemble learning for privacy-preserving distributed learning. In2016 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP) 2016 Mar 20 (pp. 2309-2313). IEEE.</dd>
+                                    <dd></dd>
+
+                                  </dl>
+                                </section>
+
+				<section>
+				  <h2>Decentralized ICA</h2>
+				  <img class="stretch" style="border:0; box-shadow: 0px 0px 0px
+											  rgba(150, 150, 255,
+					   0.8);" width="700"
+					   src="figures_ccd/djICA.png"
+					   alt="djICA">
+
+				  <div class="footer" style="position:fixed;">
+					  B.  T.   Baker, R.  F.  Silva,  V. D.  Calhoun, A.   D. Sarwate, and
+					  S. M. Plis "Large  Scale Collaboration With Autonomy: Decentralized
+					  Data ICA" MLSP, 2015
+                                          <br>Baker,  B.T., Abrol,  A.,
+                                          Silva,  R.F., Damaraju,  E.,
+                                          Sarwate,    A.D.,   Calhoun,
+                                          V.D.    and   Plis,    S.M.,
+                                          "Decentralized temporal
+                                          independent        component
+                                          analysis:   Leveraging  fMRI
+                                          data     in    collaborative
+                                          settings"  NeuroImage 2019
+				  </div>
+				</section>
+				<section>
+				  <h2>The tool</h2>
+				  <img class="stretch" style="border:0; box-shadow: 0px 0px 0px
+											  rgba(150, 150, 255,
+					   0.8);" width="700"
+					   src="figures_ccd/COINSTAC.png"
+					   alt="loop">
+
+				</section>
+
+				<!-- }}} -->
+
+                                <section>
+                                  <h3>Decentralized algorithm
+                                    development</h3>
+                                  <dl style="list-style-type: square;
+						   list-style-position: inside;
+						   font-size:18px;">
+                                    <dt>(Ridge) Regression, closed form regression (freesurfer/VBM/etc)</dt>
+<dd>S. Plis et al, "COINSTAC: A privacy enabled model and prototype for leveraging and processing decentralized brain imaging data," Frontiers in Neuroinformatics, 2016.</dd>
+<dt>Independent vector analysis (dIVA)</dt>
+<dd>Nikolas Wojtalewicz, Rogers Silva, Vince D. Calhoun, Anand D. Sarwate, Sergey Plis, "Decentralized Independent Vector Analysis" ICASSP 2017</dd>
+<dt>Neural network (ICA/deep learning)</dt>
+<dd>Noah Lewis, Sergey Plis and Vince Calhoun, "Cooperative Learning: Decentralized Data Neural Network" IJCNN 2017.</dd>
+<dt>Decentralized stochastic neighbor embedding (dSNE)</dt>
+<dd>D. Saha et al, "See without looking: joint visualization of sensitive multi-site datasets," in International Joint Conference on Artificial Intelligence Melbourne, Australia, 2017.</dd>
+<dt>Joint independent component analysis</dt>
+<dd>B. Baker et al, "Large scale collaboration with autonomy: decentralized data ICA," in IEEE Machine Learning for Signal Processing Workshop, Boston, MA, 2015.</dd>
+<dt>Group ICA/dynamic FNC</dt>
+<dd>H. Gazula, B. Baker, E. Damaraju, S. M. Plis, S. Panta, R. Silva, and V. D. Calhoun, "Decentralized Analysis of Brain Imaging Data: Voxel-based Morphometry and Dynamic Functional Network Connectivity," Frontiers in Neuroinformatics, in press</dd>
+<dt>Support vector machine</dt>
+<dd>A. D. Sarwate et al., "Sharing privacy-sensitive access to neuroimaging and genetics data: a review and preliminary validation," Front Neuroinform, vol. 8, p. 35, 2014.</dd>
+
+                                  </dl>
+                                </section>
+
+
+                                <section>
+
+                                </section>
+			  </section>
+
+                          <section>
+                            <section>
+                              <h2>Team that's working on this</h2>
+                              <img class="stretch" style="border:0; box-shadow: 0px 0px 0px
+							  rgba(150, 150, 255, 0.8);" width="800"
+				   src="figures/the_team.svg" alt="loop">
+			    </section>
+
+                          </section>
+			  <section>
+				<h3>Take Home Points</h3>
+				<ul  data-fragment-index="0">
+				  <li class="fragment"
+				  data-fragment-index="1"
+				  >Understanding brain can help us
+				  build AI and help us</li>
+				  <li class="fragment"
+				  data-fragment-index="2">We need
+				  deep learning for pattern recognition</li>
+				  <li class="fragment"
+				  data-fragment-index="3">We need
+				  causal learning to learn meaning</li>
+				  <li class="fragment"
+				  data-fragment-index="4">We need
+				    data for all of this</li>
+				</ul>
+                          </section>
+			  <section>
+				<h1>Thank you!</h1>
+				<p>
+				<p>
+				<p>
+				<p>
+			<img class="stretch" style="border:0;
+                                                    box-shadow: 0px
+                                                    0px 0px;
+						    " width="300" src="figures/trends_logo.png"
+			     alt="logo">
+			  </section>
+
+
+              </div>
+
+            </div>
+
+            <script src="dist/reveal.js"></script>
+
+            <link rel="stylesheet" href="plugin/highlight/monokai.css">
+            <script src="plugin/highlight/highlight.js"></script>
+            <script src="plugin/math/math.js"></script>
+            <script src="plugin/chalkboard/plugin.js"></script>
+            <script src="plugin/notes/notes.js"></script>
+            <script src="plugin/zoom/zoom.js"></script>
+            <script src="plugin/fullscreen/fullscreen.js"></script>
+            <script src="node_modules/reveal.js-menu/menu.js"></script>
+            <script src="node_modules/reveal.js-verticator/plugin/verticator/verticator.js"></script>
+            <link rel="stylesheet" href="node_modules/reveal.js-verticator/plugin/verticator/verticator.css">
+            <script>
+              // Full list of configuration options available at:
+              // https://github.com/hakimel/reveal.js#configuration
+
+              Reveal.initialize({
+                  // history: true,
+                  hash: true,
+                  margin: 0.01,
+                  minScale: 0.01,
+                  maxScale: 1.23,
+                  center: true,
+
+                  controls: false,
+                  keyboard: true,
+
+                  overview: true,
+                  transition: 'slide', // Transition style: none/fade/slide/convex/concave/zoom
+                  transitionSpeed: 'slow', // Transition speed: default/fast/slow
+                  menu: {
+                      themes: false,
+                      openSlideNumber: true,
+                      openButton: false,
+                  },
+
+                  chalkboard: {
+                      boardmarkerWidth: 1,
+                      chalkWidth: 2,
+                      chalkEffect: 1,
+                      toggleNotesButton: false,
+                      toggleChalkboardButton: false,
+                      slideWidth: Reveal.width,
+                      slideHeight: Reveal.height,
+                      // src: "chalkboards/chalkboard_em2.json",
+                      readOnly: false,
+                      theme: "blackboard",
+                      eraser: { src: "plugin/chalkboard/img/sponge.png", radius: 30},
+                  },
+
+                  math: {
+                      mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
+                      config: 'TeX-AMS_SVG-full',
+                      // pass other options into `MathJax.Hub.Config()`
+                      TeX: {
+                          Macros: {
+        	              RR: '\\mathbb{R}',
+        	              PP: '\\mathbb{P}',
+        	              EE: '\\mathbb{E}',
+        	              NN: '\\mathbb{N}',
+        	              vth: '\\vec{\\theta}',
+                              loss: '{\\cal l}',
+                              hclass: '{\\cal H}',
+                              CD: '{\\cal D}',
+                              def: '\\stackrel{\\text{def}}{=}',
+                              pag: ['\\text{pa}_{{\cal G}^{#1}}(#2)}', 2],
+                              vec: ['\\boldsymbol{\\mathbf #1}', 1],
+        	              set: [ '\\left\\{#1 \\; : \\; #2\\right\\}', 2 ],
+                              bm: ['\\boldsymbol{\\mathbf #1}', 1],
+                              argmin: ['\\operatorname\{arg\\,min\\,\}'],
+                              argmax: ['\\operatorname\{arg\\,max\\,\}'],
+                              prob: ["\\mbox{#1$\\left(#2\\right)$}", 2],
+                          },
+                          loader: {load: ['[tex]/color']},
+                          extensions: ["color.js"],
+                          tex: {packages: {'[+]': ['color']}},
+                          svg: {
+                              fontCache: 'global'
+                          }
+                      }
+                  },
+
+                  plugins: [ Verticator, RevealMath, RevealChalkboard, RevealHighlight, RevealNotes, RevealZoom, RevealMenu ],
+
+              });
+
+              Reveal.configure({ fragments: true }); // set false when developing to see everything at once
+              Reveal.configure({ slideNumber: true });
+              //Reveal.configure({ history: true });
+              Reveal.configure({ slideNumber: 'c / t' });
+              Reveal.addEventListener( 'darkside', function() {
+                  document.getElementById('theme').setAttribute('href','dist/theme/aml_dark.css');
+              }, false );
+              Reveal.addEventListener( 'brightside', function() {
+                  document.getElementById('theme').setAttribute('href','dist/theme/aml.css');
+              }, false );
+
+            </script>
+
+            <style type="text/css">
+              /* 1. Style header/footer <div> so they are positioned as desired. */
+              #header-left {
+                  position: absolute;
+                  top: 0%;
+                  left: 0%;
+              }
+              #header-right {
+                  position: absolute;
+                  top: 0%;
+                  right: 0%;
+              }
+              #footer-left {
+                  position: absolute;
+                  bottom: 0%;
+                  left: 0%;
+              }
+            </style>
+
+            <!-- // 2. Create hidden header/footer -->
+            <div id="hidden" style="display:none;">
+              <div id="header">
+                <div id="header-left"><h4>CS8900/9900</h4></div>
+                <div id="header-right"><h4>CS Seminar</h4></div>
+                <div id="footer-left">
+                </div>
+              </div>
+            </div>
+
+
+            <script type="text/javascript">
+              // 3. On Reveal.js ready event, copy header/footer <div> into each `.slide-background` <div>
+              var header = $('#header').html();
+              if ( window.location.search.match( /print-pdf/gi ) ) {
+                  Reveal.addEventListener( 'ready', function( event ) {
+                      $('.slide-background').append(header);
+                  });
+              }
+              else {
+                  $('div.reveal').append(header);
+              }
+            </script>
+
+  </body>
+</html>
