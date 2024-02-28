@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <!-- <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/> -->
+
+    <script src="lib/colorbrewer.v1.min.js" charset="utf-8"></script>
+    <script src="lib/colorStringStandalone.js" charset="utf-8"></script>
+    <script type="text/javascript" src="lib/jquery-2.2.4.min.js"></script>
+
+    <title>Advanced Machine Learning</title>
+
+    <meta name="description" content="CS8850 GSU class">
+    <meta name="author" content="Sergey M Plis">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+    <!-- <link rel="stylesheet" href="lib/css/zenburn.css"> -->
+    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="dist/theme/aml.css" id="theme">
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.scss';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+  </head>
+
+
+  <body>
+    <div class="reveal">
+      <!-- In between the <div="reveal"> and the <div class="slides">-->
+          <!-- <header style="position: absolute; top: 10px; left: 100px; z-index: 500; font-size:100px;background-color: rgba(0,0,0,0); text-align: center !important"></header>  -->
+          <!-- In between the <div="reveal"> and the <div class="slides">-->
+              <!-- Any section element inside of this container is displayed as a slide -->
+              <div class="slides">
+
+	        <section>
+	          <section>
+	            <p>
+	              <h2>Machine Learning Capabilities of TReNDS Center:</h2>
+                      <h3><em>From Neuroimaging to Space</em>
+                      </h3>
+                      <h3>Sergey Plis</h3>
+                      <h4><em>Director of Machine Learning Core</em></h4>
+                      <h4><em>Associate Professor at CS Department</em></h4>
+	            <p>
+	          </section>
+                </section>
+
+	        <section>
+	          <section>
+                    <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="1000"
+                         src="figures/TReNDS_logo.svg" class="bordered" alt="TReNDS logo"><br>
+                    A partnership between Georgia State University, Georgia Institute of Technology, and Emory University
+
+	          </section>
+
+                  <section data-state="brightside">
+                    <h2>Tri-institutional center</h2>
+                    <ul style="font-size: 36px;">
+                      <li class="fragment roll-in"> Founded in 2019
+                      <li class="fragment roll-in"> Employ >100 researchers
+                      <li class="fragment roll-in"> Including GRAs from GSU/GT/Emory
+                      <li class="fragment roll-in"> Publishing >120 journal papers a year
+                      <li class="fragment roll-in"> Publishing >100 conference papers a year
+                      <li class="fragment roll-in"> >15 PIs submitting proposals
+                      <li class="fragment roll-in"> ~50 proposals submitted a year
+                      <li class="fragment roll-in"> Annual burn rate ~$7M
+	            </ul>
+                    <div class="slide-footer"><a href="trendscenter.org">trendscenter.org
+                    </a></div>
+	          </section>
+
+                  <section data-state="brightside">
+                    <h2>TReNDS guiding principles</h2>
+                    <ul style="font-size: 28px;">
+                      <li class="fragment roll-in"> <span style="color: rgb(241, 180, 25); text-shadow: 1px 1px 1px #002b36;">From data to knowledge:</span> we use data-driven approaches to inform theory and vice versa
+                      <li class="fragment roll-in"> <span style="color: rgb(102, 255, 51); text-shadow: 1px 1px 1px #002b36;">Creation of new approaches and tools:</span> we draw upon engineering and computer science principles to develop new algorithms to extract the maximal information possible from the available data
+                      <li class="fragment roll-in"> <span style="color: rgb(105, 213, 222); text-shadow: 1px 1px 1px #002b36;">No data left unused:</span> we work to effectively utilize available data to help point us in the right direction for future studies
+                      <li class="fragment roll-in"> <span style="color: rgb(238, 146, 150); text-shadow: 1px 1px 1px #002b36;">Collaboration:</span> we believe a highly collaborative & interdisciplinary environment is necessary to solve the hard problems we are facing today
+                      <li class="fragment roll-in"> <span style="color: rgb(255, 255, 0); text-shadow: 1px 1px 1px #002b36;">Training:</span> dissemination of knowledge is critical to advancing our understanding of the brain
+                      <li class="fragment roll-in"> <span style="color: rgb(255, 139, 255); text-shadow: 1px 1px 1px #002b36;">Application:</span> we desire to apply the approaches to address key challenges
+                      <li class="fragment roll-in"> <span style="color: rgb(255, 102, 0); text-shadow: 1px 1px 1px #002b36;">Translation:</span> We recognize the importance of tech transfer efforts
+	            </ul>
+                    <div class="slide-footer"><a href="trendscenter.org">trendscenter.org
+                    </a></div>
+	          </section>
+
+                  <section data-state="brightside">
+                    <h2>Partnerships</h2>
+                    <row>
+                      <col50>
+                    <ul style="font-size: 32px;">
+                      <li class="fragment roll-in"> GSU
+                        <ul style="font-size: 24px;">
+                          <li class="fragment roll-in"> Psychology, CS, Neuroscience, Physics, Math, Business, Nursing, Public Health
+                        <li class="fragment roll-in"> Undergraduate/graduate training, programs for integrating research and education
+                        <li class="fragment roll-in"> Interdisciplinary imaging hub
+                        </ul>
+                      <li class="fragment roll-in"> GATech
+                        <ul style="font-size: 24px;">
+                        <li class="fragment roll-in"> ECE, CSE, BME, Psychology
+                        <li class="fragment roll-in"> GTNeuro
+                        <li class="fragment roll-in"> GTRI
+                        </ul>
+                      <li class="fragment roll-in"> Emory
+                        <ul style="font-size: 24px;">
+                          <li class="fragment roll-in"> Psychiatry, Neurology, Psychology, Radiology
+                          <li class="fragment roll-in"> Brain Health Personalized Medicine Institute
+                          <li class="fragment roll-in"> Markus Autism Center
+                        </ul>
+	            </ul>
+                      </col50>
+                      <col50>
+                        <ul style="font-size: 30px;">
+                          <li class="fragment roll-in"> Morehouse Medical
+                          <li class="fragment roll-in"> UT Dallas Center for BrainHealth & Brain Performance Institute
+
+                          <li class="fragment roll-in"> The Mind Research Network
+                          <li class="fragment roll-in"> The Child Mind Institute
+                          <li class="fragment roll-in"> Rutgers University
+                          <li class="fragment roll-in"> Erasmus University
+                          <li class="fragment roll-in"> Martinos Center/MIT
+                          <li class="fragment roll-in"> Hartford Hospital
+                          <li class="fragment roll-in"> Yale University
+                          <li class="fragment roll-in"> Johns Hopkins Medical Institutions
+                          <li class="fragment roll-in"> University of California San Diego
+                          <li class="fragment roll-in"> And many more ...
+	                </ul>
+                      </col50>
+                    </row>
+
+	          </section>
+
+                  <section data-state="brightside">
+                    <h2>Outreach (funded by NFS)</h2>
+                    <ul style="font-size: 36px;">
+                      <li class="fragment roll-in"> Atlanta Science Festival Exploration Expo exhibitor
+                      <li class="fragment roll-in"> BRAINS! Center for Advanced Brain Imaging open house
+                      <li class="fragment roll-in"> Sponsored the Innovative Methodology and Diversity, Equity, & Inclusion awards at CABI Callosum
+                      <li class="fragment roll-in"> Sponsored the Neuroimaging in Aging Award at the GSU Aging Conference
+                      <li class="fragment roll-in"> Build-A-Brain at Drew Charter School
+                      <li class="fragment roll-in"> Virtual Neuroimaging info session with Q&A
+                      <li class="fragment roll-in"> MIND'S EYE: Student art competition at Drew Charter School
+                      <li class="fragment roll-in"> Atlanta Brain Awareness Campaign participants
+                      <li class="fragment roll-in"> Paideia School CABI field trip
+	            </ul>
+	          </section>
+
+                  <section  data-state="brightside">
+                    <h2>just my tiny team</h2>
+                    <img class="stretch" style="border:0; box-shadow: 0px 0px 0px
+                                                rgba(150, 150, 255, 0.8);" width="800"
+                         src="figures/the_team23.svg" alt="loop">
+                    3 postdocs, 14 PhD (5 of which recently defended), 5 MS, 4 undergrads, 1 volunteer
+                  </section>
+
+	          <section data-state="darkside">
+                    <h2>Brain Imaging: MRI</h2>
+                    <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="1000"
+                         src="figures/Head_mri_animation.gif" class="bordered" alt="mri">
+	          </section>
+
+                  <section data-state="darkside">
+                    <h2>Brain Imaging: fMRI</h2>
+                    <video data-autoplay src="figures/rsfmri.mp4"></video>
+	          </section>
+
+                  <section data-state="brightside">
+                    <h2>Other data types</h2>
+                    <ul>
+                      <li class="fragment roll-in"> Diffusion tensor imaging
+                      <li class="fragment roll-in"> Magneto Encephalography
+                      <li class="fragment roll-in"> Electro Encephalography
+                      <li class="fragment roll-in"> Genomics data
+                      <li class="fragment roll-in"> Computerized tomography
+                      <li class="fragment roll-in"> and more
+	            </ul>
+	          </section>
+
+                  <section data-vertical-align-top data-background="figures/data_deluge.png" data-background-size="contain">
+                    <h2 style="text-shadow: 4px 4px 4px #002b36; color: #93a1a1">Over 200,000 brain scans</h2>
+	          </section>
+
+                  <section>
+                    <h1>Data-driven methods</h1>
+                    <h2>machine learning</h2>
+                    <h2>artificial intelligence</h2>
+	          </section>
+
+                  <section>
+                    <h2>Independent Component analysis</h2>
+                    <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="650"
+                         src="figures/ica_components.png" class="bordered" alt="ica components">
+	          </section>
+
+                  <section>
+                    <h2>Population Analysis</h2>
+                    <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="650"
+                         src="figures/tsne.png" class="bordered" alt="tsne">
+	          </section>
+
+                  <section>
+                    <img class="stretch" style="border:0; box-shadow: 0px 0px 0px
+                                                rgba(150, 150, 255, 0.8);" width="250"
+                         src="figures/tasks.png" alt="david">
+                  </section>
+
+
+                  <section>
+                    <h3>Causal Discovery</h3>
+                    <h3>Causal timescale $\ne$ Measurement timescale</h3>
+                    <br>
+                    <div style="width:800px;margin-left:auto;margin-right:auto;">
+                      <div style="float:left; width:200 px"></div>
+                      <div style="float:left; width:250 px">
+                        <img style="border:0; box-shadow: 0px 0px 0px
+                                    rgba(150, 150, 255, 0.8);" width="250"
+                             src="figures/neuron.png" alt="neuron">
+                        <br>
+                        $\approx100ms$
+                      </div>
+                      <div style="float:left; width:250 px">
+                        <img style="border:0; box-shadow: 0px 0px 0px
+                                    rgba(150, 150, 255, 0.8);" width="250"
+                             src="figures/brainnet.png" alt="brain">
+                        <br>
+                        $???$
+                      </div>
+                      <div style="float:left; width:250 px">
+                        <img style="border:0; box-shadow: 0px 0px 0px
+                                    rgba(150, 150, 255, 0.8);" width="250"
+                             src="figures/fmri.png" alt="fmri">
+                        <br>
+                        $\approx2s$
+                      </div>
+
+                      <div style="clear:both"></div>
+                    </div>
+                    What causal inferences can be made in this situation?
+                  </section>
+
+                  <section data-vertical-align-top data-background="figures/cWEB.svg" data-background-size="contain">
+	          </section>
+
+                  <section data-vertical-align-top data-background="figures/400lb_boxes.png" data-background-size="cover">
+	          </section>
+
+                  <section data-vertical-align-top data-background="figures/cluster_at_TReNDS.png" data-background-size="cover">
+	          </section>
+
+                  <section>
+                    <h2>Computational resources</h2>
+                    <table>
+                      <tr>
+                        <th> Type </th>
+                        <th> Description </th>
+                      </tr>
+                      <tr>
+                        <td><span class="fa fa-server"/></td>
+                        <td>35 dedicated, hi-memory 28 core servers</td>
+                      </tr>
+                      <tr>
+                        <td><span class="fa fa-server"/></td>
+                        <td>36 high memory 64 core AMD CPU servers</td>
+                      </tr>
+                      <tr>
+                        <td><span class="fa fa-server"/></td>
+                        <td>40 v100 GPUs </td>
+                      </tr>
+                      <tr>
+                        <td><span class="fa fa-server"/></td>
+                        <td>32 A100 GPUs</td>
+                      </tr>
+                      <tr>
+                        <td><span class="fas fa-database"/></td>
+                        <td>3.8PB of local storage</td>
+                      </tr>
+                    </table>
+	          </section>
+
+                  <section>
+                    <h2>Machine Learning Competencies</h2>
+                    <ul>
+                      <li class="fragment roll-in"> Telecom companies
+                      <li class="fragment roll-in"> Hospitals (mortality rate prediction)
+                      <li class="fragment roll-in"> Insurance claims in health informatics
+                      <li class="fragment roll-in"> Natural language processing
+                      <li class="fragment roll-in"> Embedded AI models
+                      <li class="fragment roll-in"> and more
+	            </ul>
+	          </section>
+                </section>
+
+                <section>
+                  <section data-background="figures/ARABSAT_l.jpeg">
+                    <h2 style="text-shadow: 4px 4px 4px #002b36; color: #cacaca">automatic detection of arcing</h2>
+                  </section>
+
+                  <section data-vertical-align-top data-background="figures/arking_data.svg" data-background-size="contain">
+	          </section>
+
+                  <section  data-state="brightside" data-vertical-align-top data-background="figures/AMC2NORAD_arking.svg" data-background-size="contain">
+
+                    <div class="slide-footer"><a href="https://doi.org/10.1007/s40295-022-00314-2">
+                        Plis, S.M., Ferguson, D.C. & Plis, E.A. Application of Machine Learning to Investigation of Arcing on Geosynchronous Satellites. J Astronaut Sci 69, 570–580 (2022). https://doi.org/10.1007/s40295-022-00314-2
+                    </a></div>
+	          </section>
+
+                </section>
+
+                <section>
+                  <section data-state="brightside" >
+                    <h3>Space University Research Initiative</h3>
+                    <h2>Space Domain Awareness in a Photon Starved Environment</h2>
+                        lead by Dr. Stuart Jefferies
+                  </section>
+                  <section  data-state="darkside" data-vertical-align-top data-background="figures/tumbling_satellites.svg" data-background-size="contain">
+	          </section>
+                </section>
+
+                <section>
+                  <section  data-state="brightside">
+                    <h1>Thank you!</h1>
+                    <h4>contact me with interesting projects in AI for Space<h4>
+                        <h2>splis@gsu.edu</h2>
+                  </section>
+                </section>
+
+              </div>
+
+            </div>
+
+            <script src="dist/reveal.js"></script>
+
+            <link rel="stylesheet" href="plugin/highlight/monokai.css">
+            <script src="plugin/highlight/highlight.js"></script>
+            <script src="plugin/math/math.js"></script>
+            <script src="plugin/chalkboard/plugin.js"></script>
+            <script src="plugin/notes/notes.js"></script>
+            <script src="plugin/zoom/zoom.js"></script>
+            <script src="plugin/fullscreen/fullscreen.js"></script>
+            <script src="plugin/menu/menu.js"></script>
+            <script src="plugin/verticator/verticator.js"></script>
+            <link rel="stylesheet" href="plugin/verticator/verticator.css">
+            <script>
+              // Full list of configuration options available at:
+              // https://github.com/hakimel/reveal.js#configuration
+
+              Reveal.initialize({
+                  // history: true,
+                  width: 960,
+                  height: 700,
+                  center: true,
+                  hash: true,
+                  controls: false,
+                  keyboard: true,
+                  margin: 0.05,
+                  overview: true,
+                  transition: 'slide', // Transition style: none/fade/slide/convex/concave/zoom
+                  transitionSpeed: 'slow', // Transition speed: default/fast/slow
+                  menu: {
+                      themes: false,
+                      openSlideNumber: true,
+                      openButton: false,
+                  },
+
+                  chalkboard: {
+                      boardmarkerWidth: 1,
+                      chalkWidth: 2,
+                      chalkEffect: 1,
+                      toggleNotesButton: false,
+                      toggleChalkboardButton: false,
+                      slideWidth: Reveal.width,
+                      slideHeight: Reveal.height,
+                      // src: "chalkboards/chalkboard_em2.json",
+                      readOnly: false,
+                      theme: "blackboard",
+                      eraser: { src: "plugin/chalkboard/img/sponge.png", radius: 30},
+                  },
+
+                  math: {
+                      mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
+                      config: 'TeX-AMS_SVG-full',
+                      // pass other options into `MathJax.Hub.Config()`
+                      TeX: {
+                          Macros: {
+        	              RR: '\\mathbb{R}',
+        	              PP: '\\mathbb{P}',
+        	              EE: '\\mathbb{E}',
+        	              NN: '\\mathbb{N}',
+        	              vth: '\\vec{\\theta}',
+                              loss: '{\\cal l}',
+                              hclass: '{\\cal H}',
+                              CD: '{\\cal D}',
+                              def: '\\stackrel{\\text{def}}{=}',
+                              pag: ['\\text{pa}_{{\cal G}^{#1}}(#2)}', 2],
+                              vec: ['\\boldsymbol{\\mathbf #1}', 1],
+        	              set: [ '\\left\\{#1 \\; : \\; #2\\right\\}', 2 ],
+                              bm: ['\\boldsymbol{\\mathbf #1}', 1],
+                              argmin: ['\\operatorname\{arg\\,min\\,\}'],
+                              argmax: ['\\operatorname\{arg\\,max\\,\}'],
+                              prob: ["\\mbox{#1$\\left(#2\\right)$}", 2],
+                          },
+                          loader: {load: ['[tex]/color']},
+                          extensions: ["color.js"],
+                          tex: {packages: {'[+]': ['color']}},
+                          svg: {
+                              fontCache: 'global'
+                          }
+                      }
+                  },
+
+                  plugins: [ Verticator, RevealMath, RevealChalkboard, RevealHighlight, RevealNotes, RevealZoom, RevealMenu ],
+
+              });
+
+              Reveal.configure({ fragments: false }); // set false when developing to see everything at once
+              Reveal.configure({ pdfSeparateFragments: false });
+              Reveal.configure({ slideNumber: true });
+              //Reveal.configure({ history: true });
+              Reveal.configure({ slideNumber: 'c / t' });
+              Reveal.addEventListener( 'darkside', function() {
+                  document.getElementById('theme').setAttribute('href','dist/theme/aml_dark.css');
+              }, false );
+              Reveal.addEventListener( 'brightside', function() {
+                  document.getElementById('theme').setAttribute('href','dist/theme/aml.css');
+              }, false );
+
+            </script>
+
+            <style type="text/css">
+              /* 1. Style header/footer <div> so they are positioned as desired. */
+              #header-left {
+                  position: absolute;
+                  top: 0%;
+                  left: 0%;
+              }
+              #header-right {
+                  position: absolute;
+                  top: 0%;
+                  right: 0%;
+              }
+              #footer-left {
+                  position: absolute;
+                  bottom: 0%;
+                  left: 0%;
+              }
+            </style>
+
+            <!-- // 2. Create hidden header/footer -->
+            <div id="hidden" style="display:none;">
+              <div id="header">
+                <div id="header-left">
+                  <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="400"
+                       src="figures/TReNDS_logo.svg" alt="TRENDS">
+                </div>
+                <div id="header-right">
+                  <img style="border:0; box-shadow: 0px 0px 0px rgba(150, 150, 255, 1);" width="200"
+                       src="figures/VOLTRON24_logo.png" alt="TRENDS">
+                </div>
+                <div id="footer-left">
+                </div>
+              </div>
+            </div>
+
+
+            <script type="text/javascript">
+              // 3. On Reveal.js ready event, copy header/footer <div> into each `.slide-background` <div>
+              var header = $('#header').html();
+              if ( window.location.search.match( /print-pdf/gi ) ) {
+                  Reveal.addEventListener( 'ready', function( event ) {
+                      $('.slide-background').append(header);
+                  });
+              }
+              else {
+                  $('div.reveal').append(header);
+              }
+            </script>
+
+  </body>
+</html>
